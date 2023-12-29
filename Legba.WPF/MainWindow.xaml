@@ -58,6 +58,12 @@
                              HorizontalContentAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ItemsSource="{Binding Messages}">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Copy to Clipboard"
+                                          Click="MenuItemCopyToClipboard_Click"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="{Binding IsSentByUser, Converter={StaticResource BooleanToBrushConverter}}"
@@ -148,6 +154,7 @@
 
                 </Grid>
             </TabItem>
+            
         </TabControl>
     </Grid>
 
