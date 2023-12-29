@@ -15,12 +15,8 @@ public class XmlFileKeyReader : IApiKeyReader, IOrganizationIdReader
             xmlDoc.Load(fileName);
 
             // Select the node using XPath
-            var node = xmlDoc.SelectSingleNode(xPath);
-
-            if (node == null)
-            {
-                throw new XmlException($"XPath {xPath} does not exist in {fileName}.");
-            }
+            var node = xmlDoc.SelectSingleNode(xPath) 
+                ?? throw new XmlException($"XPath {xPath} does not exist in {fileName}.");
 
             // Get the node's value
             string apiKey = node.InnerText;

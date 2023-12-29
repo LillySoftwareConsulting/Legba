@@ -21,6 +21,10 @@ public class JsonFileKeyReader : IApiKeyReader, IOrganizationIdReader
                 parsedJson.ToString().GetValueFromJsonPath(path)
                 ?? throw new InvalidOperationException($"Path '{path}' not found in {fileName}.");
         }
+        catch (FileNotFoundException)
+        {
+            throw new FileNotFoundException($"File {fileName} does not exist.");
+        }
         catch (Exception ex)
         {
             throw new InvalidOperationException($"Error reading JSON file: {ex.Message}", ex);
