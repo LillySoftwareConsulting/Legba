@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using KeyReader;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenAiConnector.KeyReaders;
 using OpenAiConnector.Services;
 using System.Windows;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace OpenAiConnector.KeyReaders;
+namespace KeyReader;
 
 public class UserSecretsKeyReader : IApiKeyReader, IOrganizationIdReader
 {
@@ -8,7 +8,7 @@ public class UserSecretsKeyReader : IApiKeyReader, IOrganizationIdReader
 
     public UserSecretsKeyReader(IConfigurationRoot configuration, string pathName)
     {
-        _openAiApiKey = configuration[pathName] 
+        _openAiApiKey = configuration[pathName]
             ?? throw new Exception($"Unable to find value at path '{pathName}'");
     }
 

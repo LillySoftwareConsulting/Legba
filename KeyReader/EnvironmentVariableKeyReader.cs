@@ -1,4 +1,4 @@
-﻿namespace OpenAiConnector.KeyReaders;
+﻿namespace KeyReader;
 
 public class EnvironmentVariableKeyReader : IApiKeyReader, IOrganizationIdReader
 {
@@ -7,11 +7,11 @@ public class EnvironmentVariableKeyReader : IApiKeyReader, IOrganizationIdReader
     public EnvironmentVariableKeyReader(
         string environmentVariableName = "OPENAI_API_KEY")
     {
-        string? variableValue = 
+        string? variableValue =
             Environment.GetEnvironmentVariable(environmentVariableName);
 
         if (variableValue == null)
-        {             
+        {
             throw new ArgumentException(
                 $"{environmentVariableName} environment variable not found.");
         }
