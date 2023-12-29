@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<keys>
+		<openAi_ApiKey>YOUR_OPENAI_API_KEY</openAi_ApiKey>
+		<openAi_OrgId>YOUR_OPENAI_ORG_ID</openAi_OrgId>
+	</keys>
+</root>
