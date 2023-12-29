@@ -1,4 +1,4 @@
-﻿namespace OpenAiConnector.KeyReaders;
+﻿namespace KeyReader;
 
 public interface IApiKeyReader : IKeyReader
 {

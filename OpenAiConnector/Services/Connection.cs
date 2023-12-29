@@ -1,8 +1,8 @@
-﻿using OpenAiConnector.KeyReaders;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using OpenAiConnector.Models;
+using KeyReader;
 
 namespace OpenAiConnector.Services;
 

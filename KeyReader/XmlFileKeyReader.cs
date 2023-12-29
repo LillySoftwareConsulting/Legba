@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace OpenAiConnector.KeyReaders;
+namespace KeyReader;
 
 public class XmlFileKeyReader : IApiKeyReader, IOrganizationIdReader
 {
@@ -8,8 +8,8 @@ public class XmlFileKeyReader : IApiKeyReader, IOrganizationIdReader
 
     public XmlFileKeyReader(string fileName, string xPath)
     {
-        try 
-        { 
+        try
+        {
             // Load the XML document
             XmlDocument xmlDoc = new();
             xmlDoc.Load(fileName);
@@ -43,7 +43,7 @@ public class XmlFileKeyReader : IApiKeyReader, IOrganizationIdReader
         catch (Exception ex)
         {
             throw new Exception("An unexpected error occurred: " + ex.Message);
-        }        
+        }
     }
 
     public string GetKey()

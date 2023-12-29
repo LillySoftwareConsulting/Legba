@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 
-namespace OpenAiConnector.KeyReaders;
+namespace KeyReader;
 
 public class JsonFileKeyReader : IApiKeyReader, IOrganizationIdReader
 {
@@ -10,15 +10,15 @@ public class JsonFileKeyReader : IApiKeyReader, IOrganizationIdReader
     {
         try
         {
-            string fileContent = 
+            string fileContent =
                 File.ReadAllText(fileName);
 
-            JsonNode parsedJson = 
+            JsonNode parsedJson =
                 JsonNode.Parse(fileContent)
                 ?? throw new InvalidOperationException($"Could not parse {fileName}.");
 
-            _openAiApiKey = 
-                parsedJson.ToString().GetValueFromJsonPath(path) 
+            _openAiApiKey =
+                parsedJson.ToString().GetValueFromJsonPath(path)
                 ?? throw new InvalidOperationException($"Path '{path}' not found in {fileName}.");
         }
         catch (Exception ex)
