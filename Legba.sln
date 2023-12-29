@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenAiConnector", "OpenAiConnector\OpenAiConnector.csproj", "{BA37E3B0-7F8B-479B-B31C-9A6BC36D8FD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Legba.WPF", "Legba.WPF\Legba.WPF.csproj", "{601EDCF5-AEC7-4831-972D-58AE177694E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA37E3B0-7F8B-479B-B31C-9A6BC36D8FD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA37E3B0-7F8B-479B-B31C-9A6BC36D8FD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA37E3B0-7F8B-479B-B31C-9A6BC36D8FD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA37E3B0-7F8B-479B-B31C-9A6BC36D8FD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{601EDCF5-AEC7-4831-972D-58AE177694E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{601EDCF5-AEC7-4831-972D-58AE177694E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{601EDCF5-AEC7-4831-972D-58AE177694E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{601EDCF5-AEC7-4831-972D-58AE177694E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B180EB06-0C0F-47C5-8708-BD88E4C9E7CB}
+	EndGlobalSection
+EndGlobal
