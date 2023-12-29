@@ -25,3 +25,4 @@ Please report any problems at one of these places:
 - Add new key readers for cloud key stores.
 - Convert the UI to something that runs cross-platform - probably [Avalonia](https://avaloniaui.net/).
 - Convert the KeyReader class library project into a NuGet package.
+- Able to store and retrieve "personas" and "prompt prefixes" to be passed in when making a request to OpenAI's API
