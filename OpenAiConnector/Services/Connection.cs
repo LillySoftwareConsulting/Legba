@@ -34,7 +34,6 @@ public class Connection
         _uri = new Uri("https://api.openai.com/v1/chat/completions");
         _httpClientFactory = httpClientFactory;
         _openAiApiKey = openAiKeyReader.GetKey();
-        // Organization ID is optional
         _openAiOrganizationId = organizationIdReader?.GetKey();
     }
 

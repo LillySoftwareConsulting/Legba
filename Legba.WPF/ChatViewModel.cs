@@ -10,6 +10,8 @@ namespace Legba.WPF;
 
 public class ChatViewModel : INotifyPropertyChanged
 {
+    #region Properties, Commands, and Events
+
     private readonly Connection _connection;
     private string _prompt = string.Empty;
 
@@ -40,6 +42,8 @@ public class ChatViewModel : INotifyPropertyChanged
     public int GrandTotalCompletionTokens { get { return Usages.Sum(u => u.CompletionTokens); } }
     public int GrandTotalTokens { get { return Usages.Sum(u => u.TotalTokens); } }
 
+    #endregion
+
     public ChatViewModel(Connection connection)
     {
         _connection = connection;
@@ -67,9 +71,13 @@ public class ChatViewModel : INotifyPropertyChanged
 
         AddMessage(Enums.Role.User, prompt);
 
+        AddMessage(Enums.Role.Assistant, "Thinking...");
+
         var response =
             await _connection.CallOpenAiApiAsync(prompt,
             IncludePriorMessages ? Messages.ToList() : null);
+
+        Messages.Remove(Messages.Last());
 
         AddMessage(Enums.Role.Assistant, response.Choices[0].Message?.Content);
 
