@@ -12,6 +12,7 @@ This is a desktop app to help you make, and manage, calls to OpenAI's API. It cu
     - Availble types of readers:
       - EnvironmentVariableKeyReader
       - JsonFileKeyReader
+      - JsonStringKeyReader
       - UserSecretsKeyReader
       - XmlFileKeyReader
 - Test the app
