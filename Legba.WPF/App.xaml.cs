@@ -1,4 +1,6 @@
 ﻿using KeyReader;
+using Legba.Engine.Models;
+using Legba.Engine.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenAiConnector.Services;

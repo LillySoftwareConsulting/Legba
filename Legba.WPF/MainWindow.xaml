@@ -3,13 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:Legba.WPF;assembly=Legba.WPF"
+        xmlns:viewModels="clr-namespace:Legba.Engine.ViewModels;assembly=Legba.Engine"
         xmlns:conv="clr-namespace:Legba.WPF.CustomConverters"
         d:DataContext="{d:DesignInstance viewModels:ChatViewModel}"
         mc:Ignorable="d"
         Title="Legba" 
         FontSize="11pt"
-        Height="450" Width="800">
+        Height="768" Width="1024">
 
     <Window.Resources>
         <conv:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
@@ -45,6 +45,13 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="10" />
                         <RowDefinition Height="Auto" />
@@ -53,11 +60,12 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- Messages -->
                     <ListBox Grid.Row="0" Grid.Column="0"
                              x:Name="messages"
                              HorizontalContentAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ItemsSource="{Binding Messages}">
+                             ItemsSource="{Binding ChatSession.Messages}">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Copy to Clipboard"
@@ -85,14 +93,52 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <TextBox Grid.Row="2" Grid.Column="0"
-                             x:Name="prompt"
-                             Text="{Binding Prompt, Mode=TwoWay}"
+                    <!-- Persona -->
+                    <Label Grid.Row="2" Grid.Column="0"
+                           FontWeight="Bold"
+                           Content="Persona"/>
+                    <TextBox Grid.Row="3" Grid.Column="0"
+                             AcceptsReturn="True"
                              TextWrapping="Wrap"
                              Background="LightGray"
-                             VerticalScrollBarVisibility="Auto"/>
+                             VerticalScrollBarVisibility="Auto"
+                             Text="{Binding ChatSession.Persona.Description, Mode=TwoWay}"/>
+                    
+                    <!-- Purpose -->
+                    <Label Grid.Row="4" Grid.Column="0"
+                           FontWeight="Bold"
+                           Content="Purpose"/>
+                    <TextBox Grid.Row="5" Grid.Column="0"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Background="LightGray"
+                             VerticalScrollBarVisibility="Auto"
+                             Text="{Binding ChatSession.Purpose.Description, Mode=TwoWay}"/>
 
-                    <Button Grid.Row="4" Grid.Column="0"
+                    <!-- Process -->
+                    <Label Grid.Row="6" Grid.Column="0"
+                           FontWeight="Bold"
+                           Content="Process"/>
+                    <TextBox Grid.Row="7" Grid.Column="0"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Background="LightGray"
+                             VerticalScrollBarVisibility="Auto"
+                             Text="{Binding ChatSession.Process.Description, Mode=TwoWay}"/>
+
+                    <!-- Prompt -->
+                    <Label Grid.Row="8" Grid.Column="0"
+                           FontWeight="Bold"
+                           Content="Prompt"/>
+                    <TextBox Grid.Row="9" Grid.Column="0"
+                             x:Name="prompt"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Background="LightGray"
+                             VerticalScrollBarVisibility="Auto"
+                             Text="{Binding ChatSession.Prompt, Mode=TwoWay}"/>
+
+                    <Button Grid.Row="11" Grid.Column="0"
                             Content="Ask"
                             Width="75"
                             HorizontalAlignment="Right"
@@ -118,7 +164,7 @@
                            Content="Include prior messages?"/>
                     <CheckBox Grid.Row="0" Grid.Column="1"
                               VerticalContentAlignment="Center"
-                              IsChecked="{Binding IncludePriorMessages}"/>
+                              IsChecked="{Binding ChatSession.IncludePriorMessages}"/>
 
                 </Grid>
             </TabItem>
@@ -137,7 +183,7 @@
 
                     <DataGrid Grid.Row="0" Grid.Column="0"
                               Grid.ColumnSpan="2"
-                              ItemsSource="{Binding Usages}">
+                              ItemsSource="{Binding ChatSession.Usages}">
                     </DataGrid>
 
                     <StackPanel Grid.Row="2" Grid.Column="0"
@@ -145,11 +191,11 @@
                         <Label Content="Grand Totals"
                                FontWeight="Bold"/>
                         <Label Content="Prompt tokens:"/>
-                        <Label Content="{Binding GrandTotalPromptTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalPromptTokens}"/>
                         <Label Content="Completion tokens:"/>
-                        <Label Content="{Binding GrandTotalCompletionTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalCompletionTokens}"/>
                         <Label Content="All tokens:"/>
-                        <Label Content="{Binding GrandTotalTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalTokens}"/>
                     </StackPanel>
 
                 </Grid>

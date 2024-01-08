@@ -2,25 +2,57 @@
 using OpenAiConnector.Models;
 using OpenAiConnector.Services;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Input;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
-namespace Legba.WPF;
+namespace Legba.Engine.Models;
 
-public class ChatViewModel : INotifyPropertyChanged
+public class ChatSession : INotifyPropertyChanged
 {
     #region Properties, Commands, and Events
 
     private readonly Connection _connection;
+
+    private Persona _persona = new();
+    private Purpose _purpose = new();
+    private Process _process = new();
     private string _prompt = string.Empty;
 
-    public ICommand StartNewSessionCommand { get; }
-    public ICommand AskCommand { get; }
+    public bool IncludePriorMessages { get; set; } = true;
+
+    public Persona Persona 
+    { 
+        get => _persona;
+        set 
+        { 
+            _persona = value;
+            OnPropertyChanged(nameof(Persona));
+        } 
+    }
+
+    public Purpose Purpose 
+    { 
+        get => _purpose;
+        set 
+        { 
+            _purpose = value; 
+            OnPropertyChanged(nameof(Purpose));
+        }
+    }
+
+    public Process Process
+    {
+        get => _process;
+        set
+        {
+            _process = value;
+            OnPropertyChanged(nameof(Process));
+        }
+    }
 
     public string Prompt
     {
-        get { return _prompt; }
+        get => _prompt;
         set
         {
             if (_prompt != value)
@@ -34,47 +66,38 @@ public class ChatViewModel : INotifyPropertyChanged
     public ObservableCollection<Message> Messages { get; set; } = new();
     public ObservableCollection<Usage> Usages { get; set; } = new();
 
-    public bool IncludePriorMessages { get; set; } = true;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public int GrandTotalPromptTokens { get { return Usages.Sum(u => u.PromptTokens); } }
     public int GrandTotalCompletionTokens { get { return Usages.Sum(u => u.CompletionTokens); } }
     public int GrandTotalTokens { get { return Usages.Sum(u => u.TotalTokens); } }
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     #endregion
 
-    public ChatViewModel(Connection connection)
+    public ChatSession(Connection connection)
     {
         _connection = connection;
-
-        Prompt = "What time and temperature should you use to cook frozen onion rings in a convection oven?";
-        AskCommand = new RelayCommand(async () => await Ask());
-        StartNewSessionCommand = new RelayCommand(StartNewSession);
 
         Usages.CollectionChanged += OnUsagesCollectionChanged;
     }
 
-    private void StartNewSession()
-    {
-        Prompt = string.Empty;
-        Messages.Clear();
-        Usages.Clear();
-    }
-
-    private async Task Ask()
+    public async Task Ask()
     {
         // Store prompt in a variable so we can clear it before the response is received.
         // This prevents the user from spamming the ask button.
         var prompt = Prompt;
         Prompt = string.Empty;
 
+        // TODO: Record selected Persona, Purpose, and Process with prompt, for history.
         AddMessage(Enums.Role.User, prompt);
 
         AddMessage(Enums.Role.Assistant, "Thinking...");
 
+        var completePrompt = 
+            $"{Persona.Description}\n{Purpose.Description}\n{Process.Description}\n{prompt}";
+
         var response =
-            await _connection.CallOpenAiApiAsync(prompt,
+            await _connection.CallOpenAiApiAsync(completePrompt,
             IncludePriorMessages ? Messages.ToList() : null);
 
         Messages.Remove(Messages.Last());
