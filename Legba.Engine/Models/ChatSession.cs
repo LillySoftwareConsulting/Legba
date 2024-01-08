@@ -13,11 +13,46 @@ public class ChatSession : INotifyPropertyChanged
 
     private readonly Connection _connection;
 
+    private Persona _persona = new();
+    private Purpose _purpose = new();
+    private Process _process = new();
     private string _prompt = string.Empty;
+
+    public bool IncludePriorMessages { get; set; } = true;
+
+    public Persona Persona 
+    { 
+        get => _persona;
+        set 
+        { 
+            _persona = value;
+            OnPropertyChanged(nameof(Persona));
+        } 
+    }
+
+    public Purpose Purpose 
+    { 
+        get => _purpose;
+        set 
+        { 
+            _purpose = value; 
+            OnPropertyChanged(nameof(Purpose));
+        }
+    }
+
+    public Process Process
+    {
+        get => _process;
+        set
+        {
+            _process = value;
+            OnPropertyChanged(nameof(Process));
+        }
+    }
 
     public string Prompt
     {
-        get { return _prompt; }
+        get => _prompt;
         set
         {
             if (_prompt != value)
@@ -27,8 +62,6 @@ public class ChatSession : INotifyPropertyChanged
             }
         }
     }
-
-    public bool IncludePriorMessages { get; set; } = true;
 
     public ObservableCollection<Message> Messages { get; set; } = new();
     public ObservableCollection<Usage> Usages { get; set; } = new();
@@ -55,12 +88,16 @@ public class ChatSession : INotifyPropertyChanged
         var prompt = Prompt;
         Prompt = string.Empty;
 
+        // TODO: Record selected Persona, Purpose, and Process with prompt, for history.
         AddMessage(Enums.Role.User, prompt);
 
         AddMessage(Enums.Role.Assistant, "Thinking...");
 
+        var completePrompt = 
+            $"{Persona.Description}\n{Purpose.Description}\n{Process.Description}\n{prompt}";
+
         var response =
-            await _connection.CallOpenAiApiAsync(prompt,
+            await _connection.CallOpenAiApiAsync(completePrompt,
             IncludePriorMessages ? Messages.ToList() : null);
 
         Messages.Remove(Messages.Last());
