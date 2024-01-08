@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:Legba.WPF;assembly=Legba.WPF"
+        xmlns:viewModels="clr-namespace:Legba.Engine.ViewModels;assembly=Legba.Engine"
         xmlns:conv="clr-namespace:Legba.WPF.CustomConverters"
         d:DataContext="{d:DesignInstance viewModels:ChatViewModel}"
         mc:Ignorable="d"
@@ -57,7 +57,7 @@
                              x:Name="messages"
                              HorizontalContentAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ItemsSource="{Binding Messages}">
+                             ItemsSource="{Binding ChatSession.Messages}">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Copy to Clipboard"
@@ -87,7 +87,7 @@
 
                     <TextBox Grid.Row="2" Grid.Column="0"
                              x:Name="prompt"
-                             Text="{Binding Prompt, Mode=TwoWay}"
+                             Text="{Binding ChatSession.Prompt, Mode=TwoWay}"
                              TextWrapping="Wrap"
                              Background="LightGray"
                              VerticalScrollBarVisibility="Auto"/>
@@ -118,7 +118,7 @@
                            Content="Include prior messages?"/>
                     <CheckBox Grid.Row="0" Grid.Column="1"
                               VerticalContentAlignment="Center"
-                              IsChecked="{Binding IncludePriorMessages}"/>
+                              IsChecked="{Binding ChatSession.IncludePriorMessages}"/>
 
                 </Grid>
             </TabItem>
@@ -137,7 +137,7 @@
 
                     <DataGrid Grid.Row="0" Grid.Column="0"
                               Grid.ColumnSpan="2"
-                              ItemsSource="{Binding Usages}">
+                              ItemsSource="{Binding ChatSession.Usages}">
                     </DataGrid>
 
                     <StackPanel Grid.Row="2" Grid.Column="0"
@@ -145,11 +145,11 @@
                         <Label Content="Grand Totals"
                                FontWeight="Bold"/>
                         <Label Content="Prompt tokens:"/>
-                        <Label Content="{Binding GrandTotalPromptTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalPromptTokens}"/>
                         <Label Content="Completion tokens:"/>
-                        <Label Content="{Binding GrandTotalCompletionTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalCompletionTokens}"/>
                         <Label Content="All tokens:"/>
-                        <Label Content="{Binding GrandTotalTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalTokens}"/>
                     </StackPanel>
 
                 </Grid>
