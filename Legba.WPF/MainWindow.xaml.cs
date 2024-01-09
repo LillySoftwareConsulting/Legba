@@ -19,4 +19,9 @@ public partial class MainWindow : Window
             Clipboard.SetText(message.Content);
         }
     }
+
+    private void Exit_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }
