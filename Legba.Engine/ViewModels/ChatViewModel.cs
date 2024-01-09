@@ -36,14 +36,17 @@ public class ChatViewModel : INotifyPropertyChanged
     {
         _connection = connection;
 
-        ChatSession = new ChatSession(_connection);
+        StartNewSession();
+
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
         StartNewSessionCommand = new RelayCommand(StartNewSession);
     }
 
     private void StartNewSession()
     {
-        _chatSession = new ChatSession(_connection);
+        ChatSession?.Dispose();
+
+        ChatSession = new ChatSession(_connection);
     }
 
     protected virtual void OnPropertyChanged(string propertyName)

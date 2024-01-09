@@ -24,43 +24,40 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Menu Grid.Row="0" Grid.Column="0">
+        <!-- Menu -->
+        <Menu Grid.Row="0" Grid.Column="0"
+              Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New Session" Command="{Binding StartNewSessionCommand}"/>
+                <MenuItem Header="New Session" 
+                          Command="{Binding StartNewSessionCommand}"/>
                 <Separator/>
-                <MenuItem Header="Exit" IsEnabled="False"/>
+                <MenuItem Header="Exit"
+                          Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="About" IsEnabled="False"/>
+                <MenuItem Header="About"
+                          IsEnabled="False"/>
             </MenuItem>
         </Menu>
-              
+        
+        <!-- Outputs -->
         <TabControl Grid.Row="1" Grid.Column="0" 
                     Margin="5,5,5,5">
+
+            <!-- Messages -->
             <TabItem Header="Chat">
                 <Grid Margin="5,5,5,5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Messages -->
                     <ListBox Grid.Row="0" Grid.Column="0"
                              x:Name="messages"
                              HorizontalContentAlignment="Stretch"
@@ -93,82 +90,10 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <!-- Persona -->
-                    <Label Grid.Row="2" Grid.Column="0"
-                           FontWeight="Bold"
-                           Content="Persona"/>
-                    <TextBox Grid.Row="3" Grid.Column="0"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Background="LightGray"
-                             VerticalScrollBarVisibility="Auto"
-                             Text="{Binding ChatSession.Persona.Description, Mode=TwoWay}"/>
-                    
-                    <!-- Purpose -->
-                    <Label Grid.Row="4" Grid.Column="0"
-                           FontWeight="Bold"
-                           Content="Purpose"/>
-                    <TextBox Grid.Row="5" Grid.Column="0"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Background="LightGray"
-                             VerticalScrollBarVisibility="Auto"
-                             Text="{Binding ChatSession.Purpose.Description, Mode=TwoWay}"/>
-
-                    <!-- Process -->
-                    <Label Grid.Row="6" Grid.Column="0"
-                           FontWeight="Bold"
-                           Content="Process"/>
-                    <TextBox Grid.Row="7" Grid.Column="0"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Background="LightGray"
-                             VerticalScrollBarVisibility="Auto"
-                             Text="{Binding ChatSession.Process.Description, Mode=TwoWay}"/>
-
-                    <!-- Prompt -->
-                    <Label Grid.Row="8" Grid.Column="0"
-                           FontWeight="Bold"
-                           Content="Prompt"/>
-                    <TextBox Grid.Row="9" Grid.Column="0"
-                             x:Name="prompt"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Background="LightGray"
-                             VerticalScrollBarVisibility="Auto"
-                             Text="{Binding ChatSession.Prompt, Mode=TwoWay}"/>
-
-                    <Button Grid.Row="11" Grid.Column="0"
-                            Content="Ask"
-                            Width="75"
-                            HorizontalAlignment="Right"
-                            IsEnabled="{Binding ElementName=prompt, Path=Text, Converter={StaticResource StringNotEmptyToBooleanConverter}}"
-                            Command="{Binding AskCommand, AsyncState=True}"/>
                 </Grid>
             </TabItem>
-            
-            <TabItem Header="Settings">
-                <Grid Margin="5,5,5,5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0"
-                           VerticalContentAlignment="Center"
-                           Content="Include prior messages?"/>
-                    <CheckBox Grid.Row="0" Grid.Column="1"
-                              VerticalContentAlignment="Center"
-                              IsChecked="{Binding ChatSession.IncludePriorMessages}"/>
-
-                </Grid>
-            </TabItem>
-            
+            <!-- Statistics -->
             <TabItem Header="Statistics">
                 <Grid Margin="5,5,5,5">
                     <Grid.RowDefinitions>
@@ -183,7 +108,9 @@
 
                     <DataGrid Grid.Row="0" Grid.Column="0"
                               Grid.ColumnSpan="2"
-                              ItemsSource="{Binding ChatSession.Usages}">
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              ItemsSource="{Binding ChatSession.TokenUsages}">
                     </DataGrid>
 
                     <StackPanel Grid.Row="2" Grid.Column="0"
@@ -200,8 +127,98 @@
 
                 </Grid>
             </TabItem>
-            
+
         </TabControl>
+        
+        <!-- Inputs -->
+        <Grid Grid.Row="1" Grid.Column="1"
+              Margin="5,5,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Persona -->
+            <Label Grid.Row="0" Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   FontWeight="Bold"
+                   Content="Persona"/>
+            <TextBox Grid.Row="1" Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     Background="LightGray"
+                     VerticalScrollBarVisibility="Auto"
+                     Text="{Binding ChatSession.Persona.Description, Mode=TwoWay}"/>
+
+            <!-- Purpose -->
+            <Label Grid.Row="2" Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   FontWeight="Bold"
+                   Content="Purpose"/>
+            <TextBox Grid.Row="3" Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     Background="LightGray"
+                     VerticalScrollBarVisibility="Auto"
+                     Text="{Binding ChatSession.Purpose.Description, Mode=TwoWay}"/>
+
+            <!-- Process -->
+            <Label Grid.Row="4" Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   FontWeight="Bold"
+                   Content="Process"/>
+            <TextBox Grid.Row="5" Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     Background="LightGray"
+                     VerticalScrollBarVisibility="Auto"
+                     Text="{Binding ChatSession.Process.Description, Mode=TwoWay}"/>
+
+            <!-- Prompt -->
+            <Label Grid.Row="6" Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   FontWeight="Bold"
+                   Content="Prompt"/>
+            <TextBox Grid.Row="7" Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     x:Name="prompt"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     Background="LightGray"
+                     VerticalScrollBarVisibility="Auto"
+                     Text="{Binding ChatSession.Prompt, Mode=TwoWay}"/>
+
+            <CheckBox Grid.Row="8" Grid.Column="0"
+                      VerticalContentAlignment="Center"
+                      IsChecked="{Binding ChatSession.IncludePriorMessages}"/>
+            <Label Grid.Row="8" Grid.Column="1"
+                   VerticalContentAlignment="Center"
+                   Content="Include prior messages?"/>
+
+            <Button Grid.Row="10" Grid.Column="1"
+                    Content="Ask"
+                    Width="75"
+                    HorizontalAlignment="Right"
+                    IsEnabled="{Binding ElementName=prompt, Path=Text, Converter={StaticResource StringNotEmptyToBooleanConverter}}"
+                    Command="{Binding AskCommand, AsyncState=True}"/>
+        </Grid>
+
     </Grid>
 
 </Window>

@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace Legba.Engine.Models;
 
-public class ChatSession : INotifyPropertyChanged
+public class ChatSession : INotifyPropertyChanged, IDisposable
 {
     #region Properties, Commands, and Events
 
@@ -17,6 +17,7 @@ public class ChatSession : INotifyPropertyChanged
     private Purpose _purpose = new();
     private Process _process = new();
     private string _prompt = string.Empty;
+    private bool _disposed = false; // To detect redundant calls
 
     public bool IncludePriorMessages { get; set; } = true;
 
@@ -64,11 +65,11 @@ public class ChatSession : INotifyPropertyChanged
     }
 
     public ObservableCollection<Message> Messages { get; set; } = new();
-    public ObservableCollection<Usage> Usages { get; set; } = new();
+    public ObservableCollection<Usage> TokenUsages { get; set; } = new();
 
-    public int GrandTotalPromptTokens { get { return Usages.Sum(u => u.PromptTokens); } }
-    public int GrandTotalCompletionTokens { get { return Usages.Sum(u => u.CompletionTokens); } }
-    public int GrandTotalTokens { get { return Usages.Sum(u => u.TotalTokens); } }
+    public int GrandTotalPromptTokens { get { return TokenUsages.Sum(u => u.PromptTokens); } }
+    public int GrandTotalCompletionTokens { get { return TokenUsages.Sum(u => u.CompletionTokens); } }
+    public int GrandTotalTokens { get { return TokenUsages.Sum(u => u.TotalTokens); } }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -78,7 +79,7 @@ public class ChatSession : INotifyPropertyChanged
     {
         _connection = connection;
 
-        Usages.CollectionChanged += OnUsagesCollectionChanged;
+        TokenUsages.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
 
     public async Task Ask()
@@ -100,11 +101,12 @@ public class ChatSession : INotifyPropertyChanged
             await _connection.CallOpenAiApiAsync(completePrompt,
             IncludePriorMessages ? Messages.ToList() : null);
 
+        // Remove "Thinking..." message
         Messages.Remove(Messages.Last());
 
         AddMessage(Enums.Role.Assistant, response.Choices[0].Message?.Content);
 
-        Usages.Add(response.Usage);
+        TokenUsages.Add(response.Usage);
     }
 
     private void AddMessage(Enums.Role role, string content)
@@ -117,11 +119,44 @@ public class ChatSession : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private void OnUsagesCollectionChanged(object? sender,
+    private void OnTokenUsagesCollectionChanged(object? sender,
         NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(GrandTotalPromptTokens));
         OnPropertyChanged(nameof(GrandTotalCompletionTokens));
         OnPropertyChanged(nameof(GrandTotalTokens));
     }
+
+    #region Implementation of IDisposable
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        { 
+            return; 
+        }
+
+        if (disposing)
+        {
+            Messages.Clear();
+            TokenUsages.Clear();
+
+            TokenUsages.CollectionChanged -= OnTokenUsagesCollectionChanged;
+        }
+
+        _disposed = true;
+    }
+
+    ~ChatSession()
+    {
+        Dispose(false);
+    }
+
+    #endregion
 }
