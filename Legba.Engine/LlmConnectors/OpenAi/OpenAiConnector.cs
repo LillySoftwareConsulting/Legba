@@ -5,8 +5,10 @@ using Legba.Engine.Models;
 
 namespace Legba.Engine.LlmConnectors.OpenAi;
 
-public class Connection
+public class OpenAiConnector : ILlmConnector
 {
+    #region Properties and backing fields
+
     private readonly Uri _uri;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly string _openAiApiKey = string.Empty;
@@ -23,7 +25,9 @@ public class Connection
             }
         };
 
-    public Connection(Settings settings, IHttpClientFactory httpClientFactory)
+    #endregion
+
+    public OpenAiConnector(Settings settings, IHttpClientFactory httpClientFactory)
     {
         _uri = new Uri("https://api.openai.com/v1/chat/completions");
         _httpClientFactory = httpClientFactory;
@@ -31,31 +35,61 @@ public class Connection
         _openAiOrganizationId = settings.keys.orgId;
     }
 
-    public async Task<Response> CallOpenAiApiAsync(string prompt,
-        List<Message>? priorMessages = null)
+    public async Task<LlmResponse> AskAsync(LlmRequest request)
     {
         try
         {
             HttpClient httpClient = GetHttpClient();
 
-            Request request = BuildRequest(prompt, priorMessages);
+            Request openAiRequest = BuildRequest(request.Prompt);
 
             var response =
                 await httpClient
-                .PostAsJsonAsync(_uri, request, _jsonSerializerOptions)
+                .PostAsJsonAsync(_uri, openAiRequest, _jsonSerializerOptions)
                 .ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
-            return await response
-                .Content.ReadFromJsonAsync<Response>(_jsonSerializerOptions)
-                ?? throw new Exception("Error parsing the OpenAI API response");
+            Response openAiResponse = 
+                await response
+                    .Content.ReadFromJsonAsync<Response>(_jsonSerializerOptions)
+                    ?? throw new Exception("Error parsing the OpenAI API response");
+
+            return new LlmResponse() { Text = openAiResponse.Choices[0].Message?.Content };
         }
         catch (Exception ex)
         {
             throw new Exception("Unable to parse response", ex);
         }
     }
+
+    //public async Task<Response> CallOpenAiApiAsync(string prompt,
+    //    List<Message>? priorMessages = null)
+    //{
+    //    try
+    //    {
+    //        HttpClient httpClient = GetHttpClient();
+
+    //        Request request = BuildRequest(prompt, priorMessages);
+
+    //        var response =
+    //            await httpClient
+    //            .PostAsJsonAsync(_uri, request, _jsonSerializerOptions)
+    //            .ConfigureAwait(false);
+
+    //        response.EnsureSuccessStatusCode();
+
+    //        return await response
+    //            .Content.ReadFromJsonAsync<Response>(_jsonSerializerOptions)
+    //            ?? throw new Exception("Error parsing the OpenAI API response");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception("Unable to parse response", ex);
+    //    }
+    //}
+
+    #region Private methods
 
     private HttpClient GetHttpClient()
     {
@@ -71,7 +105,7 @@ public class Connection
         return httpClient;
     }
 
-    private static Request BuildRequest(string prompt, List<Message>? priorMessages)
+    private static Request BuildRequest(string prompt, List<Message>? priorMessages = null)
     {
         Request request = new();
 
@@ -84,4 +118,6 @@ public class Connection
 
         return request;
     }
+
+    #endregion
 }

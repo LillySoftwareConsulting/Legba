@@ -1,4 +1,5 @@
-﻿using Legba.Engine.LlmConnectors.OpenAi;
+﻿using Legba.Engine.LlmConnectors;
+using Legba.Engine.LlmConnectors.OpenAi;
 using Legba.Engine.Models;
 using Legba.Engine.ViewModels;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +31,11 @@ public partial class App : Application
         services.AddTransient<MainWindow>();
 
         // Register 'service' objects for injection
-        services.AddSingleton<Connection>();
+        services.AddSingleton<OpenAiConnector>();
+        services.AddSingleton<LlmConnectorFactory>();
+
+        // Register transient classes for injection
+        services.AddTransient<ChatSession>();
 
         // Register the HttpClientFactory, for calls to external LLMs
         services.AddHttpClient();

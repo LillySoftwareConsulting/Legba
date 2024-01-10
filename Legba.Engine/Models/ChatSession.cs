@@ -1,4 +1,5 @@
-﻿using Legba.Engine.LlmConnectors.OpenAi;
+﻿using Legba.Engine.LlmConnectors;
+using Legba.Engine.LlmConnectors.OpenAi;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
 {
     #region Properties, Commands, and Events
 
-    private readonly Connection _connection;
+    private readonly OpenAiConnector _connection;
 
     private Persona _persona = new();
     private Purpose _purpose = new();
@@ -73,9 +74,11 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
 
     #endregion
 
-    public ChatSession(Connection connection)
+    public ChatSession(Settings settings, LlmConnectorFactory llmConnectorFactory,
+        OpenAiConnector connector)
     {
-        _connection = connection;
+        _connection = connector;
+        var llmConnector = llmConnectorFactory.GetLlmConnector();
 
         TokenUsages.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
@@ -95,16 +98,20 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         var completePrompt = 
             $"{Persona.Description}\n{Purpose.Description}\n{Process.Description}\n{prompt}";
 
+        var llmRequest = new LlmRequest() { Prompt = completePrompt };
+
         var response =
-            await _connection.CallOpenAiApiAsync(completePrompt,
-            IncludePriorMessages ? Messages.ToList() : null);
+            await _connection.AskAsync(llmRequest);
+        //var response =
+        //    await _connection.AskAsync(llmRequest,
+        //    IncludePriorMessages ? Messages.ToList() : null);
 
         // Remove "Thinking..." message
         Messages.Remove(Messages.Last());
 
-        AddMessage(Enums.Role.Assistant, response.Choices[0].Message?.Content);
+        AddMessage(Enums.Role.Assistant, response.Text);
 
-        TokenUsages.Add(response.Usage);
+        //TokenUsages.Add(response.Usage);
     }
 
     private void AddMessage(Enums.Role role, string content)
