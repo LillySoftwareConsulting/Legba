@@ -153,9 +153,21 @@
 
             <!-- Persona -->
             <Label Grid.Row="0" Grid.Column="0"
-                   Grid.ColumnSpan="2"
                    FontWeight="Bold"
                    Content="Persona"/>
+            <Button Grid.Row="0" Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontWeight="Bold"
+                    Height="20"
+                    Width="20">
+                <Image Source="Icons/MagnifyingGlass.png" />
+                <ToolTipService.InitialShowDelay>200</ToolTipService.InitialShowDelay>
+                <Button.ToolTip>
+                    <ToolTip>Select or manage personas</ToolTip>
+                </Button.ToolTip>
+            </Button>
             <TextBox Grid.Row="1" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
@@ -166,9 +178,21 @@
 
             <!-- Purpose -->
             <Label Grid.Row="2" Grid.Column="0"
-                   Grid.ColumnSpan="2"
                    FontWeight="Bold"
                    Content="Purpose"/>
+            <Button Grid.Row="2" Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontWeight="Bold"
+                    Height="20"
+                    Width="20">
+                <Image Source="Icons/MagnifyingGlass.png" />
+                <ToolTipService.InitialShowDelay>200</ToolTipService.InitialShowDelay>
+                <Button.ToolTip>
+                    <ToolTip>Select or manage purposes</ToolTip>
+                </Button.ToolTip>
+            </Button>
             <TextBox Grid.Row="3" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
@@ -179,9 +203,21 @@
 
             <!-- Process -->
             <Label Grid.Row="4" Grid.Column="0"
-                   Grid.ColumnSpan="2"
                    FontWeight="Bold"
                    Content="Process"/>
+            <Button Grid.Row="4" Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontWeight="Bold"
+                    Height="20"
+                    Width="20">
+                <Image Source="Icons/MagnifyingGlass.png" />
+                <ToolTipService.InitialShowDelay>200</ToolTipService.InitialShowDelay>
+                <Button.ToolTip>
+                    <ToolTip>Select or manage processes</ToolTip>
+                </Button.ToolTip>
+            </Button>
             <TextBox Grid.Row="5" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
@@ -192,7 +228,6 @@
 
             <!-- Prompt -->
             <Label Grid.Row="6" Grid.Column="0"
-                   Grid.ColumnSpan="2"
                    FontWeight="Bold"
                    Content="Prompt"/>
             <TextBox Grid.Row="7" Grid.Column="0"

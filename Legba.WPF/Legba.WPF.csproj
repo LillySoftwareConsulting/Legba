@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icons\MagnifyingGlass.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="LegbaIcon.ico" />
   </ItemGroup>
 
@@ -27,6 +31,12 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\MagnifyingGlass.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
