@@ -1,5 +1,4 @@
-﻿using Legba.Engine;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Legba.Engine.LlmConnectors.OpenAi;
 

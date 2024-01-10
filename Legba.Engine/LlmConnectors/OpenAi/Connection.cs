@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
-using Legba.Engine;
 using Legba.Engine.Models;
 
 namespace Legba.Engine.LlmConnectors.OpenAi;
@@ -26,9 +25,6 @@ public class Connection
 
     public Connection(Settings settings, IHttpClientFactory httpClientFactory)
     {
-        ArgumentNullException.ThrowIfNull(settings, nameof(settings));
-        ArgumentNullException.ThrowIfNull(httpClientFactory, nameof(httpClientFactory));
-
         _uri = new Uri("https://api.openai.com/v1/chat/completions");
         _httpClientFactory = httpClientFactory;
         _openAiApiKey = settings.keys.apiKey;

@@ -15,26 +15,25 @@ public partial class App : Application
     {
         IServiceCollection services = new ServiceCollection();
 
-        // Add Settings from User Secrets or appsettings.json
-        var builder = 
-            new ConfigurationBuilder()
-                .AddUserSecrets<App>();
+        // Add Settings from User Secrets
+        var builder = new ConfigurationBuilder()
+            .AddUserSecrets<App>();
 
         var config = builder.Build();
         var settings = config.Get<Settings>() ?? new Settings();
+
+        // Register the Settings object for injection
         services.AddSingleton(settings);
 
-        // Register your view model for injection
+        // Register view and viewmodel objects for injection
         services.AddTransient<ChatViewModel>();
-
-        // Register your view for injection
         services.AddTransient<MainWindow>();
 
-        // Register the HttpClientFactory, required by OpenAiConnector
-        services.AddHttpClient();
-
-        // Register the connection
+        // Register 'service' objects for injection
         services.AddSingleton<Connection>();
+
+        // Register the HttpClientFactory, for calls to external LLMs
+        services.AddHttpClient();
 
         _serviceProvider = services.BuildServiceProvider();
     }
