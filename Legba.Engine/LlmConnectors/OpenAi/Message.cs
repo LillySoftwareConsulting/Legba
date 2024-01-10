@@ -1,6 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using Legba.Engine;
+using System.Text.Json.Serialization;
 
-namespace LlmConnectors.OpenAi.Models;
+namespace Legba.Engine.LlmConnectors.OpenAi;
 
 public class Message
 {

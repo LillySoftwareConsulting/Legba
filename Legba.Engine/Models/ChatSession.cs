@@ -1,6 +1,4 @@
-﻿using LlmConnectors;
-using LlmConnectors.OpenAi.Models;
-using LlmConnectors.OpenAi.Services;
+﻿using Legba.Engine.LlmConnectors.OpenAi;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;

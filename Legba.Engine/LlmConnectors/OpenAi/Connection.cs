@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
-using KeyReader;
-using LlmConnectors.OpenAi.Models;
+using Legba.Engine;
+using Legba.Engine.Models;
 
-namespace LlmConnectors.OpenAi.Services;
+namespace Legba.Engine.LlmConnectors.OpenAi;
 
 public class Connection
 {
@@ -24,17 +24,15 @@ public class Connection
             }
         };
 
-    public Connection(IHttpClientFactory httpClientFactory,
-        IApiKeyReader openAiKeyReader,
-        IOrganizationIdReader? organizationIdReader = null)
+    public Connection(Settings settings, IHttpClientFactory httpClientFactory)
     {
+        ArgumentNullException.ThrowIfNull(settings, nameof(settings));
         ArgumentNullException.ThrowIfNull(httpClientFactory, nameof(httpClientFactory));
-        ArgumentNullException.ThrowIfNull(openAiKeyReader, nameof(openAiKeyReader));
 
         _uri = new Uri("https://api.openai.com/v1/chat/completions");
         _httpClientFactory = httpClientFactory;
-        _openAiApiKey = openAiKeyReader.GetKey();
-        _openAiOrganizationId = organizationIdReader?.GetKey();
+        _openAiApiKey = settings.keys.apiKey;
+        _openAiOrganizationId = settings.keys.orgId;
     }
 
     public async Task<Response> CallOpenAiApiAsync(string prompt,

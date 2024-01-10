@@ -1,4 +1,4 @@
-﻿namespace LlmConnectors;
+﻿namespace Legba.Engine;
 
 public static class ExtensionMethods
 {

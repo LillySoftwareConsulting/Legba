@@ -1,6 +1,6 @@
-﻿using KeyReader;
+﻿using Legba.Engine.LlmConnectors.OpenAi;
+using Legba.Engine.Models;
 using Legba.Engine.ViewModels;
-using LlmConnectors.OpenAi.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
@@ -15,22 +15,20 @@ public partial class App : Application
     {
         IServiceCollection services = new ServiceCollection();
 
+        // Add Settings from User Secrets or appsettings.json
+        var builder = 
+            new ConfigurationBuilder()
+                .AddUserSecrets<App>();
+
+        var config = builder.Build();
+        var settings = config.Get<Settings>() ?? new Settings();
+        services.AddSingleton(settings);
+
         // Register your view model for injection
         services.AddTransient<ChatViewModel>();
 
         // Register your view for injection
         services.AddTransient<MainWindow>();
-
-        // Register appropriate key reader(s) for injection
-        // The reader types for the API key and organization ID can be different types.
-        // For example, get the API key from an environment variable and
-        // get the organization ID from a JSON file.
-        //
-        // Only using separate functions in this demonstation code,
-        // to make this simpler to read.
-        //AddEnvironmentVariableKeyReader(services);
-        //AddJsonFileKeyReader(services);
-        AddUserSecretsKeyReader(services);
 
         // Register the HttpClientFactory, required by OpenAiConnector
         services.AddHttpClient();
@@ -40,33 +38,6 @@ public partial class App : Application
 
         _serviceProvider = services.BuildServiceProvider();
     }
-
-    #region KeyReader setup samples
-
-    // EnvironmentVariableKeyReader sample
-    private static void AddEnvironmentVariableKeyReader(IServiceCollection services)
-    {
-        services.AddSingleton<IApiKeyReader, EnvironmentVariableKeyReader>();
-    }
-
-    // JsonFileKeyReader sample
-    private static void AddJsonFileKeyReader(IServiceCollection services)
-    {
-        services.AddSingleton<IApiKeyReader>(provider =>
-            new JsonFileKeyReader("appsettings.json", "keys:openAi_ApiKey"));
-    }
-
-    // UserSecretKeyReader sample
-    private static void AddUserSecretsKeyReader(IServiceCollection services)
-    {
-        var builder = new ConfigurationBuilder().AddUserSecrets<App>();
-        var config = builder.Build();
-
-        services.AddSingleton<IApiKeyReader>(provider =>
-            new UserSecretsKeyReader(config, "keys:openAi_ApiKey"));
-    }
-
-    #endregion
 
     protected override void OnStartup(StartupEventArgs e)
     {

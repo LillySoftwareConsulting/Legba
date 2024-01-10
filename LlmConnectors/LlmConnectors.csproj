@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KeyReader\KeyReader.csproj" />
+    <Folder Include="OpenAi\Models\" />
+    <Folder Include="OpenAi\Services\" />
   </ItemGroup>
 
 </Project>
