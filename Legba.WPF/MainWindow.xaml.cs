@@ -1,4 +1,4 @@
-﻿using OpenAiConnector.Models;
+﻿using LlmConnectors.OpenAi.Models;
 using System.Windows;
 
 namespace Legba.WPF;

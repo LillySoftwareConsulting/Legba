@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
-using OpenAiConnector.Models;
 using KeyReader;
+using LlmConnectors.OpenAi.Models;
 
-namespace OpenAiConnector.Services;
+namespace LlmConnectors.OpenAi.Services;
 
 public class Connection
 {
@@ -37,7 +37,7 @@ public class Connection
         _openAiOrganizationId = organizationIdReader?.GetKey();
     }
 
-    public async Task<Response> CallOpenAiApiAsync(string prompt, 
+    public async Task<Response> CallOpenAiApiAsync(string prompt,
         List<Message>? priorMessages = null)
     {
         try
@@ -81,7 +81,7 @@ public class Connection
     {
         Request request = new();
 
-        if(priorMessages is not null)
+        if (priorMessages is not null)
         {
             request.Messages.AddRange(priorMessages);
         }

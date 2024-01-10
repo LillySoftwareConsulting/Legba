@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Legba.Engine\Legba.Engine.csproj" />
-    <ProjectReference Include="..\OpenAiConnector\OpenAiConnector.csproj" />
   </ItemGroup>
 
   <ItemGroup>

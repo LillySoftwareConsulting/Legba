@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace OpenAiConnector.Models;
+namespace LlmConnectors.OpenAi.Models;
 
 public class Message
 {

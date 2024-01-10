@@ -1,6 +1,6 @@
-﻿using OpenAiConnector;
-using OpenAiConnector.Models;
-using OpenAiConnector.Services;
+﻿using LlmConnectors;
+using LlmConnectors.OpenAi.Models;
+using LlmConnectors.OpenAi.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;

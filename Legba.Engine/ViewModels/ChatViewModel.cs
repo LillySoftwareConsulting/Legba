@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
 using Legba.Engine.Models;
-using OpenAiConnector.Services;
+using LlmConnectors.OpenAi.Services;
 
 namespace Legba.Engine.ViewModels;
 

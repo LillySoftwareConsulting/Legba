@@ -1,4 +1,4 @@
-﻿namespace OpenAiConnector;
+﻿namespace LlmConnectors;
 
 public class Enums
 {
