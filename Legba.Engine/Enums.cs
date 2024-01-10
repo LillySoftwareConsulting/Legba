@@ -4,7 +4,7 @@ namespace Legba.Engine;
 
 public class Enums
 {
-    public enum LlmConnectorType
+    public enum Llm
     {
         Unspecified,
         [Description("OpenAI")]
