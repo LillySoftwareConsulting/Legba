@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Legba.Engine.Models;
+using Legba.Engine.Services;
 
 namespace Legba.Engine.LlmConnectors.OpenAi;
 
@@ -35,13 +36,13 @@ public class OpenAiConnector : ILlmConnector
         _openAiOrganizationId = settings.keys.orgId;
     }
 
-    public async Task<LlmResponse> AskAsync(LlmRequest request)
+    public async Task<LegbaResponse> AskAsync(LegbaRequest request)
     {
         try
         {
             HttpClient httpClient = GetHttpClient();
 
-            Request openAiRequest = BuildRequest(request.Prompt);
+            Request openAiRequest = Mapper.Map<LegbaRequest, Request>(request);
 
             var response =
                 await httpClient
@@ -55,7 +56,7 @@ public class OpenAiConnector : ILlmConnector
                     .Content.ReadFromJsonAsync<Response>(_jsonSerializerOptions)
                     ?? throw new Exception("Error parsing the OpenAI API response");
 
-            return new LlmResponse() { Text = openAiResponse.Choices[0].Message?.Content };
+            return new LegbaResponse() { Text = openAiResponse.Choices[0].Message?.Content };
         }
         catch (Exception ex)
         {

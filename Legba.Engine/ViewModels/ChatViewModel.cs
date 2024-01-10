@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
-using Legba.Engine.LlmConnectors;
-using Legba.Engine.LlmConnectors.OpenAi;
 using Legba.Engine.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,10 +7,10 @@ namespace Legba.Engine.ViewModels;
 
 public class ChatViewModel : INotifyPropertyChanged
 {
-    private readonly IServiceProvider _serviceProvider;
-    #region Properties, Commands, and Events
+    #region Properties, Fields, Commands, and Events
 
-    private readonly ILlmConnector _connection;
+    private readonly IServiceProvider _serviceProvider;
+
     private ChatSession _chatSession;
 
     public ChatSession ChatSession
@@ -35,16 +33,13 @@ public class ChatViewModel : INotifyPropertyChanged
 
     #endregion
 
-    public ChatViewModel(IServiceProvider serviceProvider,
-        LlmConnectorFactory factory, OpenAiConnector connection)
+    public ChatViewModel(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        _connection = connection;
-
-        _connection = factory.GetLlmConnector();
 
         StartNewSession();
 
+        // These only need to be created once for the ViewModel, not for each ChatSession.
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
         StartNewSessionCommand = new RelayCommand(StartNewSession);
     }

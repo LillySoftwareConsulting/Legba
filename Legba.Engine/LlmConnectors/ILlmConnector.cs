@@ -4,5 +4,5 @@ namespace Legba.Engine.LlmConnectors;
 
 public interface ILlmConnector
 {
-    Task<LlmResponse> AskAsync(LlmRequest request);
+    Task<LegbaResponse> AskAsync(LegbaRequest request);
 }

@@ -1,14 +1,14 @@
-﻿using Legba.Engine.LlmConnectors;
-using Legba.Engine.LlmConnectors.OpenAi;
+﻿using Legba.Engine.LlmConnectors.OpenAi;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Text;
 
 namespace Legba.Engine.Models;
 
 public class ChatSession : INotifyPropertyChanged, IDisposable
 {
-    #region Properties, Commands, and Events
+    #region Properties, Fields, Commands, and Events
 
     private readonly OpenAiConnector _connection;
 
@@ -63,22 +63,23 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         }
     }
 
-    public ObservableCollection<Message> Messages { get; set; } = new();
-    public ObservableCollection<Usage> TokenUsages { get; set; } = new();
+    public ObservableCollection<Message> Messages { get; set; } = [];
+    public ObservableCollection<Usage> TokenUsages { get; set; } = [];
 
-    public int GrandTotalPromptTokens { get { return TokenUsages.Sum(u => u.PromptTokens); } }
-    public int GrandTotalCompletionTokens { get { return TokenUsages.Sum(u => u.CompletionTokens); } }
-    public int GrandTotalTokens { get { return TokenUsages.Sum(u => u.TotalTokens); } }
+    public int GrandTotalPromptTokens 
+        => TokenUsages.Sum(u => u.PromptTokens);
+    public int GrandTotalCompletionTokens 
+        => TokenUsages.Sum(u => u.CompletionTokens);
+    public int GrandTotalTokens 
+        => TokenUsages.Sum(u => u.TotalTokens);
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #endregion
 
-    public ChatSession(Settings settings, LlmConnectorFactory llmConnectorFactory,
-        OpenAiConnector connector)
+    public ChatSession(OpenAiConnector connector)
     {
         _connection = connector;
-        var llmConnector = llmConnectorFactory.GetLlmConnector();
 
         TokenUsages.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
@@ -86,25 +87,19 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     public async Task Ask()
     {
         // Store prompt in a variable so we can clear it before the response is received.
-        // This prevents the user from spamming the ask button.
-        var prompt = Prompt;
+        // This prevents the user from spamming the ask button,
+        // due to the button not being enabled when Prompt is empty.
+        var completePrompt = BuildPrompt();
         Prompt = string.Empty;
 
         // TODO: Record selected Persona, Purpose, and Process with prompt, for history.
-        AddMessage(Enums.Role.User, prompt);
+        AddMessage(Enums.Role.User, completePrompt);
+
+        var llmRequest = BuildLlmRequest();
 
         AddMessage(Enums.Role.Assistant, "Thinking...");
 
-        var completePrompt = 
-            $"{Persona.Description}\n{Purpose.Description}\n{Process.Description}\n{prompt}";
-
-        var llmRequest = new LlmRequest() { Prompt = completePrompt };
-
-        var response =
-            await _connection.AskAsync(llmRequest);
-        //var response =
-        //    await _connection.AskAsync(llmRequest,
-        //    IncludePriorMessages ? Messages.ToList() : null);
+        var response = await _connection.AskAsync(llmRequest);
 
         // Remove "Thinking..." message
         Messages.Remove(Messages.Last());
@@ -114,15 +109,7 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         //TokenUsages.Add(response.Usage);
     }
 
-    private void AddMessage(Enums.Role role, string content)
-    {
-        Messages.Add(new Message { Role = role, Content = content });
-    }
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    #region Private supporting methods
 
     private void OnTokenUsagesCollectionChanged(object? sender,
         NotifyCollectionChangedEventArgs e)
@@ -131,6 +118,49 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(GrandTotalCompletionTokens));
         OnPropertyChanged(nameof(GrandTotalTokens));
     }
+
+    private void AddMessage(Enums.Role role, string content)
+    {
+        Messages.Add(new Message { Role = role, Content = content });
+    }
+
+    private LegbaRequest BuildLlmRequest()
+    {
+        return new LegbaRequest
+        {
+            Messages = IncludePriorMessages ? Messages.ToList() : [],
+            Temperature = 0.5f
+        };
+    }
+
+    private string BuildPrompt()
+    {
+        var sb = new StringBuilder();
+
+        if(Persona.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Persona.Description);
+        }
+        if(Purpose.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Purpose.Description);
+        }
+        if (Process.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Process.Description);
+        }
+
+        sb.Append(Prompt);
+
+        return sb.ToString();
+    }
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
 
     #region Implementation of IDisposable
 

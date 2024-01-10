@@ -16,9 +16,15 @@ public partial class App : Application
     {
         IServiceCollection services = new ServiceCollection();
 
-        // Add Settings from User Secrets
+        // Load settings from User Secrets
         var builder = new ConfigurationBuilder()
             .AddUserSecrets<App>();
+
+        // Uncomment to use local settings file
+        // Load settings from appsettings.json
+        //var builder = 
+        //    new ConfigurationBuilder()
+        //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
         var config = builder.Build();
         var settings = config.Get<Settings>() ?? new Settings();
@@ -37,7 +43,7 @@ public partial class App : Application
         // Register transient classes for injection
         services.AddTransient<ChatSession>();
 
-        // Register the HttpClientFactory, for calls to external LLMs
+        // Registers IHttpClientFactory
         services.AddHttpClient();
 
         _serviceProvider = services.BuildServiceProvider();
