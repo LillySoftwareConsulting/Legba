@@ -36,13 +36,13 @@ public class OpenAiConnector : ILlmConnector
         _openAiOrganizationId = settings.keys.orgId;
     }
 
-    public async Task<LegbaResponse> AskAsync(LegbaRequest request)
+    public async Task<LegbaResponse> AskAsync(LegbaRequest legbaRequest)
     {
         try
         {
-            HttpClient httpClient = GetHttpClient();
+            OpenAiRequest openAiRequest = Mapper.Map(legbaRequest);
 
-            Request openAiRequest = Mapper.Map<LegbaRequest, Request>(request);
+            HttpClient httpClient = GetHttpClient();
 
             var response =
                 await httpClient
@@ -51,9 +51,9 @@ public class OpenAiConnector : ILlmConnector
 
             response.EnsureSuccessStatusCode();
 
-            Response openAiResponse = 
+            OpenAiResponse openAiResponse = 
                 await response
-                    .Content.ReadFromJsonAsync<Response>(_jsonSerializerOptions)
+                    .Content.ReadFromJsonAsync<OpenAiResponse>(_jsonSerializerOptions)
                     ?? throw new Exception("Error parsing the OpenAI API response");
 
             return new LegbaResponse() { Text = openAiResponse.Choices[0].Message?.Content };
@@ -106,9 +106,9 @@ public class OpenAiConnector : ILlmConnector
         return httpClient;
     }
 
-    private static Request BuildRequest(string prompt, List<Message>? priorMessages = null)
+    private static OpenAiRequest BuildRequest(string prompt, List<Message>? priorMessages = null)
     {
-        Request request = new();
+        OpenAiRequest request = new();
 
         if (priorMessages is not null)
         {

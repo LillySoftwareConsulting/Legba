@@ -2,7 +2,7 @@
 
 namespace Legba.Engine.LlmConnectors.OpenAi;
 
-public class Response
+public class OpenAiResponse
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }
