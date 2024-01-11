@@ -12,6 +12,8 @@ public class ChatViewModel : INotifyPropertyChanged
 
     private readonly IServiceProvider _serviceProvider;
 
+    public ObservableCollection<Settings.Llm> Llms { get; } = new();
+
     private ChatSession _chatSession;
 
     public ChatSession ChatSession
@@ -23,21 +25,19 @@ public class ChatViewModel : INotifyPropertyChanged
             {
                 _chatSession = value;
                 OnPropertyChanged(nameof(ChatSession));
+                OnPropertyChanged(nameof(HasChatSession));
             }
         }
     }
 
-    public ICommand StartNewSessionCommand { get; }
-    public ICommand AskCommand { get; }
+    public bool HasChatSession => ChatSession != null;
+
+    public ICommand SelectModelCommand { get; private set; }
+    public ICommand AskCommand { get; private set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #endregion
-
-    private Settings.Llm? _llm;
-    private Settings.Model? _model;
-    public ObservableCollection<Settings.Llm> Llms { get; } = new();
-    public ICommand SelectModelCommand { get; private set; }
 
     public ChatViewModel(IServiceProvider serviceProvider)
     {
@@ -49,29 +49,17 @@ public class ChatViewModel : INotifyPropertyChanged
             Llms.Add(llm);
         }
 
-        // TODO: Handle from user input
-        _llm = settings.Llms.FirstOrDefault();
-        _model = _llm?.Models.First(m => m.Name.Equals("GPT-4 (preview)"));
-
-        StartNewSession();
-
-        // These only need to be created once for the ViewModel, not for each ChatSession.
-        AskCommand = new RelayCommand(async () => await ChatSession.Ask());
-        StartNewSessionCommand = new RelayCommand(StartNewSession);
         SelectModelCommand = new GenericRelayCommand<Settings.Model>(SelectModel);
+        AskCommand = new RelayCommand(async () => await ChatSession.Ask());
     }
 
     private void SelectModel(Settings.Model model)
     {
-        ;
-        var llm = Llms.FirstOrDefault(l => l.Models.Contains(model));
-    }
+        var llm = Llms.First(l => l.Models.Contains(model));
 
-    private void StartNewSession()
-    {
         ChatSession?.Dispose();
 
-        ChatSession = new ChatSession(_serviceProvider, _llm!, _model!);
+        ChatSession = new ChatSession(_serviceProvider, llm, model);
     }
 
     protected virtual void OnPropertyChanged(string propertyName)
