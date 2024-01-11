@@ -58,7 +58,18 @@
               Grid.ColumnSpan="2">
             <MenuItem Header="File">
                 <MenuItem Header="New Session" 
-                          Command="{Binding StartNewSessionCommand}"/>
+                          Command="{Binding StartNewSessionCommand}">
+                    <MenuItem.ItemsSource>
+                        <Binding Path="Llms"/>
+                    </MenuItem.ItemsSource>
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <MenuItem Header="{Binding Name}" 
+                                      Command="{Binding DataContext.SelectLlmCommand, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}"
+                                      CommandParameter="{Binding}"/>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Exit"
                           Click="Exit_Click"/>

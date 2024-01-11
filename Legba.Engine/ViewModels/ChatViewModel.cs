@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 using Legba.Engine.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,12 +36,19 @@ public class ChatViewModel : INotifyPropertyChanged
 
     private Settings.Llm? _llm;
     private Settings.Model? _model;
+    public ObservableCollection<Settings.Llm> Llms { get; } = new();
+    public ICommand SelectLlmCommand { get; private set; }
 
     public ChatViewModel(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
 
         var settings = _serviceProvider.GetRequiredService<Settings>();
+        foreach (var llm in settings.Llms)
+        {
+            Llms.Add(llm);
+        }
+
         // TODO: Handle from user input
         _llm = settings.Llms.FirstOrDefault();
         _model = _llm?.Models.First(m => m.Name.Equals("GPT-4 (preview)"));
@@ -50,6 +58,14 @@ public class ChatViewModel : INotifyPropertyChanged
         // These only need to be created once for the ViewModel, not for each ChatSession.
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
         StartNewSessionCommand = new RelayCommand(StartNewSession);
+        SelectLlmCommand = new GenericRelayCommand<Settings.Llm>(SelectLlm);
+    }
+
+    private void SelectLlm(Settings.Llm llm)
+    {
+        ;
+        // Implementation when a dynamic MenuItem is selected
+        // Use selectedLlm.Name or other properties as needed
     }
 
     private void StartNewSession()
