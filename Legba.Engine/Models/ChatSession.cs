@@ -88,7 +88,7 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     {
         // Store prompt in a variable so we can clear it before the response is received.
         // This prevents the user from spamming the ask button,
-        // due to the button not being enabled when Prompt is empty.
+        // due to the button not being enabled when the Prompt property is empty.
         var completePrompt = BuildPrompt();
         Prompt = string.Empty;
 

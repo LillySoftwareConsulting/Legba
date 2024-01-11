@@ -40,55 +40,36 @@ public class OpenAiConnector : ILlmConnector
     {
         try
         {
-            OpenAiRequest openAiRequest = Mapper.Map(legbaRequest);
+            // Convert the LegbaRequest to an OpenAiRequest
+            var openAiRequest = legbaRequest.MapTo<OpenAiRequest>();
 
-            HttpClient httpClient = GetHttpClient();
+            // Send the request to OpenAI
+            var httpClient = GetHttpClient();
 
             var response =
                 await httpClient
                 .PostAsJsonAsync(_uri, openAiRequest, _jsonSerializerOptions)
                 .ConfigureAwait(false);
 
+            // Ensure the response is successful
             response.EnsureSuccessStatusCode();
 
-            OpenAiResponse openAiResponse = 
+            // Parse the successful response
+            var openAiResponse = 
                 await response
                     .Content.ReadFromJsonAsync<OpenAiResponse>(_jsonSerializerOptions)
                     ?? throw new Exception("Error parsing the OpenAI API response");
 
-            return new LegbaResponse() { Text = openAiResponse.Choices[0].Message?.Content };
+            // Map the OpenAiResponse to a LegbaResponse
+            var legbaResponse = openAiResponse.MapTo<LegbaResponse>();
+
+            return legbaResponse;
         }
         catch (Exception ex)
         {
             throw new Exception("Unable to parse response", ex);
         }
     }
-
-    //public async Task<Response> CallOpenAiApiAsync(string prompt,
-    //    List<Message>? priorMessages = null)
-    //{
-    //    try
-    //    {
-    //        HttpClient httpClient = GetHttpClient();
-
-    //        Request request = BuildRequest(prompt, priorMessages);
-
-    //        var response =
-    //            await httpClient
-    //            .PostAsJsonAsync(_uri, request, _jsonSerializerOptions)
-    //            .ConfigureAwait(false);
-
-    //        response.EnsureSuccessStatusCode();
-
-    //        return await response
-    //            .Content.ReadFromJsonAsync<Response>(_jsonSerializerOptions)
-    //            ?? throw new Exception("Error parsing the OpenAI API response");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new Exception("Unable to parse response", ex);
-    //    }
-    //}
 
     #region Private methods
 
@@ -104,20 +85,6 @@ public class OpenAiConnector : ILlmConnector
         }
 
         return httpClient;
-    }
-
-    private static OpenAiRequest BuildRequest(string prompt, List<Message>? priorMessages = null)
-    {
-        OpenAiRequest request = new();
-
-        if (priorMessages is not null)
-        {
-            request.Messages.AddRange(priorMessages);
-        }
-
-        request.Messages.Add(new Message { Role = Enums.Role.User, Content = prompt });
-
-        return request;
     }
 
     #endregion

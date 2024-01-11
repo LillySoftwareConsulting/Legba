@@ -5,9 +5,9 @@ namespace Legba.Engine.Services;
 
 public static class Mapper
 {
-    public static OpenAiRequest Map(LegbaRequest source)
+    public static T MapTo<T>(this LegbaRequest source) where T : OpenAiRequest, new()
     {
-        return new OpenAiRequest()
+        return new T()
         {
             Model = string.IsNullOrWhiteSpace(source.Model) ? "gpt-3.5-turbo" : source.Model,
             Messages = source.Messages,
@@ -15,11 +15,11 @@ public static class Mapper
         };
     }
 
-    public static LegbaResponse Map(OpenAiResponse source)
+    public static T MapTo<T>(this OpenAiResponse source) where T : LegbaResponse, new()
     {
-        return new LegbaResponse()
+        return new T()
         {
-            Text = source.Choices[0].Message?.Content
+            Text = source.Choices[0].Message?.Content ?? string.Empty
         };
     }
 }
