@@ -1,9 +1,9 @@
-﻿using KeyReader;
+﻿using Legba.Engine.LlmConnectors;
+using Legba.Engine.LlmConnectors.OpenAi;
 using Legba.Engine.Models;
 using Legba.Engine.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenAiConnector.Services;
 using System.Windows;
 
 namespace Legba.WPF;
@@ -16,58 +16,38 @@ public partial class App : Application
     {
         IServiceCollection services = new ServiceCollection();
 
-        // Register your view model for injection
-        services.AddTransient<ChatViewModel>();
+        // Load settings from user secrets
+#if DEBUG
+        var builder = new ConfigurationBuilder()
+            .AddUserSecrets<App>();
+#else
+        // Load settings from appsettings.json
+        var builder = 
+            new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+#endif
+        var config = builder.Build();
+        var settings = config.Get<Settings>() ?? new Settings();
 
-        // Register your view for injection
+        // Register the Settings object for injection
+        services.AddSingleton(settings);
+
+        // Register view and viewmodel objects for injection
+        services.AddTransient<ChatViewModel>();
         services.AddTransient<MainWindow>();
 
-        // Register appropriate key reader(s) for injection
-        // The reader types for the API key and organization ID can be different types.
-        // For example, get the API key from an environment variable and
-        // get the organization ID from a JSON file.
-        //
-        // Only using separate functions in this demonstation code,
-        // to make this simpler to read.
-        //AddEnvironmentVariableKeyReader(services);
-        //AddJsonFileKeyReader(services);
-        AddUserSecretsKeyReader(services);
+        // Register 'service' objects for injection
+        services.AddSingleton<OpenAiConnector>();
+        services.AddSingleton<LlmConnectorFactory>();
 
-        // Register the HttpClientFactory, required by OpenAiConnector
+        // Register transient classes for injection
+        services.AddTransient<ChatSession>();
+
+        // Registers IHttpClientFactory
         services.AddHttpClient();
-
-        // Register the connection
-        services.AddSingleton<Connection>();
 
         _serviceProvider = services.BuildServiceProvider();
     }
-
-    #region KeyReader setup samples
-
-    // EnvironmentVariableKeyReader sample
-    private static void AddEnvironmentVariableKeyReader(IServiceCollection services)
-    {
-        services.AddSingleton<IApiKeyReader, EnvironmentVariableKeyReader>();
-    }
-
-    // JsonFileKeyReader sample
-    private static void AddJsonFileKeyReader(IServiceCollection services)
-    {
-        services.AddSingleton<IApiKeyReader>(provider =>
-            new JsonFileKeyReader("appsettings.json", "keys:openAi_ApiKey"));
-    }
-
-    // UserSecretKeyReader sample
-    private static void AddUserSecretsKeyReader(IServiceCollection services)
-    {
-        var builder = new ConfigurationBuilder().AddUserSecrets<App>();
-        var config = builder.Build();
-
-        services.AddSingleton<IApiKeyReader>(provider =>
-            new UserSecretsKeyReader(config, "keys:openAi_ApiKey"));
-    }
-
-    #endregion
 
     protected override void OnStartup(StartupEventArgs e)
     {

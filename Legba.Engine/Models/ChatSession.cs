@@ -1,23 +1,23 @@
-﻿using OpenAiConnector;
-using OpenAiConnector.Models;
-using OpenAiConnector.Services;
+﻿using Legba.Engine.LlmConnectors.OpenAi;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Text;
 
 namespace Legba.Engine.Models;
 
 public class ChatSession : INotifyPropertyChanged, IDisposable
 {
-    #region Properties, Commands, and Events
+    #region Properties, Fields, Commands, and Events
 
-    private readonly Connection _connection;
+    private readonly OpenAiConnector _connection;
 
     private Persona _persona = new();
     private Purpose _purpose = new();
     private Process _process = new();
     private string _prompt = string.Empty;
     private bool _disposed = false; // To detect redundant calls
+    private Persuasion _persuasion = new();
 
     public bool IncludePriorMessages { get; set; } = true;
 
@@ -38,6 +38,16 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         { 
             _purpose = value; 
             OnPropertyChanged(nameof(Purpose));
+        }
+    }
+
+    public Persuasion Persuasion
+    {
+        get => _persuasion;
+        set
+        {
+            _persuasion = value;
+            OnPropertyChanged(nameof(Persuasion));
         }
     }
 
@@ -64,49 +74,64 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         }
     }
 
-    public ObservableCollection<Message> Messages { get; set; } = new();
-    public ObservableCollection<Usage> TokenUsages { get; set; } = new();
+    public ObservableCollection<Message> Messages { get; set; } = [];
+    public ObservableCollection<TokenSummary> TokenSummaries { get; set; } = [];
 
-    public int GrandTotalPromptTokens { get { return TokenUsages.Sum(u => u.PromptTokens); } }
-    public int GrandTotalCompletionTokens { get { return TokenUsages.Sum(u => u.CompletionTokens); } }
-    public int GrandTotalTokens { get { return TokenUsages.Sum(u => u.TotalTokens); } }
+    public int GrandTotalRequestTokenCount => 
+        TokenSummaries.Sum(u => u.RequestTokenCount);
+    public int GrandTotalResponseTokenCount => 
+        TokenSummaries.Sum(u => u.ResponseTokenCount);
+    public int GrandTotalTokenCount => 
+        TokenSummaries.Sum(u => u.TotalTokenCount);
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #endregion
 
-    public ChatSession(Connection connection)
+    public ChatSession(OpenAiConnector connector)
     {
-        _connection = connection;
+        _connection = connector;
 
-        TokenUsages.CollectionChanged += OnTokenUsagesCollectionChanged;
+        TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
 
     public async Task Ask()
     {
         // Store prompt in a variable so we can clear it before the response is received.
-        // This prevents the user from spamming the ask button.
-        var prompt = Prompt;
+        // This prevents the user from spamming the ask button,
+        // due to the button not being enabled when the Prompt property is empty.
+        var completePrompt = BuildPrompt();
         Prompt = string.Empty;
 
         // TODO: Record selected Persona, Purpose, and Process with prompt, for history.
-        AddMessage(Enums.Role.User, prompt);
+        AddMessage(Enums.Role.User, completePrompt);
+
+        var llmRequest = BuildLlmRequest();
 
         AddMessage(Enums.Role.Assistant, "Thinking...");
 
-        var completePrompt = 
-            $"{Persona.Description}\n{Purpose.Description}\n{Process.Description}\n{prompt}";
-
-        var response =
-            await _connection.CallOpenAiApiAsync(completePrompt,
-            IncludePriorMessages ? Messages.ToList() : null);
+        var response = await _connection.AskAsync(llmRequest);
 
         // Remove "Thinking..." message
         Messages.Remove(Messages.Last());
 
-        AddMessage(Enums.Role.Assistant, response.Choices[0].Message?.Content);
+        AddMessage(Enums.Role.Assistant, response.Text);
 
-        TokenUsages.Add(response.Usage);
+        TokenSummaries.Add(new TokenSummary
+        {
+            RequestTokenCount = response.RequestTokenCount,
+            ResponseTokenCount = response.ResponseTokenCount
+        });
+    }
+
+    #region Private supporting methods
+
+    private void OnTokenUsagesCollectionChanged(object? sender,
+        NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(GrandTotalRequestTokenCount));
+        OnPropertyChanged(nameof(GrandTotalResponseTokenCount));
+        OnPropertyChanged(nameof(GrandTotalTokenCount));
     }
 
     private void AddMessage(Enums.Role role, string content)
@@ -114,18 +139,50 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         Messages.Add(new Message { Role = role, Content = content });
     }
 
+    private LegbaRequest BuildLlmRequest()
+    {
+        return new LegbaRequest
+        {
+            Messages = IncludePriorMessages ? Messages.ToList() : [],
+            Temperature = 0.5f
+        };
+    }
+
+    private string BuildPrompt()
+    {
+        var sb = new StringBuilder();
+
+        if (Persona.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Persona.Description);
+        }
+
+        if (Persuasion.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Persuasion.Description);
+        }
+
+        if (Purpose.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Purpose.Description);
+        }
+        
+        if (Process.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Process.Description);
+        }
+
+        sb.Append(Prompt);
+
+        return sb.ToString();
+    }
+
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private void OnTokenUsagesCollectionChanged(object? sender,
-        NotifyCollectionChangedEventArgs e)
-    {
-        OnPropertyChanged(nameof(GrandTotalPromptTokens));
-        OnPropertyChanged(nameof(GrandTotalCompletionTokens));
-        OnPropertyChanged(nameof(GrandTotalTokens));
-    }
+    #endregion
 
     #region Implementation of IDisposable
 
@@ -145,9 +202,9 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         if (disposing)
         {
             Messages.Clear();
-            TokenUsages.Clear();
+            TokenSummaries.Clear();
 
-            TokenUsages.CollectionChanged -= OnTokenUsagesCollectionChanged;
+            TokenSummaries.CollectionChanged -= OnTokenUsagesCollectionChanged;
         }
 
         _disposed = true;

@@ -1,4 +1,4 @@
-﻿namespace OpenAiConnector;
+﻿namespace Legba.Engine;
 
 public static class ExtensionMethods
 {

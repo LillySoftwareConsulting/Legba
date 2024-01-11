@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace OpenAiConnector.Models;
+namespace Legba.Engine.LlmConnectors.OpenAi;
 
 public class Choice
 {

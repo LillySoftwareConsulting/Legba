@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace OpenAiConnector.Models;
+namespace Legba.Engine.LlmConnectors.OpenAi;
 
-public class Request
+public class OpenAiRequest
 {
     [JsonPropertyName("model")]
     public string Model { get; set; } = "gpt-3.5-turbo";
