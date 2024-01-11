@@ -39,8 +39,7 @@ public class OpenAiConnector : ILlmConnector
     {
         try
         {
-            // Convert the LegbaRequest to an OpenAiRequest
-            var openAiRequest = legbaRequest.MapTo<OpenAiRequest>();
+            var openAiRequest = MapToOpenAiRequest(legbaRequest);
 
             // Send the request to OpenAI
             var httpClient = GetHttpClient();
@@ -59,8 +58,7 @@ public class OpenAiConnector : ILlmConnector
                     .Content.ReadFromJsonAsync<OpenAiResponse>(_jsonSerializerOptions)
                     ?? throw new Exception("Error parsing the OpenAI API response");
 
-            // Map the OpenAiResponse to a LegbaResponse
-            var legbaResponse = openAiResponse.MapTo<LegbaResponse>();
+            var legbaResponse = MapToLegbaResponse(openAiResponse);
 
             return legbaResponse;
         }
@@ -84,6 +82,28 @@ public class OpenAiConnector : ILlmConnector
         }
 
         return httpClient;
+    }
+
+    private static OpenAiRequest MapToOpenAiRequest(LegbaRequest legbaRequest)
+    {
+        return new OpenAiRequest()
+        {
+            Model = string.IsNullOrWhiteSpace(legbaRequest.Model) 
+                ? "gpt-3.5-turbo" 
+                : legbaRequest.Model,
+            Messages = legbaRequest.Messages,
+            Temperature = legbaRequest.Temperature
+        };
+    }
+
+    private static LegbaResponse MapToLegbaResponse(OpenAiResponse openAiResponse)
+    {
+        return new LegbaResponse()
+        {
+            Text = openAiResponse.Choices[0].Message?.Content ?? string.Empty,
+            RequestTokenCount = openAiResponse.Usage.PromptTokens,
+            ResponseTokenCount = openAiResponse.Usage.CompletionTokens
+        };
     }
 
     #endregion

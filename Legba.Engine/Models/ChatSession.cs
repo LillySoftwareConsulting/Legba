@@ -17,6 +17,7 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     private Process _process = new();
     private string _prompt = string.Empty;
     private bool _disposed = false; // To detect redundant calls
+    private Persuasion _persuasion = new();
 
     public bool IncludePriorMessages { get; set; } = true;
 
@@ -37,6 +38,16 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         { 
             _purpose = value; 
             OnPropertyChanged(nameof(Purpose));
+        }
+    }
+
+    public Persuasion Persuasion
+    {
+        get => _persuasion;
+        set
+        {
+            _persuasion = value;
+            OnPropertyChanged(nameof(Persuasion));
         }
     }
 
@@ -141,14 +152,21 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     {
         var sb = new StringBuilder();
 
-        if(Persona.Description.IsNotNullEmptyOrWhitespace())
+        if (Persona.Description.IsNotNullEmptyOrWhitespace())
         {
             sb.AppendLine(Persona.Description);
         }
-        if(Purpose.Description.IsNotNullEmptyOrWhitespace())
+
+        if (Persuasion.Description.IsNotNullEmptyOrWhitespace())
+        {
+            sb.AppendLine(Persuasion.Description);
+        }
+
+        if (Purpose.Description.IsNotNullEmptyOrWhitespace())
         {
             sb.AppendLine(Purpose.Description);
         }
+        
         if (Process.Description.IsNotNullEmptyOrWhitespace())
         {
             sb.AppendLine(Process.Description);

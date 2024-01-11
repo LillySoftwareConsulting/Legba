@@ -16,16 +16,16 @@ public partial class App : Application
     {
         IServiceCollection services = new ServiceCollection();
 
-        // Load settings from User Secrets
+        // Load settings from user secrets
+#if DEBUG
         var builder = new ConfigurationBuilder()
             .AddUserSecrets<App>();
-
-        // Uncomment to use local settings file
+#else
         // Load settings from appsettings.json
-        //var builder = 
-        //    new ConfigurationBuilder()
-        //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
+        var builder = 
+            new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+#endif
         var config = builder.Build();
         var settings = config.Get<Settings>() ?? new Settings();
 
