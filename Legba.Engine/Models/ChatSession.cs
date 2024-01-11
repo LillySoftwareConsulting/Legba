@@ -64,14 +64,14 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     }
 
     public ObservableCollection<Message> Messages { get; set; } = [];
-    public ObservableCollection<Usage> TokenUsages { get; set; } = [];
+    public ObservableCollection<TokenSummary> TokenSummaries { get; set; } = [];
 
-    public int GrandTotalPromptTokens 
-        => TokenUsages.Sum(u => u.PromptTokens);
-    public int GrandTotalCompletionTokens 
-        => TokenUsages.Sum(u => u.CompletionTokens);
-    public int GrandTotalTokens 
-        => TokenUsages.Sum(u => u.TotalTokens);
+    public int GrandTotalRequestTokenCount => 
+        TokenSummaries.Sum(u => u.RequestTokenCount);
+    public int GrandTotalResponseTokenCount => 
+        TokenSummaries.Sum(u => u.ResponseTokenCount);
+    public int GrandTotalTokenCount => 
+        TokenSummaries.Sum(u => u.TotalTokenCount);
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -81,7 +81,7 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     {
         _connection = connector;
 
-        TokenUsages.CollectionChanged += OnTokenUsagesCollectionChanged;
+        TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
 
     public async Task Ask()
@@ -106,7 +106,11 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
 
         AddMessage(Enums.Role.Assistant, response.Text);
 
-        //TokenUsages.Add(response.Usage);
+        TokenSummaries.Add(new TokenSummary
+        {
+            RequestTokenCount = response.RequestTokenCount,
+            ResponseTokenCount = response.ResponseTokenCount
+        });
     }
 
     #region Private supporting methods
@@ -114,9 +118,9 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     private void OnTokenUsagesCollectionChanged(object? sender,
         NotifyCollectionChangedEventArgs e)
     {
-        OnPropertyChanged(nameof(GrandTotalPromptTokens));
-        OnPropertyChanged(nameof(GrandTotalCompletionTokens));
-        OnPropertyChanged(nameof(GrandTotalTokens));
+        OnPropertyChanged(nameof(GrandTotalRequestTokenCount));
+        OnPropertyChanged(nameof(GrandTotalResponseTokenCount));
+        OnPropertyChanged(nameof(GrandTotalTokenCount));
     }
 
     private void AddMessage(Enums.Role role, string content)
@@ -180,9 +184,9 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         if (disposing)
         {
             Messages.Clear();
-            TokenUsages.Clear();
+            TokenSummaries.Clear();
 
-            TokenUsages.CollectionChanged -= OnTokenUsagesCollectionChanged;
+            TokenSummaries.CollectionChanged -= OnTokenUsagesCollectionChanged;
         }
 
         _disposed = true;

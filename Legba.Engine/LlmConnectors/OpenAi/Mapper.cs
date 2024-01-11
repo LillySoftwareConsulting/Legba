@@ -1,7 +1,6 @@
 ﻿using Legba.Engine.Models;
-using Legba.Engine.LlmConnectors.OpenAi;
 
-namespace Legba.Engine.Services;
+namespace Legba.Engine.LlmConnectors.OpenAi;
 
 public static class Mapper
 {
@@ -19,7 +18,9 @@ public static class Mapper
     {
         return new T()
         {
-            Text = source.Choices[0].Message?.Content ?? string.Empty
+            Text = source.Choices[0].Message?.Content ?? string.Empty,
+            RequestTokenCount = source.Usage.PromptTokens,
+            ResponseTokenCount = source.Usage.CompletionTokens
         };
     }
 }

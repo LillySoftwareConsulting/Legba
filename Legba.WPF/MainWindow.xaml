@@ -7,8 +7,9 @@
         xmlns:conv="clr-namespace:Legba.WPF.CustomConverters"
         d:DataContext="{d:DesignInstance viewModels:ChatViewModel}"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="Legba" 
-        FontSize="11pt"
+        FontSize="12pt"
         Height="768" Width="1024">
 
     <Window.Resources>
@@ -16,9 +17,32 @@
         <conv:BooleanToHorizontalAlignmentConverter x:Key="BooleanToHorizontalAlignmentConverter" />
         <conv:RelativeWidthConverter x:Key="RelativeWidthConverter" />
         <conv:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
+
+        <Style x:Key="NoIconMenuItemStyle" TargetType="{x:Type MenuItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <!-- The ColumnDefinitions here have been modified to remove the icon column -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ContentPresenter x:Name="HeaderHost" ContentSource="Header" Margin="10,2"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Add triggers for mouse over, pressed, etc. as needed -->
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
-    <Grid>
+    <Grid Background="#BAE8F2">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -30,6 +54,7 @@
 
         <!-- Menu -->
         <Menu Grid.Row="0" Grid.Column="0"
+              FontSize="12pt"
               Grid.ColumnSpan="2">
             <MenuItem Header="File">
                 <MenuItem Header="New Session" 
@@ -60,12 +85,14 @@
 
                     <ListBox Grid.Row="0" Grid.Column="0"
                              x:Name="messages"
+                             Background="#EBE9DF"
                              HorizontalContentAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ItemsSource="{Binding ChatSession.Messages}">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Copy to Clipboard"
+                                          Style="{StaticResource NoIconMenuItemStyle}"
                                           Click="MenuItemCopyToClipboard_Click"/>
                             </ContextMenu>
                         </ListBox.ContextMenu>
@@ -110,7 +137,7 @@
                               Grid.ColumnSpan="2"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
-                              ItemsSource="{Binding ChatSession.TokenUsages}">
+                              ItemsSource="{Binding ChatSession.TokenSummaries}">
                     </DataGrid>
 
                     <StackPanel Grid.Row="2" Grid.Column="0"
@@ -118,11 +145,11 @@
                         <Label Content="Grand Totals"
                                FontWeight="Bold"/>
                         <Label Content="Prompt tokens:"/>
-                        <Label Content="{Binding ChatSession.GrandTotalPromptTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalRequestTokenCount}"/>
                         <Label Content="Completion tokens:"/>
-                        <Label Content="{Binding ChatSession.GrandTotalCompletionTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalResponseTokenCount}"/>
                         <Label Content="All tokens:"/>
-                        <Label Content="{Binding ChatSession.GrandTotalTokens}"/>
+                        <Label Content="{Binding ChatSession.GrandTotalTokenCount}"/>
                     </StackPanel>
 
                 </Grid>
@@ -135,7 +162,6 @@
               Margin="5,5,5,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto" />
@@ -143,6 +169,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="10" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
@@ -151,11 +178,21 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <StackPanel Grid.Row="0" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                <CheckBox VerticalContentAlignment="Center" 
+                          IsChecked="{Binding ChatSession.IncludePriorMessages}"/>
+                <Label VerticalContentAlignment="Center" 
+                       Content="Include prior messages?"/>
+            </StackPanel>
+
             <!-- Persona -->
-            <Label Grid.Row="0" Grid.Column="0"
+            <Label Grid.Row="1" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Persona"/>
-            <Button Grid.Row="0" Grid.Column="1"
+            <Button Grid.Row="1" Grid.Column="1"
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -168,7 +205,7 @@
                     <ToolTip>Select or manage personas</ToolTip>
                 </Button.ToolTip>
             </Button>
-            <TextBox Grid.Row="1" Grid.Column="0"
+            <TextBox Grid.Row="2" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -177,10 +214,10 @@
                      Text="{Binding ChatSession.Persona.Description, Mode=TwoWay}"/>
 
             <!-- Purpose -->
-            <Label Grid.Row="2" Grid.Column="0"
+            <Label Grid.Row="3" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Purpose"/>
-            <Button Grid.Row="2" Grid.Column="1"
+            <Button Grid.Row="3" Grid.Column="1"
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -193,7 +230,7 @@
                     <ToolTip>Select or manage purposes</ToolTip>
                 </Button.ToolTip>
             </Button>
-            <TextBox Grid.Row="3" Grid.Column="0"
+            <TextBox Grid.Row="4" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -202,10 +239,10 @@
                      Text="{Binding ChatSession.Purpose.Description, Mode=TwoWay}"/>
 
             <!-- Process -->
-            <Label Grid.Row="4" Grid.Column="0"
+            <Label Grid.Row="5" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Process"/>
-            <Button Grid.Row="4" Grid.Column="1"
+            <Button Grid.Row="5" Grid.Column="1"
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -218,7 +255,7 @@
                     <ToolTip>Select or manage processes</ToolTip>
                 </Button.ToolTip>
             </Button>
-            <TextBox Grid.Row="5" Grid.Column="0"
+            <TextBox Grid.Row="6" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -227,10 +264,10 @@
                      Text="{Binding ChatSession.Process.Description, Mode=TwoWay}"/>
 
             <!-- Prompt -->
-            <Label Grid.Row="6" Grid.Column="0"
+            <Label Grid.Row="7" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Prompt"/>
-            <TextBox Grid.Row="7" Grid.Column="0"
+            <TextBox Grid.Row="8" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      x:Name="prompt"
                      AcceptsReturn="True"
@@ -238,13 +275,6 @@
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
                      Text="{Binding ChatSession.Prompt, Mode=TwoWay}"/>
-
-            <CheckBox Grid.Row="8" Grid.Column="0"
-                      VerticalContentAlignment="Center"
-                      IsChecked="{Binding ChatSession.IncludePriorMessages}"/>
-            <Label Grid.Row="8" Grid.Column="1"
-                   VerticalContentAlignment="Center"
-                   Content="Include prior messages?"/>
 
             <Button Grid.Row="10" Grid.Column="1"
                     Content="Ask"
