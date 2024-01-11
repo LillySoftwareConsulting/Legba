@@ -37,7 +37,7 @@ public class ChatViewModel : INotifyPropertyChanged
     private Settings.Llm? _llm;
     private Settings.Model? _model;
     public ObservableCollection<Settings.Llm> Llms { get; } = new();
-    public ICommand SelectLlmCommand { get; private set; }
+    public ICommand SelectModelCommand { get; private set; }
 
     public ChatViewModel(IServiceProvider serviceProvider)
     {
@@ -58,14 +58,13 @@ public class ChatViewModel : INotifyPropertyChanged
         // These only need to be created once for the ViewModel, not for each ChatSession.
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
         StartNewSessionCommand = new RelayCommand(StartNewSession);
-        SelectLlmCommand = new GenericRelayCommand<Settings.Llm>(SelectLlm);
+        SelectModelCommand = new GenericRelayCommand<Settings.Model>(SelectModel);
     }
 
-    private void SelectLlm(Settings.Llm llm)
+    private void SelectModel(Settings.Model model)
     {
         ;
-        // Implementation when a dynamic MenuItem is selected
-        // Use selectedLlm.Name or other properties as needed
+        var llm = Llms.FirstOrDefault(l => l.Models.Contains(model));
     }
 
     private void StartNewSession()

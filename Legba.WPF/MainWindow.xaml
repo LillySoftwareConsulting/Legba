@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Legba.Engine.ViewModels;assembly=Legba.Engine"
         xmlns:conv="clr-namespace:Legba.WPF.CustomConverters"
+        xmlns:local="clr-namespace:Legba.WPF"
         d:DataContext="{d:DesignInstance viewModels:ChatViewModel}"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -57,17 +58,21 @@
               FontSize="12pt"
               Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="New Session" 
-                          Command="{Binding StartNewSessionCommand}">
+                <MenuItem Header="New Session">
                     <MenuItem.ItemsSource>
-                        <Binding Path="Llms"/>
+                        <Binding Path="Llms" />
                     </MenuItem.ItemsSource>
                     <MenuItem.ItemTemplate>
-                        <DataTemplate>
-                            <MenuItem Header="{Binding Name}" 
-                                      Command="{Binding DataContext.SelectLlmCommand, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}"
-                                      CommandParameter="{Binding}"/>
-                        </DataTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Models}">
+                            <TextBlock Text="{Binding Name}" />
+                            <HierarchicalDataTemplate.ItemTemplate>
+                                <DataTemplate>
+                                    <MenuItem Header="{Binding Name}" 
+                                              Command="{Binding DataContext.SelectModelCommand, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}" 
+                                              CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </HierarchicalDataTemplate.ItemTemplate>
+                        </HierarchicalDataTemplate>
                     </MenuItem.ItemTemplate>
                 </MenuItem>
                 <Separator/>
@@ -79,7 +84,7 @@
                           IsEnabled="False"/>
             </MenuItem>
         </Menu>
-        
+
         <!-- Outputs -->
         <TabControl Grid.Row="1" Grid.Column="0" 
                     Margin="5,5,5,5">
