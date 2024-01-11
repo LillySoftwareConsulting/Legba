@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
 using Legba.Engine.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ public class ChatViewModel : INotifyPropertyChanged
 
     private readonly IServiceProvider _serviceProvider;
 
+    public ObservableCollection<Settings.Llm> Llms { get; } = new();
+
     private ChatSession _chatSession;
 
     public ChatSession ChatSession
@@ -22,12 +25,15 @@ public class ChatViewModel : INotifyPropertyChanged
             {
                 _chatSession = value;
                 OnPropertyChanged(nameof(ChatSession));
+                OnPropertyChanged(nameof(HasChatSession));
             }
         }
     }
 
-    public ICommand StartNewSessionCommand { get; }
-    public ICommand AskCommand { get; }
+    public bool HasChatSession => ChatSession != null;
+
+    public ICommand SelectModelCommand { get; private set; }
+    public ICommand AskCommand { get; private set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -37,18 +43,23 @@ public class ChatViewModel : INotifyPropertyChanged
     {
         _serviceProvider = serviceProvider;
 
-        StartNewSession();
+        var settings = _serviceProvider.GetRequiredService<Settings>();
+        foreach (var llm in settings.Llms)
+        {
+            Llms.Add(llm);
+        }
 
-        // These only need to be created once for the ViewModel, not for each ChatSession.
+        SelectModelCommand = new GenericRelayCommand<Settings.Model>(SelectModel);
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
-        StartNewSessionCommand = new RelayCommand(StartNewSession);
     }
 
-    private void StartNewSession()
+    private void SelectModel(Settings.Model model)
     {
+        var llm = Llms.First(l => l.Models.Contains(model));
+
         ChatSession?.Dispose();
 
-        ChatSession = _serviceProvider.GetRequiredService<ChatSession>();
+        ChatSession = new ChatSession(_serviceProvider, llm, model);
     }
 
     protected virtual void OnPropertyChanged(string propertyName)

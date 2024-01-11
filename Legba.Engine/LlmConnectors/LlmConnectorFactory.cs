@@ -4,23 +4,21 @@ namespace Legba.Engine.LlmConnectors;
 
 public class LlmConnectorFactory
 {
-    private readonly Settings _settings;
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public LlmConnectorFactory(Settings settings, IHttpClientFactory httpClientFactory)
+    public LlmConnectorFactory(IHttpClientFactory httpClientFactory)
     {
-        _settings = settings;
         _httpClientFactory = httpClientFactory;
     }
 
-    public ILlmConnector GetLlmConnector()
+    public ILlmConnector GetLlmConnector(Settings.Llm llm, Settings.Model model)
     {
-        switch(_settings.llm)
+        switch(llm.Name)
         {
             case Enums.Llm.OpenAi:
-                return new OpenAi.OpenAiConnector(_settings, _httpClientFactory);
+                return new OpenAi.OpenAiConnector(_httpClientFactory, llm, model);
             default:
-                throw new Exception($"Unknown LLM Connector: {_settings.llm}");
+                throw new Exception($"Unknown LLM Connector: {llm.Name} - {model.Name}");
         }
     }
 }

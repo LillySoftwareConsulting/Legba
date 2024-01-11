@@ -1,11 +1,12 @@
 ﻿using Legba.Engine.LlmConnectors.OpenAi;
+using Legba.Engine.Models;
 using System.Windows;
 
 namespace Legba.WPF;
 
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    public MainWindow(Settings settings)
     {
         InitializeComponent();
     }

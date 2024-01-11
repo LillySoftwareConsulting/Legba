@@ -9,10 +9,9 @@ public class OpenAiConnector : ILlmConnector
 {
     #region Properties and backing fields
 
-    private readonly Uri _uri;
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly string _openAiApiKey = string.Empty;
-    private readonly string? _openAiOrganizationId;
+    private readonly Settings.Llm _llm;
+    private readonly Settings.Model _model;
 
     private readonly JsonSerializerOptions _jsonSerializerOptions =
         new()
@@ -27,12 +26,12 @@ public class OpenAiConnector : ILlmConnector
 
     #endregion
 
-    public OpenAiConnector(Settings settings, IHttpClientFactory httpClientFactory)
+    public OpenAiConnector(IHttpClientFactory httpClientFactory, 
+        Settings.Llm llm, Settings.Model model)
     {
-        _uri = new Uri("https://api.openai.com/v1/chat/completions");
+        _llm = llm;
+        _model = model;
         _httpClientFactory = httpClientFactory;
-        _openAiApiKey = settings.keys.apiKey;
-        _openAiOrganizationId = settings.keys.orgId;
     }
 
     public async Task<LegbaResponse> AskAsync(LegbaRequest legbaRequest)
@@ -44,9 +43,10 @@ public class OpenAiConnector : ILlmConnector
             // Send the request to OpenAI
             var httpClient = GetHttpClient();
 
+            var uri = new Uri("https://api.openai.com/v1/chat/completions");
             var response =
                 await httpClient
-                .PostAsJsonAsync(_uri, openAiRequest, _jsonSerializerOptions)
+                .PostAsJsonAsync(uri, openAiRequest, _jsonSerializerOptions)
                 .ConfigureAwait(false);
 
             // Ensure the response is successful
@@ -74,29 +74,27 @@ public class OpenAiConnector : ILlmConnector
     {
         var httpClient = _httpClientFactory.CreateClient();
 
-        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_openAiApiKey}");
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_llm.Keys.ApiKey}");
 
-        if (_openAiOrganizationId.IsNotNullEmptyOrWhitespace())
+        if (_llm.Keys.OrgId.IsNotNullEmptyOrWhitespace())
         {
-            httpClient.DefaultRequestHeaders.Add("OpenAI-Organization", _openAiOrganizationId);
+            httpClient.DefaultRequestHeaders.Add("OpenAI-Organization", _llm.Keys.OrgId);
         }
 
         return httpClient;
     }
 
-    private static OpenAiRequest MapToOpenAiRequest(LegbaRequest legbaRequest)
+    private OpenAiRequest MapToOpenAiRequest(LegbaRequest legbaRequest)
     {
         return new OpenAiRequest()
         {
-            Model = string.IsNullOrWhiteSpace(legbaRequest.Model) 
-                ? "gpt-3.5-turbo" 
-                : legbaRequest.Model,
+            Model = _model.Id,
             Messages = legbaRequest.Messages,
             Temperature = legbaRequest.Temperature
         };
     }
 
-    private static LegbaResponse MapToLegbaResponse(OpenAiResponse openAiResponse)
+    private LegbaResponse MapToLegbaResponse(OpenAiResponse openAiResponse)
     {
         return new LegbaResponse()
         {
