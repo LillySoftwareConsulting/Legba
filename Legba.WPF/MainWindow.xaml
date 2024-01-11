@@ -162,7 +162,6 @@
               Margin="5,5,5,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*"/>
@@ -180,21 +179,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="0" Grid.Column="0"
-                        Grid.ColumnSpan="2"
-                        HorizontalAlignment="Left"
-                        Orientation="Horizontal">
-                <CheckBox VerticalContentAlignment="Center" 
-                          IsChecked="{Binding ChatSession.IncludePriorMessages}"/>
-                <Label VerticalContentAlignment="Center" 
-                       Content="Include prior messages?"/>
-            </StackPanel>
-
             <!-- Persona -->
-            <Label Grid.Row="1" Grid.Column="0"
+            <Label Grid.Row="0" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Persona"/>
-            <Button Grid.Row="1" Grid.Column="1"
+            <Button Grid.Row="0" Grid.Column="1"
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -207,7 +196,7 @@
                     <ToolTip>Select or manage personas</ToolTip>
                 </Button.ToolTip>
             </Button>
-            <TextBox Grid.Row="2" Grid.Column="0"
+            <TextBox Grid.Row="1" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -216,10 +205,10 @@
                      Text="{Binding ChatSession.Persona.Description, Mode=TwoWay}"/>
 
             <!-- Purpose -->
-            <Label Grid.Row="3" Grid.Column="0"
+            <Label Grid.Row="2" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Purpose"/>
-            <Button Grid.Row="3" Grid.Column="1"
+            <Button Grid.Row="2" Grid.Column="1"
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -232,7 +221,7 @@
                     <ToolTip>Select or manage purposes</ToolTip>
                 </Button.ToolTip>
             </Button>
-            <TextBox Grid.Row="4" Grid.Column="0"
+            <TextBox Grid.Row="3" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -241,10 +230,10 @@
                      Text="{Binding ChatSession.Purpose.Description, Mode=TwoWay}"/>
 
             <!-- Persuasion -->
-            <Label Grid.Row="5" Grid.Column="0"
+            <Label Grid.Row="4" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Persuasion"/>
-            <Button Grid.Row="5" Grid.Column="1"
+            <Button Grid.Row="4" Grid.Column="1"
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -257,7 +246,7 @@
                     <ToolTip>Select or manage persuasion</ToolTip>
                 </Button.ToolTip>
             </Button>
-            <TextBox Grid.Row="6" Grid.Column="0"
+            <TextBox Grid.Row="5" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -266,10 +255,10 @@
                      Text="{Binding ChatSession.Persuasion.Description, Mode=TwoWay}"/>
 
             <!-- Process -->
-            <Label Grid.Row="7" Grid.Column="0"
+            <Label Grid.Row="6" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Process"/>
-            <Button Grid.Row="7" Grid.Column="1"
+            <Button Grid.Row="6" Grid.Column="1"
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -282,7 +271,7 @@
                     <ToolTip>Select or manage processes</ToolTip>
                 </Button.ToolTip>
             </Button>
-            <TextBox Grid.Row="8" Grid.Column="0"
+            <TextBox Grid.Row="7" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -291,10 +280,10 @@
                      Text="{Binding ChatSession.Process.Description, Mode=TwoWay}"/>
 
             <!-- Prompt -->
-            <Label Grid.Row="9" Grid.Column="0"
+            <Label Grid.Row="8" Grid.Column="0"
                    FontWeight="Bold"
                    Content="Prompt"/>
-            <TextBox Grid.Row="10" Grid.Column="0"
+            <TextBox Grid.Row="9" Grid.Column="0"
                      Grid.ColumnSpan="2"
                      x:Name="prompt"
                      AcceptsReturn="True"
@@ -303,7 +292,7 @@
                      VerticalScrollBarVisibility="Auto"
                      Text="{Binding ChatSession.Prompt, Mode=TwoWay}"/>
 
-            <Button Grid.Row="12" Grid.Column="1"
+            <Button Grid.Row="11" Grid.Column="1"
                     Content="Ask"
                     Width="75"
                     HorizontalAlignment="Right"

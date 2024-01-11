@@ -33,9 +33,17 @@ public class ChatViewModel : INotifyPropertyChanged
 
     #endregion
 
+    private Settings.Llm? _llm;
+    private Settings.Model? _model;
+
     public ChatViewModel(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
+
+        var settings = _serviceProvider.GetRequiredService<Settings>();
+        // TODO: Handle from user input
+        _llm = settings.Llms.FirstOrDefault();
+        _model = _llm?.Models.First(m => m.Name.Equals("GPT-4 (preview)"));
 
         StartNewSession();
 
@@ -48,7 +56,7 @@ public class ChatViewModel : INotifyPropertyChanged
     {
         ChatSession?.Dispose();
 
-        ChatSession = _serviceProvider.GetRequiredService<ChatSession>();
+        ChatSession = new ChatSession(_serviceProvider, _llm!, _model!);
     }
 
     protected virtual void OnPropertyChanged(string propertyName)

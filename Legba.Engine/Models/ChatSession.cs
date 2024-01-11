@@ -1,4 +1,6 @@
-﻿using Legba.Engine.LlmConnectors.OpenAi;
+﻿using Legba.Engine.LlmConnectors;
+using Legba.Engine.LlmConnectors.OpenAi;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -10,7 +12,7 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
 {
     #region Properties, Fields, Commands, and Events
 
-    private readonly OpenAiConnector _connection;
+    private readonly ILlmConnector _connection;
 
     private Persona _persona = new();
     private Purpose _purpose = new();
@@ -88,9 +90,11 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
 
     #endregion
 
-    public ChatSession(OpenAiConnector connector)
+    public ChatSession(IServiceProvider serviceProvider, 
+        Settings.Llm llm, Settings.Model model)
     {
-        _connection = connector;
+        var factory = serviceProvider.GetRequiredService<LlmConnectorFactory>();
+        _connection = factory.GetLlmConnector(llm, model);
 
         TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
