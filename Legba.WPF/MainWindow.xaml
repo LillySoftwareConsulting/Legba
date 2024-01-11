@@ -176,9 +176,10 @@
 
         </TabControl>
 
-        <GridSplitter Grid.Row="0" Grid.Column="1" 
+        <!-- Grid splitter -->
+        <GridSplitter Grid.Row="0" Grid.Column="1"
                       Grid.RowSpan="2"
-                      Width="5" 
+                      Width="5"
                       HorizontalAlignment="Stretch"/>
 
         <!-- Inputs -->
