@@ -50,14 +50,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*" MinWidth="100"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*" MinWidth="100"/>
         </Grid.ColumnDefinitions>
 
         <!-- Menu -->
         <Menu Grid.Row="0" Grid.Column="0"
               FontSize="12pt"
-              Grid.ColumnSpan="2">
+              Grid.ColumnSpan="3">
             <MenuItem Header="File">
                 <MenuItem Header="New Session">
                     <MenuItem.ItemsSource>
@@ -174,9 +175,14 @@
             </TabItem>
 
         </TabControl>
-        
+
+        <GridSplitter Grid.Row="0" Grid.Column="1" 
+                      Grid.RowSpan="2"
+                      Width="5" 
+                      HorizontalAlignment="Stretch"/>
+
         <!-- Inputs -->
-        <Grid Grid.Row="1" Grid.Column="1"
+        <Grid Grid.Row="1" Grid.Column="2"
               Visibility="{Binding HasChatSession, Converter={StaticResource BooleanToVisibilityConverter}}"
               Margin="5,5,5,5">
             <Grid.RowDefinitions>
