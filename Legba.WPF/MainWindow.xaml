@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Legba.Engine.ViewModels;assembly=Legba.Engine"
-        xmlns:conv="clr-namespace:Legba.WPF.CustomConverters"
         xmlns:local="clr-namespace:Legba.WPF"
         d:DataContext="{d:DesignInstance viewModels:ChatViewModel}"
         mc:Ignorable="d"
@@ -14,12 +13,6 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <conv:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
-        <conv:BooleanToHorizontalAlignmentConverter x:Key="BooleanToHorizontalAlignmentConverter" />
-        <conv:RelativeWidthConverter x:Key="RelativeWidthConverter" />
-        <conv:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
-
         <Style x:Key="NoIconMenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="Template">
                 <Setter.Value>

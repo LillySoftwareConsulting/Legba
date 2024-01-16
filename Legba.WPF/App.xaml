@@ -1,9 +1,17 @@
 ﻿<Application x:Class="Legba.WPF.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Legba.WPF">
+             xmlns:local="clr-namespace:Legba.WPF" 
+             xmlns:customConverters="clr-namespace:Legba.WPF.CustomConverters">
 
     <Application.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <customConverters:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
+        <customConverters:BooleanToHorizontalAlignmentConverter x:Key="BooleanToHorizontalAlignmentConverter" />
+        <customConverters:RelativeWidthConverter x:Key="RelativeWidthConverter" />
+        <customConverters:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
+        <customConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <customConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
     </Application.Resources>
 
 </Application>

@@ -3,17 +3,17 @@ using System.Windows;
 
 namespace Legba.WPF.Windows;
 
-public partial class PromptPrefixSelectionViewBase : Window
+public partial class GenericPromptPrefixSelectionView : Window
 {
     private readonly PromptRepository _promptRepository;
 
-    public PromptPrefixSelectionViewBase(PromptRepository promptRepository)
+    public GenericPromptPrefixSelectionView(PromptRepository promptRepository)
     {
         InitializeComponent();
         _promptRepository = promptRepository;
     }
 
-    private void Done_Click(object sender, RoutedEventArgs e)
+    private void Close_Click(object sender, RoutedEventArgs e)
     {
         Close();
     }

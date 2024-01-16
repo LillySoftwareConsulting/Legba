@@ -10,6 +10,7 @@ public class PromptPrefixSelectionViewModel<T> : ViewModelBase where T : PromptP
     #region Properties, Fields, Commands, and Events
 
     private string _title;
+    private T? _selectedPromptPrefix;
 
     public string Title
     {
@@ -21,6 +22,16 @@ public class PromptPrefixSelectionViewModel<T> : ViewModelBase where T : PromptP
         }
     }
 
+    public T? SelectedPromptPrefix
+    {
+        get => _selectedPromptPrefix;
+        set
+        {
+            _selectedPromptPrefix = value;
+            OnPropertyChanged(nameof(SelectedPromptPrefix));
+        }
+    }
+
     public ObservableCollection<T> PromptPrefixes { get; } = new();
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -29,7 +40,7 @@ public class PromptPrefixSelectionViewModel<T> : ViewModelBase where T : PromptP
 
     public PromptPrefixSelectionViewModel(PromptRepository promptRepository)
     {
-        Title = $"Manage {typeof(T).Name}s";
+        Title = $"Manage {typeof(T).Name} Prefixes";
         PromptPrefixes = new ObservableCollection<T>(promptRepository.Get<T>());
     }
 }

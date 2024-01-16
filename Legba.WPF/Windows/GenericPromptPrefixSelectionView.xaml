@@ -1,4 +1,4 @@
-﻿<Window x:Class="Legba.WPF.Windows.PromptPrefixSelectionViewBase"
+﻿<Window x:Class="Legba.WPF.Windows.GenericPromptPrefixSelectionView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -22,10 +22,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- List of prompt prefixes -->
         <DataGrid Grid.Row="0" Grid.Column="0"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserReorderColumns="False"
+                  Visibility="{Binding SelectedPromptPrefix, Converter={StaticResource NullToVisibilityConverter}}"
                   HeadersVisibility="Column"
                   ItemsSource="{Binding PromptPrefixes}"
                   AutoGenerateColumns="False">
@@ -35,13 +37,15 @@
             </DataGrid.Columns>
             
         </DataGrid>
+        
+        <!-- Add/edit controls for a prompt prefix -->
 
         <Button Grid.Row="2" Grid.Column="0"
                 HorizontalAlignment="Right"
                 Margin="5,5,5,5"
                 Width="75"
-                Content="Done"
-                Click="Done_Click"/>
+                Content="Close"
+                Click="Close_Click"/>
     </Grid>
 
 </Window>

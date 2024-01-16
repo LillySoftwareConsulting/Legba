@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Legba.WPF.Windows;
 
-public class PromptPrefixSelectionView<T> : PromptPrefixSelectionViewBase where T : PromptPrefix
+public class PromptPrefixSelectionView<T> : GenericPromptPrefixSelectionView where T : PromptPrefix
 {
     public PromptPrefixSelectionView(IServiceProvider serviceProvider)
         : base(serviceProvider.GetRequiredService<PromptRepository>())
