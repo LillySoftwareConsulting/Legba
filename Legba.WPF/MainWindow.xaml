@@ -213,6 +213,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Persona_OnClick"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
@@ -238,6 +239,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Purpose_Click"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
@@ -263,6 +265,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Persuasion_Click"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
@@ -288,6 +291,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Process_Click"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
