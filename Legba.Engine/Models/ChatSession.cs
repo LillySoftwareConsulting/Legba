@@ -156,25 +156,10 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     {
         var sb = new StringBuilder();
 
-        if (Persona.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Persona.Description);
-        }
-
-        if (Persuasion.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Persuasion.Description);
-        }
-
-        if (Purpose.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Purpose.Description);
-        }
-        
-        if (Process.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Process.Description);
-        }
+        sb.AppendLineIfNotEmpty(Persona.Text);
+        sb.AppendLineIfNotEmpty(Persuasion.Text);
+        sb.AppendLineIfNotEmpty(Purpose.Text);
+        sb.AppendLineIfNotEmpty(Process.Text);
 
         sb.Append(Prompt);
 

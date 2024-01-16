@@ -228,7 +228,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Persona.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Persona.Text, Mode=TwoWay}"/>
 
             <!-- Purpose -->
             <Label Grid.Row="2" Grid.Column="0"
@@ -253,7 +253,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Purpose.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Purpose.Text, Mode=TwoWay}"/>
 
             <!-- Persuasion -->
             <Label Grid.Row="4" Grid.Column="0"
@@ -278,7 +278,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Persuasion.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Persuasion.Text, Mode=TwoWay}"/>
 
             <!-- Process -->
             <Label Grid.Row="6" Grid.Column="0"
@@ -303,7 +303,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Process.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Process.Text, Mode=TwoWay}"/>
 
             <!-- Prompt -->
             <Label Grid.Row="8" Grid.Column="0"
