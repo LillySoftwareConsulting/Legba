@@ -1,7 +1,9 @@
 ﻿using Legba.Engine.LlmConnectors;
 using Legba.Engine.LlmConnectors.OpenAi;
 using Legba.Engine.Models;
+using Legba.Engine.Services;
 using Legba.Engine.ViewModels;
+using Legba.WPF.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
@@ -35,10 +37,19 @@ public partial class App : Application
         // Register view and viewmodel objects for injection
         services.AddTransient<ChatViewModel>();
         services.AddTransient<MainWindow>();
+        services.AddTransient<PromptPrefixSelectionViewModel<Persona>>();
+        services.AddTransient<PromptPrefixSelectionViewModel<Persuasion>>();
+        services.AddTransient<PromptPrefixSelectionViewModel<Process>>();
+        services.AddTransient<PromptPrefixSelectionViewModel<Purpose>>();
+        services.AddTransient<PromptPrefixSelectionView<Persona>>();
+        services.AddTransient<PromptPrefixSelectionView<Persuasion>>();
+        services.AddTransient<PromptPrefixSelectionView<Process>>();
+        services.AddTransient<PromptPrefixSelectionView<Purpose>>();
 
         // Register 'service' objects for injection
         services.AddSingleton<OpenAiConnector>();
         services.AddSingleton<LlmConnectorFactory>();
+        services.AddSingleton(provider => new PromptRepository("Legba.db"));
 
         // Register transient classes for injection
         services.AddTransient<ChatSession>();

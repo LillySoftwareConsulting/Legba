@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Legba.Engine.ViewModels;assembly=Legba.Engine"
-        xmlns:conv="clr-namespace:Legba.WPF.CustomConverters"
         xmlns:local="clr-namespace:Legba.WPF"
         d:DataContext="{d:DesignInstance viewModels:ChatViewModel}"
         mc:Ignorable="d"
@@ -14,12 +13,6 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <conv:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
-        <conv:BooleanToHorizontalAlignmentConverter x:Key="BooleanToHorizontalAlignmentConverter" />
-        <conv:RelativeWidthConverter x:Key="RelativeWidthConverter" />
-        <conv:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
-
         <Style x:Key="NoIconMenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -213,6 +206,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Persona_OnClick"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
@@ -228,7 +222,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Persona.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Persona.Text, Mode=TwoWay}"/>
 
             <!-- Purpose -->
             <Label Grid.Row="2" Grid.Column="0"
@@ -238,6 +232,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Purpose_Click"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
@@ -253,7 +248,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Purpose.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Purpose.Text, Mode=TwoWay}"/>
 
             <!-- Persuasion -->
             <Label Grid.Row="4" Grid.Column="0"
@@ -263,6 +258,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Persuasion_Click"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
@@ -278,7 +274,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Persuasion.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Persuasion.Text, Mode=TwoWay}"/>
 
             <!-- Process -->
             <Label Grid.Row="6" Grid.Column="0"
@@ -288,6 +284,7 @@
                     HorizontalAlignment="Right"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    Click="Process_Click"
                     FontWeight="Bold"
                     Height="20"
                     Width="20">
@@ -303,7 +300,7 @@
                      TextWrapping="Wrap"
                      Background="LightGray"
                      VerticalScrollBarVisibility="Auto"
-                     Text="{Binding ChatSession.Process.Description, Mode=TwoWay}"/>
+                     Text="{Binding ChatSession.Process.Text, Mode=TwoWay}"/>
 
             <!-- Prompt -->
             <Label Grid.Row="8" Grid.Column="0"

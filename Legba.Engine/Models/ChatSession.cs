@@ -3,12 +3,11 @@ using Legba.Engine.LlmConnectors.OpenAi;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Text;
 
 namespace Legba.Engine.Models;
 
-public class ChatSession : INotifyPropertyChanged, IDisposable
+public class ChatSession : ObservableObject, IDisposable
 {
     #region Properties, Fields, Commands, and Events
 
@@ -86,8 +85,6 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     public int GrandTotalTokenCount => 
         TokenSummaries.Sum(u => u.TotalTokenCount);
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     #endregion
 
     public ChatSession(IServiceProvider serviceProvider, 
@@ -156,34 +153,14 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     {
         var sb = new StringBuilder();
 
-        if (Persona.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Persona.Description);
-        }
-
-        if (Persuasion.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Persuasion.Description);
-        }
-
-        if (Purpose.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Purpose.Description);
-        }
-        
-        if (Process.Description.IsNotNullEmptyOrWhitespace())
-        {
-            sb.AppendLine(Process.Description);
-        }
+        sb.AppendLineIfNotEmpty(Persona.Text);
+        sb.AppendLineIfNotEmpty(Persuasion.Text);
+        sb.AppendLineIfNotEmpty(Purpose.Text);
+        sb.AppendLineIfNotEmpty(Process.Text);
 
         sb.Append(Prompt);
 
         return sb.ToString();
-    }
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     #endregion

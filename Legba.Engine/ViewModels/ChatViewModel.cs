@@ -1,12 +1,11 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
 using Legba.Engine.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Legba.Engine.ViewModels;
 
-public class ChatViewModel : INotifyPropertyChanged
+public class ChatViewModel : ObservableObject
 {
     #region Properties, Fields, Commands, and Events
 
@@ -35,8 +34,6 @@ public class ChatViewModel : INotifyPropertyChanged
     public ICommand SelectModelCommand { get; private set; }
     public ICommand AskCommand { get; private set; }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     #endregion
 
     public ChatViewModel(IServiceProvider serviceProvider)
@@ -49,7 +46,7 @@ public class ChatViewModel : INotifyPropertyChanged
             Llms.Add(llm);
         }
 
-        SelectModelCommand = new GenericRelayCommand<Settings.Model>(SelectModel);
+        SelectModelCommand = new TypedRelayCommand<Settings.Model>(SelectModel);
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
     }
 
@@ -60,10 +57,5 @@ public class ChatViewModel : INotifyPropertyChanged
         ChatSession?.Dispose();
 
         ChatSession = new ChatSession(_serviceProvider, llm, model);
-    }
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
