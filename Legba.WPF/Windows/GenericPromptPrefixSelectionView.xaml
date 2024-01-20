@@ -15,19 +15,22 @@
     <Grid Margin="5,5,5,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- List of prompt prefixes -->
         <DataGrid Grid.Row="0" Grid.Column="0"
+                  Grid.ColumnSpan="2"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserReorderColumns="False"
-                  Visibility="{Binding SelectedPromptPrefix, Converter={StaticResource NullToVisibilityConverter}}"
+                  Visibility="{Binding PromptPrefixToEdit, Converter={StaticResource NullToVisibilityConverter}}"
                   HeadersVisibility="Column"
                   ItemsSource="{Binding PromptPrefixes}"
                   AutoGenerateColumns="False">
@@ -39,11 +42,51 @@
         </DataGrid>
         
         <!-- Add/edit controls for a prompt prefix -->
+        <Grid Grid.Row="1" Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Visibility="{Binding PromptPrefixToEdit, Converter={StaticResource NotNullToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="2" Grid.Column="0"
+            <Label Grid.Row="0" Grid.Column="0"
+                   FontWeight="Bold"
+                   Content="Name:"/>
+            <TextBox Grid.Row="1" Grid.Column="0"
+                     Text="{Binding PromptPrefixToEdit.Name, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label Grid.Row="2" Grid.Column="0"
+                   FontWeight="Bold"
+                   Content="Prompt prefix text:"/>
+            <TextBox Grid.Row="3" Grid.Column="0"
+                     Text="{Binding PromptPrefixToEdit.Text, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Grid.Row="5" Grid.Column="0"
+                    Style="{StaticResource ButtonStyle}"
+                    HorizontalAlignment="Right"
+                    Content="Save"
+                    IsEnabled="{Binding PromptPrefixToEdit.CanBeSaved, Mode=OneWay}"
+                    Command="{Binding SaveCommand}"/>
+        </Grid>
+
+        <!-- Buttons -->
+        <Button Grid.Row="3" Grid.Column="0"
+                Style="{StaticResource ButtonStyle}"
+                HorizontalAlignment="Left"
+                Visibility="{Binding PromptPrefixToEdit, Converter={StaticResource NullToVisibilityConverter}}"
+                Content="{Binding AddNewButtonText, NotifyOnSourceUpdated=True}"
+                Command="{Binding AddNewCommand}"/>
+
+        <Button Grid.Row="3" Grid.Column="1"
+                Style="{StaticResource ButtonStyle}"
                 HorizontalAlignment="Right"
-                Margin="5,5,5,5"
-                Width="75"
+                Visibility="{Binding PromptPrefixToEdit, Converter={StaticResource NullToVisibilityConverter}}"
                 Content="Close"
                 Click="Close_Click"/>
     </Grid>

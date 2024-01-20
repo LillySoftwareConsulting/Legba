@@ -1,5 +1,6 @@
 ﻿using Legba.Engine.Models;
 using LiteDB;
+using System.Linq.Expressions;
 
 namespace Legba.Engine.Services;
 
@@ -10,24 +11,70 @@ public class PromptRepository(string databasePath) : IDisposable
     private readonly LiteDatabase _liteDb = new(databasePath);
     private bool _disposed = false;
 
-    public IEnumerable<T> Get<T>() where T : PromptPrefix
+    public static string GetCollectionName<T>() where T : PromptPrefix
     {
-        return _liteDb.GetCollection<T>(nameof(T)).FindAll();
+        return typeof(T).Name;
     }
 
-    public void Add<T>(T promptPrefix) where T : PromptPrefix
+    public void Add<T>(T item) where T : PromptPrefix
     {
-        _liteDb.GetCollection<T>(nameof(T)).Insert(promptPrefix);
+        var collectionName = GetCollectionName<T>();
+        var collection = _liteDb.GetCollection<T>(collectionName);
+
+        // TODO: Possibly raise an exception if the Id is not Guid.Empty.
+        // New items Id is Guid.Empty, so we need to generate a real Id.
+        item.Id = Guid.NewGuid();
+
+        collection.Insert(item);
     }
 
-    public void Update<T>(T promptPrefix) where T : PromptPrefix
+    public bool Update<T>(T item) where T : PromptPrefix
     {
-        _liteDb.GetCollection<T>(nameof(T)).Update(promptPrefix);
+        var collectionName = GetCollectionName<T>();
+        var collection = _liteDb.GetCollection<T>(collectionName);
+
+        return collection.Update(item);
     }
 
-    public void Delete<T>(T promptPrefix) where T : PromptPrefix
+    public bool AddOrUpdate<T>(T item) where T : PromptPrefix
     {
-        _liteDb.GetCollection<T>(nameof(T)).Delete(promptPrefix.Id);
+        var collectionName = GetCollectionName<T>();
+        var collection = _liteDb.GetCollection<T>(collectionName);
+
+        if(item.Id == Guid.Empty)
+        {
+            // New items Id is Guid.Empty, so we need to generate a real Id.
+            item.Id = Guid.NewGuid();
+            collection.Insert(item);
+            return true;
+        }
+        else
+        {
+            return collection.Update(item);
+        }
+    }
+
+    public bool Delete<T>(int id) where T : PromptPrefix
+    {
+        var collectionName = GetCollectionName<T>();
+        var collection = _liteDb.GetCollection<T>(collectionName);
+
+        return collection.Delete(id);
+    }
+
+    public IEnumerable<T> Find<T>(Expression<Func<T, bool>> predicate) where T : PromptPrefix
+    {
+        var collectionName = GetCollectionName<T>();
+        var collection = _liteDb.GetCollection<T>(collectionName);
+
+        return collection.Find(predicate);
+    }
+
+    public IEnumerable<T> GetAll<T>() where T : PromptPrefix
+    {
+        var collectionName = GetCollectionName<T>();
+
+        return _liteDb.GetCollection<T>(collectionName).FindAll();
     }
 
     #region Implementation of IDisposable

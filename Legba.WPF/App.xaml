@@ -12,6 +12,11 @@
         <customConverters:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
         <customConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <customConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Padding" Value="10,2,10,2" />
+        </Style>
+        
     </Application.Resources>
 
 </Application>

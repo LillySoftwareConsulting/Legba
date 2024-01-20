@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Legba.Engine.Models;
 
-public class ChatSession : INotifyPropertyChanged, IDisposable
+public class ChatSession : ObservableObject, IDisposable
 {
     #region Properties, Fields, Commands, and Events
 
@@ -86,8 +86,6 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
     public int GrandTotalTokenCount => 
         TokenSummaries.Sum(u => u.TotalTokenCount);
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     #endregion
 
     public ChatSession(IServiceProvider serviceProvider, 
@@ -164,11 +162,6 @@ public class ChatSession : INotifyPropertyChanged, IDisposable
         sb.Append(Prompt);
 
         return sb.ToString();
-    }
-
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     #endregion

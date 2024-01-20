@@ -52,7 +52,7 @@ public partial class MainWindow : Window
         DisplayPromptPrefixPopup<Process>();
     }
 
-    private void DisplayPromptPrefixPopup<T>() where T : PromptPrefix
+    private void DisplayPromptPrefixPopup<T>() where T : PromptPrefix, new()
     {
         var view =
             _serviceProvider.GetRequiredService<PromptPrefixSelectionView<T>>();
