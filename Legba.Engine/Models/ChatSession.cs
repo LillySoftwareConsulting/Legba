@@ -3,7 +3,6 @@ using Legba.Engine.LlmConnectors.OpenAi;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Text;
 
 namespace Legba.Engine.Models;

@@ -1,7 +1,6 @@
 ﻿using Legba.Engine.Models;
 using Legba.Engine.Services;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
 
 namespace Legba.Engine.ViewModels;
@@ -10,7 +9,7 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
 {
     #region Properties, Fields, Commands, and Events
 
-    private string _title;
+    private string _title = string.Empty;
     private T? _selectedPromptPrefix;
     private T? _promptPrefixToEdit;
     private readonly PromptRepository _promptRepository;
@@ -56,8 +55,6 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
     public ICommand AddCommand { get; private set; }
     public ICommand CancelCommand { get; private set; }
     public ICommand SaveCommand { get; private set; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     #endregion
 
