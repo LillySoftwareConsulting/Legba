@@ -20,6 +20,8 @@ public partial class MainWindow : Window
         _serviceProvider = serviceProvider;
     }
 
+    #region Menu item click handlers
+
     private void MenuItemCopyToClipboard_Click(object sender, RoutedEventArgs e)
     {
         if (messages.SelectedIndex != -1)
@@ -35,25 +37,77 @@ public partial class MainWindow : Window
         Close();
     }
 
-    private void Persona_OnClick(object sender, RoutedEventArgs e)
+    #endregion
+
+    #region Button click handlers
+
+    private void ManagePersonas_Click(object sender, RoutedEventArgs e)
     {
         DisplayPromptPrefixPopup<Persona>();
     }
 
-    private void Purpose_Click(object sender, RoutedEventArgs e)
+    private void SavePersonaText_Click(object sender, RoutedEventArgs e)
+    {
+        // TODO: Popup window to enter the name of the persona
+        // and save it to the database.
+    }
+
+    private void ClearPersonaText_Click(object sender, RoutedEventArgs e)
+    {
+        VM.ChatSession.Persona = new Persona();
+    }
+
+    private void ManagePurposes_Click(object sender, RoutedEventArgs e)
     {
         DisplayPromptPrefixPopup<Purpose>();
     }
 
-    private void Persuasion_Click(object sender, RoutedEventArgs e)
+    private void SavePurposeText_Click(object sender, RoutedEventArgs e)
+    {
+        // TODO: Popup window to enter the name of the purpose
+        // and save it to the database.
+    }
+
+    private void ClearPurposeText_Click(object sender, RoutedEventArgs e)
+    {
+        VM.ChatSession.Purpose = new Purpose();
+    }
+
+    private void ManagePersuasions_Click(object sender, RoutedEventArgs e)
     {
         DisplayPromptPrefixPopup<Persuasion>();
     }
 
-    private void Process_Click(object sender, RoutedEventArgs e)
+    private void SavePersuasionText_Click(object sender, RoutedEventArgs e)
+    {
+        // TODO: Popup window to enter the name of the persuasion
+        // and save it to the database.
+    }
+
+    private void ClearPersuasionText_Click(object sender, RoutedEventArgs e)
+    {
+        VM.ChatSession.Persuasion = new Persuasion();
+    }
+
+    private void ManageProcesses_Click(object sender, RoutedEventArgs e)
     {
         DisplayPromptPrefixPopup<Process>();
     }
+
+    private void SaveProcessText_Click(object sender, RoutedEventArgs e)
+    {
+        // TODO: Popup window to enter the name of the process
+        // and save it to the database.
+    }
+
+    private void ClearProcessText_Click(object sender, RoutedEventArgs e)
+    {
+        VM.ChatSession.Process = new Process();
+    }
+
+    #endregion
+
+    #region Private support methods
 
     private void DisplayPromptPrefixPopup<T>() where T : PromptPrefix, new()
     {
@@ -91,4 +145,6 @@ public partial class MainWindow : Window
             VM.ChatSession.Process = process;
         }
     }
+
+    #endregion
 }
