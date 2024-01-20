@@ -67,14 +67,15 @@ public class PromptRepository(string databasePath) : IDisposable
         var collectionName = GetCollectionName<T>();
         var collection = _liteDb.GetCollection<T>(collectionName);
 
-        return collection.Find(predicate);
+        return collection.Find(predicate).OrderBy(pp => pp.Name);
     }
 
     public IEnumerable<T> GetAll<T>() where T : PromptPrefix
     {
         var collectionName = GetCollectionName<T>();
 
-        return _liteDb.GetCollection<T>(collectionName).FindAll();
+        return _liteDb.GetCollection<T>(collectionName)
+            .FindAll().OrderBy(pp => pp.Name);
     }
 
     #region Implementation of IDisposable

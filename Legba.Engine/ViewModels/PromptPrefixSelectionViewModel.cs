@@ -63,19 +63,21 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
 
     public PromptPrefixSelectionViewModel(PromptRepository promptRepository)
     {
-        _promptRepository = promptRepository;
-
         Title = $"Manage {typeof(T).Name} Prefixes";
+
+        _promptRepository = promptRepository;
 
         PopulatePromptPrefixes();
 
         UseCommand = new TypedRelayCommand<T>(Use);
         EditCommand = new TypedRelayCommand<T>(Edit);
         DeleteCommand = new TypedRelayCommand<T>(Delete);
-        AddCommand = new RelayCommand(() => PromptPrefixToEdit = new T());
+        AddCommand = new RelayCommand(Add);
         CancelCommand = new RelayCommand(Cancel);
         SaveCommand = new RelayCommand(Save);
     }
+
+    #region Command handlers
 
     private void Use(T promptPrefix)
     {
@@ -92,6 +94,11 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
         _promptRepository.Delete<T>(promptPrefix.Id);
 
         PopulatePromptPrefixes();
+    }
+
+    private void Add()
+    {
+        PromptPrefixToEdit = new T();
     }
 
     private void Cancel()
@@ -113,6 +120,10 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
         PopulatePromptPrefixes();
     }
 
+    #endregion
+
+    #region Private support methods
+
     private void PopulatePromptPrefixes()
     {
         PromptPrefixes.Clear();
@@ -122,4 +133,6 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
             PromptPrefixes.Add(promptPrefix);
         }
     }
+
+    #endregion
 }
