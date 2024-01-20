@@ -194,30 +194,40 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <!-- Persona -->
             <Label Grid.Row="0" Grid.Column="0"
+                   VerticalContentAlignment="Center"
                    FontWeight="Bold"
                    Content="Persona"/>
             <Button Grid.Row="0" Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Click="Persona_OnClick"
-                    FontWeight="Bold"
-                    Height="20"
-                    Width="20">
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ManagePersonas_Click">
                 <Image Source="Icons/MagnifyingGlass.png" />
-                <ToolTipService.InitialShowDelay>200</ToolTipService.InitialShowDelay>
                 <Button.ToolTip>
                     <ToolTip>Select or manage personas</ToolTip>
                 </Button.ToolTip>
             </Button>
+            <!--<Button Grid.Row="0" Grid.Column="2"
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="SavePersonaText_Click">
+                <Image Source="Icons/PlusCircle.png" />
+                <Button.ToolTip>
+                    <ToolTip>Save current text to prompt prefix library</ToolTip>
+                </Button.ToolTip>
+            </Button>-->
+            <Button Grid.Row="0" Grid.Column="3"
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ClearPersonaText_Click">
+                <Image Source="Icons/ClearIcon.png" />
+            </Button>
             <TextBox Grid.Row="1" Grid.Column="0"
-                     Grid.ColumnSpan="2"
+                     Grid.ColumnSpan="4"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      Background="LightGray"
@@ -229,21 +239,20 @@
                    FontWeight="Bold"
                    Content="Purpose"/>
             <Button Grid.Row="2" Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Click="Purpose_Click"
-                    FontWeight="Bold"
-                    Height="20"
-                    Width="20">
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ManagePurposes_Click">
                 <Image Source="Icons/MagnifyingGlass.png" />
-                <ToolTipService.InitialShowDelay>200</ToolTipService.InitialShowDelay>
                 <Button.ToolTip>
                     <ToolTip>Select or manage purposes</ToolTip>
                 </Button.ToolTip>
             </Button>
+            <Button Grid.Row="2" Grid.Column="3"
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ClearPurposeText_Click">
+                <Image Source="Icons/ClearIcon.png" />
+            </Button>
             <TextBox Grid.Row="3" Grid.Column="0"
-                     Grid.ColumnSpan="2"
+                     Grid.ColumnSpan="4"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      Background="LightGray"
@@ -255,21 +264,20 @@
                    FontWeight="Bold"
                    Content="Persuasion"/>
             <Button Grid.Row="4" Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Click="Persuasion_Click"
-                    FontWeight="Bold"
-                    Height="20"
-                    Width="20">
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ManagePersuasions_Click">
                 <Image Source="Icons/MagnifyingGlass.png" />
-                <ToolTipService.InitialShowDelay>200</ToolTipService.InitialShowDelay>
                 <Button.ToolTip>
                     <ToolTip>Select or manage persuasion</ToolTip>
                 </Button.ToolTip>
             </Button>
+            <Button Grid.Row="4" Grid.Column="3"
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ClearPersuasionText_Click">
+                <Image Source="Icons/ClearIcon.png" />
+            </Button>
             <TextBox Grid.Row="5" Grid.Column="0"
-                     Grid.ColumnSpan="2"
+                     Grid.ColumnSpan="4"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      Background="LightGray"
@@ -281,21 +289,20 @@
                    FontWeight="Bold"
                    Content="Process"/>
             <Button Grid.Row="6" Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Click="Process_Click"
-                    FontWeight="Bold"
-                    Height="20"
-                    Width="20">
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ManageProcesses_Click">
                 <Image Source="Icons/MagnifyingGlass.png" />
-                <ToolTipService.InitialShowDelay>200</ToolTipService.InitialShowDelay>
                 <Button.ToolTip>
                     <ToolTip>Select or manage processes</ToolTip>
                 </Button.ToolTip>
             </Button>
+            <Button Grid.Row="6" Grid.Column="3"
+                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Click="ClearProcessText_Click">
+                <Image Source="Icons/ClearIcon.png" />
+            </Button>
             <TextBox Grid.Row="7" Grid.Column="0"
-                     Grid.ColumnSpan="2"
+                     Grid.ColumnSpan="4"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      Background="LightGray"
@@ -307,7 +314,7 @@
                    FontWeight="Bold"
                    Content="Prompt"/>
             <TextBox Grid.Row="9" Grid.Column="0"
-                     Grid.ColumnSpan="2"
+                     Grid.ColumnSpan="4"
                      x:Name="prompt"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
@@ -315,7 +322,9 @@
                      VerticalScrollBarVisibility="Auto"
                      Text="{Binding ChatSession.Prompt, Mode=TwoWay}"/>
 
+            <!-- Submit prompt to LLM -->
             <Button Grid.Row="11" Grid.Column="1"
+                    Grid.ColumnSpan="3"
                     Content="Ask"
                     Width="75"
                     HorizontalAlignment="Right"

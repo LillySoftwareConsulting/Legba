@@ -11,7 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icons\ClearIcon.png" />
     <None Remove="Icons\MagnifyingGlass.png" />
+    <None Remove="Icons\PlusCircle.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,7 +36,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Icons\ClearIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Icons\MagnifyingGlass.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Icons\PlusCircle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
