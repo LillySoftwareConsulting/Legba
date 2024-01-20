@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace Legba.Engine.ViewModels;
 
-public class PromptPrefixSelectionViewModel<T> : ViewModelBase where T : PromptPrefix, new()
+public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : PromptPrefix, new()
 {
     #region Properties, Fields, Commands, and Events
 

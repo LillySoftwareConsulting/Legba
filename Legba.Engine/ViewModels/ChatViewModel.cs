@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Legba.Engine.ViewModels;
 
-public class ChatViewModel : ViewModelBase
+public class ChatViewModel : ObservableObject
 {
     #region Properties, Fields, Commands, and Events
 
