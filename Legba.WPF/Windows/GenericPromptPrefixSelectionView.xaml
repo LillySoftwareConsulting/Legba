@@ -20,13 +20,13 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
         <!-- List of prompt prefixes -->
         <DataGrid Grid.Row="0" Grid.Column="0"
-                  Grid.ColumnSpan="2"
+                  Grid.ColumnSpan="3"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserReorderColumns="False"
@@ -36,7 +36,42 @@
                   AutoGenerateColumns="False">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Name" 
+                                    Width="*"
+                                    Binding="{Binding Name}"/>
+                
+                <DataGridTemplateColumn Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Use" 
+                                    Style="{StaticResource ButtonStyle}"
+                                    Command="{Binding DataContext.UseCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTemplateColumn Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Edit" 
+                                    Style="{StaticResource ButtonStyle}"
+                                    Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTemplateColumn Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" 
+                                    Style="{StaticResource ButtonStyle}"
+                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                                    CommandParameter="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             
         </DataGrid>
@@ -55,19 +90,33 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0"
+                   Grid.ColumnSpan="2"
                    FontWeight="Bold"
                    Content="Name:"/>
             <TextBox Grid.Row="1" Grid.Column="0"
+                     Grid.ColumnSpan="2"
                      Text="{Binding PromptPrefixToEdit.Name, UpdateSourceTrigger=PropertyChanged}"/>
             <Label Grid.Row="2" Grid.Column="0"
+                   Grid.ColumnSpan="2"
                    FontWeight="Bold"
                    Content="Prompt prefix text:"/>
             <TextBox Grid.Row="3" Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     TextWrapping="Wrap"
                      Text="{Binding PromptPrefixToEdit.Text, UpdateSourceTrigger=PropertyChanged}"/>
+
             <Button Grid.Row="5" Grid.Column="0"
+                    Style="{StaticResource ButtonStyle}"
+                    HorizontalAlignment="Right"
+                    Content="Cancel"
+                    IsEnabled="{Binding PromptPrefixToEdit.CanBeSaved, Mode=OneWay}"
+                    Command="{Binding CancelCommand}"/>
+
+            <Button Grid.Row="5" Grid.Column="1"
                     Style="{StaticResource ButtonStyle}"
                     HorizontalAlignment="Right"
                     Content="Save"
@@ -80,8 +129,8 @@
                 Style="{StaticResource ButtonStyle}"
                 HorizontalAlignment="Left"
                 Visibility="{Binding PromptPrefixToEdit, Converter={StaticResource NullToVisibilityConverter}}"
-                Content="{Binding AddNewButtonText, NotifyOnSourceUpdated=True}"
-                Command="{Binding AddNewCommand}"/>
+                Content="{Binding AddButtonText, NotifyOnSourceUpdated=True}"
+                Command="{Binding AddCommand}"/>
 
         <Button Grid.Row="3" Grid.Column="1"
                 Style="{StaticResource ButtonStyle}"

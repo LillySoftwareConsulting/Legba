@@ -54,7 +54,7 @@ public class PromptRepository(string databasePath) : IDisposable
         }
     }
 
-    public bool Delete<T>(int id) where T : PromptPrefix
+    public bool Delete<T>(Guid id) where T : PromptPrefix
     {
         var collectionName = GetCollectionName<T>();
         var collection = _liteDb.GetCollection<T>(collectionName);

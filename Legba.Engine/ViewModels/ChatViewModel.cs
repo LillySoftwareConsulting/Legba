@@ -46,7 +46,7 @@ public class ChatViewModel : ObservableObject
             Llms.Add(llm);
         }
 
-        SelectModelCommand = new GenericRelayCommand<Settings.Model>(SelectModel);
+        SelectModelCommand = new TypedRelayCommand<Settings.Model>(SelectModel);
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
     }
 

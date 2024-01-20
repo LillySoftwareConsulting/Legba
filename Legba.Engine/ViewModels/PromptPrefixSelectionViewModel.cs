@@ -22,7 +22,7 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
         {
             _title = value;
             OnPropertyChanged(nameof(Title));
-            OnPropertyChanged(nameof(AddNewButtonText));
+            OnPropertyChanged(nameof(AddButtonText));
         }
     }
 
@@ -36,7 +36,7 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
         }
     }
 
-    public string AddNewButtonText => $"Add New {typeof(T).Name}";
+    public string AddButtonText => $"Add New {typeof(T).Name}";
 
     public T? SelectedPromptPrefix
     {
@@ -50,7 +50,11 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
 
     public ObservableCollection<T> PromptPrefixes { get; } = new();
 
-    public ICommand AddNewCommand { get; private set; }
+    public ICommand UseCommand { get; private set; }
+    public ICommand EditCommand { get; private set; }
+    public ICommand DeleteCommand { get; private set; }
+    public ICommand AddCommand { get; private set; }
+    public ICommand CancelCommand { get; private set; }
     public ICommand SaveCommand { get; private set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -63,10 +67,36 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
 
         Title = $"Manage {typeof(T).Name} Prefixes";
 
-        UpdatePromptPrefixes();
+        PopulatePromptPrefixes();
 
-        AddNewCommand = new RelayCommand(() => PromptPrefixToEdit = new T());
+        UseCommand = new TypedRelayCommand<T>(Use);
+        EditCommand = new TypedRelayCommand<T>(Edit);
+        DeleteCommand = new TypedRelayCommand<T>(Delete);
+        AddCommand = new RelayCommand(() => PromptPrefixToEdit = new T());
+        CancelCommand = new RelayCommand(Cancel);
         SaveCommand = new RelayCommand(Save);
+    }
+
+    private void Use(T promptPrefix)
+    {
+        SelectedPromptPrefix = promptPrefix;
+    }
+
+    private void Edit(T promptPrefix)
+    {
+        PromptPrefixToEdit = promptPrefix;
+    }
+
+    private void Delete(T promptPrefix)
+    {
+        _promptRepository.Delete<T>(promptPrefix.Id);
+
+        PopulatePromptPrefixes();
+    }
+
+    private void Cancel()
+    {
+        PromptPrefixToEdit = null;
     }
 
     private void Save()
@@ -79,9 +109,11 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
         _promptRepository.AddOrUpdate(PromptPrefixToEdit);
 
         PromptPrefixToEdit = null;
+
+        PopulatePromptPrefixes();
     }
 
-    private void UpdatePromptPrefixes()
+    private void PopulatePromptPrefixes()
     {
         PromptPrefixes.Clear();
 
