@@ -34,7 +34,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
     </Window.Resources>
 
     <Grid Background="#AEDFF7">
@@ -214,8 +213,7 @@
 
             <!-- Persona -->
             <Label Grid.Row="0" Grid.Column="0"
-                   VerticalContentAlignment="Center"
-                   FontWeight="Bold"
+                   Style="{StaticResource LiteralLabel}"
                    Content="Persona"/>
             <Button Grid.Row="0" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
@@ -248,7 +246,7 @@
 
             <!-- Purpose -->
             <Label Grid.Row="2" Grid.Column="0"
-                   FontWeight="Bold"
+                   Style="{StaticResource LiteralLabel}"
                    Content="Purpose"/>
             <Button Grid.Row="2" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
@@ -273,7 +271,7 @@
 
             <!-- Persuasion -->
             <Label Grid.Row="4" Grid.Column="0"
-                   FontWeight="Bold"
+                   Style="{StaticResource LiteralLabel}"
                    Content="Persuasion"/>
             <Button Grid.Row="4" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
@@ -298,7 +296,7 @@
 
             <!-- Process -->
             <Label Grid.Row="6" Grid.Column="0"
-                   FontWeight="Bold"
+                   Style="{StaticResource LiteralLabel}"
                    Content="Process"/>
             <Button Grid.Row="6" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
@@ -323,7 +321,7 @@
 
             <!-- Prompt -->
             <Label Grid.Row="8" Grid.Column="0"
-                   FontWeight="Bold"
+                   Style="{StaticResource LiteralLabel}"
                    Content="Prompt"/>
             <TextBox Grid.Row="9" Grid.Column="0"
                      Grid.ColumnSpan="4"

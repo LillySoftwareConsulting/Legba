@@ -32,6 +32,11 @@
                x:Key="PromptPrefixSectionClearButton">
             <Setter Property="ToolTip" Value="Clear prompt prefix text"/>
         </Style>
+
+        <Style TargetType="Label" x:Key="LiteralLabel">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
         
     </Application.Resources>
 
