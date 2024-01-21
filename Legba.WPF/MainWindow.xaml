@@ -232,7 +232,7 @@
                 </Button.ToolTip>
             </Button>-->
             <Button Grid.Row="0" Grid.Column="3"
-                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Style="{StaticResource PromptPrefixSectionClearButton}"
                     Click="ClearPersonaText_Click">
                 <Image Source="Images/ClearIcon.png" />
             </Button>
@@ -254,7 +254,7 @@
                 </Button.ToolTip>
             </Button>
             <Button Grid.Row="2" Grid.Column="3"
-                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Style="{StaticResource PromptPrefixSectionClearButton}"
                     Click="ClearPurposeText_Click">
                 <Image Source="Images/ClearIcon.png" />
             </Button>
@@ -276,7 +276,7 @@
                 </Button.ToolTip>
             </Button>
             <Button Grid.Row="4" Grid.Column="3"
-                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Style="{StaticResource PromptPrefixSectionClearButton}"
                     Click="ClearPersuasionText_Click">
                 <Image Source="Images/ClearIcon.png" />
             </Button>
@@ -298,7 +298,7 @@
                 </Button.ToolTip>
             </Button>
             <Button Grid.Row="6" Grid.Column="3"
-                    Style="{StaticResource PromptPrefixSectionButton}"
+                    Style="{StaticResource PromptPrefixSectionClearButton}"
                     Click="ClearProcessText_Click">
                 <Image Source="Images/ClearIcon.png" />
             </Button>
