@@ -1,27 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Legba.Engine.Models;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace Legba.WPF.Windows
+namespace Legba.WPF.Windows;
+
+public partial class GenericPromptPrefixEditorView : Window
 {
-    /// <summary>
-    /// Interaction logic for GenericPromptPrefixEditorView.xaml
-    /// </summary>
-    public partial class GenericPromptPrefixEditorView : Window
+    public GenericPromptPrefixEditorView()
     {
-        public GenericPromptPrefixEditorView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
+
+    private void Save_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = DataContext as ICanSaveToDatabase;
+        vm?.Save();
+        Close();
     }
 }

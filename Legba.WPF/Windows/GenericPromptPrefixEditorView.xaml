@@ -26,33 +26,33 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0"
-                   Grid.ColumnSpan="2"
-                   FontWeight="Bold"
-                   Content="Name:"/>
+               Grid.ColumnSpan="2"
+               FontWeight="Bold"
+               Content="Name:"/>
         <TextBox Grid.Row="1" Grid.Column="0"
-                     Grid.ColumnSpan="2"
-                     Text="{Binding PromptPrefixToEdit.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                 Grid.ColumnSpan="2"
+                 Text="{Binding PromptPrefixToEdit.Name, UpdateSourceTrigger=PropertyChanged}"/>
         <Label Grid.Row="2" Grid.Column="0"
-                   Grid.ColumnSpan="2"
-                   FontWeight="Bold"
-                   Content="Prompt prefix text:"/>
+               Grid.ColumnSpan="2"
+               FontWeight="Bold"
+               Content="Prompt prefix text:"/>
         <TextBox Grid.Row="3" Grid.Column="0"
-                     Grid.ColumnSpan="2"
-                     TextWrapping="Wrap"
-                     Text="{Binding PromptPrefixToEdit.Text, UpdateSourceTrigger=PropertyChanged}"/>
+                 Grid.ColumnSpan="2"
+                 TextWrapping="Wrap"
+                 Text="{Binding PromptPrefixToEdit.Text, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Button Grid.Row="5" Grid.Column="0"
-                    Style="{StaticResource ButtonStyle}"
-                    HorizontalAlignment="Right"
-                    Content="Cancel"
-                    IsEnabled="{Binding PromptPrefixToEdit.CanBeSaved, Mode=OneWay}"/>
+                Style="{StaticResource ButtonStyle}"
+                HorizontalAlignment="Right"
+                Content="Cancel"
+                IsCancel="True"/>
 
         <Button Grid.Row="5" Grid.Column="1"
-                    Style="{StaticResource ButtonStyle}"
-                    HorizontalAlignment="Right"
-                    Content="Save"
-                    IsEnabled="{Binding PromptPrefixToEdit.CanBeSaved, Mode=OneWay}"
-                    Command="{Binding SaveCommand}"/>
+                Style="{StaticResource ButtonStyle}"
+                HorizontalAlignment="Right"
+                Content="Save"
+                IsEnabled="{Binding PromptPrefixToEdit.CanBeSaved, Mode=OneWay}"
+                Click="Save_Click"/>
     </Grid>
 
 </Window>

@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace Legba.Engine.ViewModels;
 
-public class PromptPrefixEditorViewModel<T> : ObservableObject where T : PromptPrefix, new()
+public class PromptPrefixEditorViewModel<T> : ObservableObject, ICanSaveToDatabase where T : PromptPrefix, new()
 {
     #region Properties, Fields, Commands, and Events
 
@@ -42,18 +42,14 @@ public class PromptPrefixEditorViewModel<T> : ObservableObject where T : PromptP
         }
     }
 
-    public ICommand SaveCommand { get; private set; }
-
     #endregion
 
     public PromptPrefixEditorViewModel(PromptRepository promptRepository)
     {
         _promptRepository = promptRepository;
-
-        SaveCommand = new RelayCommand(Save);
     }
 
-    private void Save()
+    public void Save()
     {
         if (PromptPrefixToEdit == null)
         {
