@@ -1,7 +1,7 @@
 # About Legba
-Legba is a desktop app to help you make and manage calls to OpenAI's API. It currently only runs on Windows, but I plan to make it cross-platform.
+Legba is a desktop app to help you test and make calls to OpenAI's API. It currently only runs on Windows, but I hope to eventually make it cross-platform.
 
-It started out as a simple desktop request/response app, but I'm expanding it to help test building prompts with different 'setup' text describing the persona, purpose, persuasion, and process to include with the prompt.
+It started out as a simple desktop request/response app, but I've expanded it to help test building prompts with different 'prefix' text describing the persona, purpose, persuasion, and process to include when submitting the prompt.
 
 The name "Legba" is from [Papa Legba](https://en.wikipedia.org/wiki/Papa_Legba), a voodoo *loa* who stood at the crossroads between humans and God and helped them communicate.
 
@@ -20,6 +20,6 @@ Please report any problems at one of these places:
 
 # Future Plans
 - Convert the UI to something that runs cross-platform - probably [Avalonia](https://avaloniaui.net/).
-- Able to store and retrieve "prompt prefixes" to be passed in when making a request to OpenAI's API.
 - Able to share prompts with friends, co-workers, or the public.
-- Connect to other LLMs (on the web or locally).
+  - Possibly host a service to share prompt prefixes.
+- Connect to other LLMs besides OpenAI (on the web and/or locally).
