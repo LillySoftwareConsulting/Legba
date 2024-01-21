@@ -37,6 +37,13 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
+
+        <Style TargetType="TextBox" x:Key="PromptInputTextBox">
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        </Style>
         
     </Application.Resources>
 

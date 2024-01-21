@@ -238,10 +238,7 @@
             </Button>
             <TextBox Grid.Row="1" Grid.Column="0"
                      Grid.ColumnSpan="4"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     Background="LightGray"
-                     VerticalScrollBarVisibility="Auto"
+                     Style="{StaticResource PromptInputTextBox}"
                      Text="{Binding ChatSession.Persona.Text, Mode=TwoWay}"/>
 
             <!-- Purpose -->
@@ -263,10 +260,7 @@
             </Button>
             <TextBox Grid.Row="3" Grid.Column="0"
                      Grid.ColumnSpan="4"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     Background="LightGray"
-                     VerticalScrollBarVisibility="Auto"
+                     Style="{StaticResource PromptInputTextBox}"
                      Text="{Binding ChatSession.Purpose.Text, Mode=TwoWay}"/>
 
             <!-- Persuasion -->
@@ -288,10 +282,7 @@
             </Button>
             <TextBox Grid.Row="5" Grid.Column="0"
                      Grid.ColumnSpan="4"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     Background="LightGray"
-                     VerticalScrollBarVisibility="Auto"
+                     Style="{StaticResource PromptInputTextBox}"
                      Text="{Binding ChatSession.Persuasion.Text, Mode=TwoWay}"/>
 
             <!-- Process -->
@@ -313,10 +304,7 @@
             </Button>
             <TextBox Grid.Row="7" Grid.Column="0"
                      Grid.ColumnSpan="4"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     Background="LightGray"
-                     VerticalScrollBarVisibility="Auto"
+                     Style="{StaticResource PromptInputTextBox}"
                      Text="{Binding ChatSession.Process.Text, Mode=TwoWay}"/>
 
             <!-- Prompt -->
@@ -324,12 +312,9 @@
                    Style="{StaticResource LiteralLabel}"
                    Content="Prompt"/>
             <TextBox Grid.Row="9" Grid.Column="0"
-                     Grid.ColumnSpan="4"
                      x:Name="prompt"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     Background="LightGray"
-                     VerticalScrollBarVisibility="Auto"
+                     Grid.ColumnSpan="4"
+                     Style="{StaticResource PromptInputTextBox}"
                      Text="{Binding ChatSession.Prompt, Mode=TwoWay}"/>
 
             <!-- Submit prompt to LLM -->
