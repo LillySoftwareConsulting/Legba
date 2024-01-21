@@ -45,6 +45,14 @@ public partial class App : Application
         services.AddTransient<PromptPrefixSelectionView<Persuasion>>();
         services.AddTransient<PromptPrefixSelectionView<Process>>();
         services.AddTransient<PromptPrefixSelectionView<Purpose>>();
+        services.AddTransient<PromptPrefixEditorViewModel<Persona>>();
+        services.AddTransient<PromptPrefixEditorViewModel<Persuasion>>();
+        services.AddTransient<PromptPrefixEditorViewModel<Process>>();
+        services.AddTransient<PromptPrefixEditorViewModel<Purpose>>();
+        services.AddTransient<PromptPrefixEditorView<Persona>>();
+        services.AddTransient<PromptPrefixEditorView<Persuasion>>();
+        services.AddTransient<PromptPrefixEditorView<Process>>();
+        services.AddTransient<PromptPrefixEditorView<Purpose>>();
 
         // Register 'service' objects for injection
         services.AddSingleton<OpenAiConnector>();

@@ -15,10 +15,10 @@ public class ChatSession : ObservableObject, IDisposable
 
     private Persona _persona = new();
     private Purpose _purpose = new();
+    private Persuasion _persuasion = new();
     private Process _process = new();
     private string _prompt = string.Empty;
     private bool _disposed = false; // To detect redundant calls
-    private Persuasion _persuasion = new();
 
     public bool IncludePriorMessages { get; set; } = true;
 
