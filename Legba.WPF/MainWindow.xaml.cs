@@ -87,13 +87,12 @@ public partial class MainWindow : Window
 
     private void ManagePersonas_Click(object sender, RoutedEventArgs e)
     {
-        DisplayPromptPrefixPopup<Persona>();
+        DisplayPromptPrefixSelectionPopup<Persona>();
     }
 
-    private void SavePersonaText_Click(object sender, RoutedEventArgs e)
+    private void AddUpdatePersonaText_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: Popup window to enter the name of the persona
-        // and save it to the database.
+        DisplayPromptPrefixEditorPopup(VM.ChatSession.Persona);
     }
 
     private void ClearPersonaText_Click(object sender, RoutedEventArgs e)
@@ -103,13 +102,12 @@ public partial class MainWindow : Window
 
     private void ManagePurposes_Click(object sender, RoutedEventArgs e)
     {
-        DisplayPromptPrefixPopup<Purpose>();
+        DisplayPromptPrefixSelectionPopup<Purpose>();
     }
 
-    private void SavePurposeText_Click(object sender, RoutedEventArgs e)
+    private void AddUpdatePurposeText_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: Popup window to enter the name of the purpose
-        // and save it to the database.
+        DisplayPromptPrefixEditorPopup(VM.ChatSession.Purpose);
     }
 
     private void ClearPurposeText_Click(object sender, RoutedEventArgs e)
@@ -119,13 +117,12 @@ public partial class MainWindow : Window
 
     private void ManagePersuasions_Click(object sender, RoutedEventArgs e)
     {
-        DisplayPromptPrefixPopup<Persuasion>();
+        DisplayPromptPrefixSelectionPopup<Persuasion>();
     }
 
-    private void SavePersuasionText_Click(object sender, RoutedEventArgs e)
+    private void AddUpdatePersuasionText_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: Popup window to enter the name of the persuasion
-        // and save it to the database.
+        DisplayPromptPrefixEditorPopup(VM.ChatSession.Persuasion);
     }
 
     private void ClearPersuasionText_Click(object sender, RoutedEventArgs e)
@@ -135,13 +132,12 @@ public partial class MainWindow : Window
 
     private void ManageProcesses_Click(object sender, RoutedEventArgs e)
     {
-        DisplayPromptPrefixPopup<Process>();
+        DisplayPromptPrefixSelectionPopup<Process>();
     }
 
-    private void SaveProcessText_Click(object sender, RoutedEventArgs e)
+    private void AddUpdateProcessText_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: Popup window to enter the name of the process
-        // and save it to the database.
+        DisplayPromptPrefixEditorPopup(VM.ChatSession.Process);
     }
 
     private void ClearProcessText_Click(object sender, RoutedEventArgs e)
@@ -153,7 +149,19 @@ public partial class MainWindow : Window
 
     #region Private support methods
 
-    private void DisplayPromptPrefixPopup<T>() where T : PromptPrefix, new()
+    private void DisplayPromptPrefixEditorPopup<T>(T promptPrefix) where T : PromptPrefix, new()
+    {
+        var view =
+            _serviceProvider.GetRequiredService<PromptPrefixEditorView<T>>();
+        var dataContext =
+            view.DataContext as PromptPrefixEditorViewModel<T>;
+        dataContext.PromptPrefixToEdit = promptPrefix;
+        view.Owner = this;
+
+        view.ShowDialog();
+    }
+
+    private void DisplayPromptPrefixSelectionPopup<T>() where T : PromptPrefix, new()
     {
         var view =
             _serviceProvider.GetRequiredService<PromptPrefixSelectionView<T>>();
