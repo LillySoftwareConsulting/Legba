@@ -220,7 +220,7 @@
             <Button Grid.Row="0" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ManagePersonas_Click">
-                <Image Source="Icons/MagnifyingGlass.png" />
+                <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
                     <ToolTip>Select or manage personas</ToolTip>
                 </Button.ToolTip>
@@ -228,7 +228,7 @@
             <!--<Button Grid.Row="0" Grid.Column="2"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="SavePersonaText_Click">
-                <Image Source="Icons/PlusCircle.png" />
+                <Image Source="Images/PlusCircle.png" />
                 <Button.ToolTip>
                     <ToolTip>Save current text to prompt prefix library</ToolTip>
                 </Button.ToolTip>
@@ -236,7 +236,7 @@
             <Button Grid.Row="0" Grid.Column="3"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ClearPersonaText_Click">
-                <Image Source="Icons/ClearIcon.png" />
+                <Image Source="Images/ClearIcon.png" />
             </Button>
             <TextBox Grid.Row="1" Grid.Column="0"
                      Grid.ColumnSpan="4"
@@ -253,7 +253,7 @@
             <Button Grid.Row="2" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ManagePurposes_Click">
-                <Image Source="Icons/MagnifyingGlass.png" />
+                <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
                     <ToolTip>Select or manage purposes</ToolTip>
                 </Button.ToolTip>
@@ -261,7 +261,7 @@
             <Button Grid.Row="2" Grid.Column="3"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ClearPurposeText_Click">
-                <Image Source="Icons/ClearIcon.png" />
+                <Image Source="Images/ClearIcon.png" />
             </Button>
             <TextBox Grid.Row="3" Grid.Column="0"
                      Grid.ColumnSpan="4"
@@ -278,7 +278,7 @@
             <Button Grid.Row="4" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ManagePersuasions_Click">
-                <Image Source="Icons/MagnifyingGlass.png" />
+                <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
                     <ToolTip>Select or manage persuasion</ToolTip>
                 </Button.ToolTip>
@@ -286,7 +286,7 @@
             <Button Grid.Row="4" Grid.Column="3"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ClearPersuasionText_Click">
-                <Image Source="Icons/ClearIcon.png" />
+                <Image Source="Images/ClearIcon.png" />
             </Button>
             <TextBox Grid.Row="5" Grid.Column="0"
                      Grid.ColumnSpan="4"
@@ -303,7 +303,7 @@
             <Button Grid.Row="6" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ManageProcesses_Click">
-                <Image Source="Icons/MagnifyingGlass.png" />
+                <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
                     <ToolTip>Select or manage processes</ToolTip>
                 </Button.ToolTip>
@@ -311,7 +311,7 @@
             <Button Grid.Row="6" Grid.Column="3"
                     Style="{StaticResource PromptPrefixSectionButton}"
                     Click="ClearProcessText_Click">
-                <Image Source="Icons/ClearIcon.png" />
+                <Image Source="Images/ClearIcon.png" />
             </Button>
             <TextBox Grid.Row="7" Grid.Column="0"
                      Grid.ColumnSpan="4"

@@ -7,17 +7,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UserSecretsId>3be61677-fcf9-4588-bc35-5383dcd0d62e</UserSecretsId>
-    <ApplicationIcon>LegbaIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Images\LegbaIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Icons\ClearIcon.png" />
-    <None Remove="Icons\MagnifyingGlass.png" />
-    <None Remove="Icons\PlusCircle.png" />
+    <None Remove="Images\ClearIcon.png" />
+    <None Remove="Images\MagnifyingGlass.png" />
+    <None Remove="Images\PlusCircle.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="LegbaIcon.ico" />
+    <Content Include="Images\LegbaIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,13 +37,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Icons\ClearIcon.png">
+    <Resource Include="Images\ClearIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Icons\MagnifyingGlass.png">
+    <Resource Include="Images\MagnifyingGlass.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Icons\PlusCircle.png">
+    <Resource Include="Images\PlusCircle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
