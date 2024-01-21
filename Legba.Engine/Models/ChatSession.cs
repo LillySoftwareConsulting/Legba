@@ -78,6 +78,8 @@ public class ChatSession : ObservableObject, IDisposable
     public ObservableCollection<Message> Messages { get; set; } = [];
     public ObservableCollection<TokenSummary> TokenSummaries { get; set; } = [];
 
+    public bool HasMessages => Messages.Count > 0;
+
     public int GrandTotalRequestTokenCount => 
         TokenSummaries.Sum(u => u.RequestTokenCount);
     public int GrandTotalResponseTokenCount => 
@@ -93,6 +95,7 @@ public class ChatSession : ObservableObject, IDisposable
         var factory = serviceProvider.GetRequiredService<LlmConnectorFactory>();
         _connection = factory.GetLlmConnector(llm, model);
 
+        Messages.CollectionChanged += OnMessageCollectionChanged;
         TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
 
@@ -126,6 +129,12 @@ public class ChatSession : ObservableObject, IDisposable
     }
 
     #region Private supporting methods
+
+    private void OnMessageCollectionChanged(object? sender, 
+        NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(HasMessages));
+    }
 
     private void OnTokenUsagesCollectionChanged(object? sender,
         NotifyCollectionChangedEventArgs e)

@@ -1,8 +1,12 @@
-﻿using Legba.Engine.LlmConnectors.OpenAi;
+﻿using CSharpExtender.ExtensionMethods;
+using Legba.Engine.LlmConnectors.OpenAi;
 using Legba.Engine.Models;
+using Legba.Engine.Services;
 using Legba.Engine.ViewModels;
 using Legba.WPF.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
+using System.IO;
 using System.Windows;
 
 namespace Legba.WPF;
@@ -10,6 +14,7 @@ namespace Legba.WPF;
 public partial class MainWindow : Window
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly PromptRepository _promptRepository;
 
     private ChatViewModel? VM => DataContext as ChatViewModel;
 
@@ -18,6 +23,7 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _serviceProvider = serviceProvider;
+        _promptRepository = _serviceProvider.GetRequiredService<PromptRepository>();
     }
 
     #region Menu item click handlers
@@ -29,6 +35,44 @@ public partial class MainWindow : Window
             var message = (Message)messages.SelectedItem;
 
             Clipboard.SetText(message.Content);
+        }
+    }
+
+    private void ExportPromptPrefixesLibrary_Click(object sender, RoutedEventArgs e)
+    {
+        var saveFileDialog = 
+            new SaveFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                FilterIndex = 1,
+                RestoreDirectory = true
+            };
+
+        if(saveFileDialog.ShowDialog() == true)
+        {
+            var export = _promptRepository.Export();
+
+            File.WriteAllText(saveFileDialog.FileName, 
+                export.AsSerializedJson().PrettyPrintJson());
+        }
+    }
+
+    private void ExportCurrentChatMessages_Click(object sender, RoutedEventArgs e)
+    {
+        var saveFileDialog =
+            new SaveFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                FilterIndex = 1,
+                RestoreDirectory = true
+            };
+
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            var export = VM.ChatSession.Messages;
+
+            File.WriteAllText(saveFileDialog.FileName,
+                export.AsSerializedJson().PrettyPrintJson());
         }
     }
 

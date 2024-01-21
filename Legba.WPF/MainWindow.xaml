@@ -71,6 +71,18 @@
                     </MenuItem.ItemTemplate>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Export">
+                    <MenuItem Header="Prompt Prefixes Library"
+                              Click="ExportPromptPrefixesLibrary_Click"/>
+                    <MenuItem Header="Current Chat Messages"
+                              IsEnabled="{Binding ChatSession.HasMessages, Mode=OneWay}"
+                              Click="ExportCurrentChatMessages_Click"/>
+                </MenuItem>
+                <MenuItem Header="Import"
+                          IsEnabled="False">
+                    
+                </MenuItem>
+                <Separator/>
                 <MenuItem Header="Exit"
                           Click="Exit_Click"/>
             </MenuItem>
