@@ -78,6 +78,18 @@ public class PromptRepository(string databasePath) : IDisposable
             .FindAll().OrderBy(pp => pp.Name);
     }
 
+    public PromptPrefixesExport Export()
+    {
+        var export = new PromptPrefixesExport();
+
+        export.Personas.AddRange(GetAll<Persona>());
+        export.Purposes.AddRange(GetAll<Purpose>());
+        export.Persuasions.AddRange(GetAll<Persuasion>());
+        export.Processes.AddRange(GetAll<Process>());
+
+        return export;
+    }
+
     #region Implementation of IDisposable
 
     public void Dispose()
