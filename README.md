@@ -1,6 +1,6 @@
 # About Legba
 
-<img align="left" width="125" height="125" style="color:white" src="https://github.com/LillySoftwareConsulting/Legba/blob/master/Legba.WPF/LegbaIcon.png">
+<img align="left" width="125" height="125" style="color:white" src="https://github.com/LillySoftwareConsulting/Legba/blob/master/Legba.WPF/Images/LegbaLogo.png">
 
 Legba is a desktop app to help you test, optimize, and share prompts when calling OpenAI's API. It currently only runs on Windows, but I hope to eventually make it cross-platform.
 
