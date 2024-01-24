@@ -85,7 +85,8 @@
                           Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="Help">
-                <MenuItem Header="View Help"/>
+                <MenuItem Header="View Help"
+                          Click="Help_Click"/>
                 <Separator/>
                 <MenuItem Header="About"
                           Click="About_Click"/>

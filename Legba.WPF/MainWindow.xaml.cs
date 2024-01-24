@@ -15,6 +15,7 @@ public partial class MainWindow : Window
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly PromptRepository _promptRepository;
+    private HelpView _helpView;
 
     private ChatViewModel? VM => DataContext as ChatViewModel;
 
@@ -81,11 +82,35 @@ public partial class MainWindow : Window
         Close();
     }
 
+    private void Help_Click(object sender, RoutedEventArgs e)
+    {
+        if (_helpView == null)
+        {
+            _helpView = _serviceProvider.GetRequiredService<HelpView>();
+            _helpView.Owner = this;
+
+            // Set _helpView to null when it's closed
+            _helpView.Closed += (s, args) => _helpView = null;
+        }
+
+        // Bring the window to the top and set focus
+        _helpView.Activate();
+
+        if (_helpView.WindowState == WindowState.Minimized)
+        {
+            // If the window was minimized, restore it
+            _helpView.WindowState = WindowState.Normal;
+        }
+
+        // Show the window if it's not already visible
+        _helpView.Show();
+    }
+
     private void About_Click(object sender, RoutedEventArgs e)
     {
-        var about = _serviceProvider.GetRequiredService<About>();
-        about.Owner = this;
-        about.ShowDialog();
+        var aboutView = _serviceProvider.GetRequiredService<AboutView>();
+        aboutView.Owner = this;
+        aboutView.ShowDialog();
     }
 
     #endregion
