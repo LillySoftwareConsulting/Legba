@@ -13,6 +13,14 @@
         <customConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <customConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
 
+        <Style TargetType="Window" x:Key="WindowStyle">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        
+        <Style TargetType="Menu" x:Key="MenuStyle">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
         <Style TargetType="Button" x:Key="ButtonStyle">
             <Setter Property="Padding" Value="10,2,10,2" />
             <Setter Property="Margin" Value="3,0,3,0" />

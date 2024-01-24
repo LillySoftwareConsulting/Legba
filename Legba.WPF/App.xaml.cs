@@ -35,6 +35,8 @@ public partial class App : Application
         services.AddSingleton(settings);
 
         // Register view and viewmodel objects for injection
+        services.AddTransient<About>();
+        services.AddTransient<AboutViewModel>();
         services.AddTransient<ChatViewModel>();
         services.AddTransient<MainWindow>();
         services.AddTransient<PromptPrefixSelectionViewModel<Persona>>();

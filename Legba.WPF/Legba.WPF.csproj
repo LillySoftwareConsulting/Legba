@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Remove="Images\ClearIcon.png" />
+    <None Remove="Images\LegbaLogo_Transparent.png" />
     <None Remove="Images\MagnifyingGlass.png" />
     <None Remove="Images\PlusCircle.png" />
   </ItemGroup>
@@ -38,6 +39,9 @@
 
   <ItemGroup>
     <Resource Include="Images\ClearIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\LegbaLogo_Transparent.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\MagnifyingGlass.png">

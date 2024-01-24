@@ -81,6 +81,13 @@ public partial class MainWindow : Window
         Close();
     }
 
+    private void About_Click(object sender, RoutedEventArgs e)
+    {
+        var about = _serviceProvider.GetRequiredService<About>();
+        about.Owner = this;
+        about.ShowDialog();
+    }
+
     #endregion
 
     #region Button click handlers
