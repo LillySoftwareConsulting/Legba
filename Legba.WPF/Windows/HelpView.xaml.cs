@@ -1,16 +1,15 @@
 ﻿using Legba.Engine.ViewModels;
 using System.Windows;
-using System.Windows.Input;
 
 namespace Legba.WPF.Windows;
 
-public partial class About : Window
+public partial class HelpView : Window
 {
-    public About(AboutViewModel aboutViewModel)
+    public HelpView(HelpViewModel helpViewModel)
     {
         InitializeComponent();
 
-        DataContext = aboutViewModel;
+        DataContext = helpViewModel;
     }
 
     private void OK_Click(object sender, RoutedEventArgs e)

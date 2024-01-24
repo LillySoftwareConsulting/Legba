@@ -35,7 +35,9 @@ public partial class App : Application
         services.AddSingleton(settings);
 
         // Register view and viewmodel objects for injection
-        services.AddTransient<About>();
+        services.AddTransient<HelpView>();
+        services.AddTransient<HelpViewModel>();
+        services.AddTransient<AboutView>();
         services.AddTransient<AboutViewModel>();
         services.AddTransient<ChatViewModel>();
         services.AddTransient<MainWindow>();
