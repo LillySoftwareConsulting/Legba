@@ -7,9 +7,8 @@
         xmlns:local="clr-namespace:Legba.WPF"
         d:DataContext="{d:DesignInstance viewModels:ChatViewModel}"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource WindowStyle}"
         Title="Legba" 
-        FontSize="12pt"
         WindowState="Maximized">
 
     <Window.Resources>
@@ -49,7 +48,7 @@
 
         <!-- Menu -->
         <Menu Grid.Row="0" Grid.Column="0"
-              FontSize="12pt"
+              Style="{StaticResource MenuStyle}"
               Grid.ColumnSpan="3">
             <MenuItem Header="File">
                 <MenuItem Header="New Session">
@@ -86,8 +85,10 @@
                           Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="Help">
+                <MenuItem Header="View Help"/>
+                <Separator/>
                 <MenuItem Header="About"
-                          IsEnabled="False"/>
+                          Click="About_Click"/>
             </MenuItem>
         </Menu>
 
