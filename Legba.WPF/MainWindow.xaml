@@ -73,13 +73,11 @@
                     <MenuItem Header="Prompt Prefixes Library"
                               Click="ExportPromptPrefixesLibrary_Click"/>
                     <MenuItem Header="Current Chat Messages"
-                              IsEnabled="{Binding ChatSession.HasMessages, Mode=OneWay}"
+                              IsEnabled="{Binding HasChatMessages, Mode=OneWay}"
                               Click="ExportCurrentChatMessages_Click"/>
                 </MenuItem>
-                <MenuItem Header="Import"
-                          IsEnabled="False">
-                    
-                </MenuItem>
+                <!--<MenuItem Header="Import"
+                          IsEnabled="False"/>-->
                 <Separator/>
                 <MenuItem Header="Exit"
                           Click="Exit_Click"/>
