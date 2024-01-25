@@ -9,7 +9,7 @@
         FontSize="16"
         WindowStartupLocation="CenterOwner"
         Title="Help" 
-        Height="500" Width="700">
+        Height="500" Width="800">
 
     <Grid Margin="5,5,5,5">
         <Grid.RowDefinitions>
