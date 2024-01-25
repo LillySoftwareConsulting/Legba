@@ -1,10 +1,10 @@
 ﻿using Legba.Engine.Models;
 using Legba.Engine.Services;
-using System.Windows.Input;
 
 namespace Legba.Engine.ViewModels;
 
-public class PromptPrefixEditorViewModel<T> : ObservableObject, ICanSaveToDatabase where T : PromptPrefix, new()
+public class PromptPrefixEditorViewModel<T> : 
+    ObservableObject, ICanSaveToDatabase where T : PromptPrefix, new()
 {
     #region Properties, Fields, Commands, and Events
 

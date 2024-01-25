@@ -10,7 +10,7 @@ public class PromptPrefixSelectionView<T> :
     GenericPromptPrefixSelectionView where T : PromptPrefix, new()
 {
     public PromptPrefixSelectionView(IServiceProvider serviceProvider)
-        : base()
+        : base(serviceProvider)
     {
         DataContext = 
             serviceProvider.GetRequiredService<PromptPrefixSelectionViewModel<T>>();
