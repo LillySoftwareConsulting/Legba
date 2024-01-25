@@ -74,6 +74,16 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
         SaveCommand = new RelayCommand(Save);
     }
 
+    public void PopulatePromptPrefixes()
+    {
+        PromptPrefixes.Clear();
+
+        foreach (var promptPrefix in _promptRepository.GetAll<T>())
+        {
+            PromptPrefixes.Add(promptPrefix);
+        }
+    }
+
     #region Command handlers
 
     private void Use(T promptPrefix)
@@ -115,20 +125,6 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
         PromptPrefixToEdit = null;
 
         PopulatePromptPrefixes();
-    }
-
-    #endregion
-
-    #region Private support methods
-
-    private void PopulatePromptPrefixes()
-    {
-        PromptPrefixes.Clear();
-
-        foreach (var promptPrefix in _promptRepository.GetAll<T>())
-        {
-            PromptPrefixes.Add(promptPrefix);
-        }
     }
 
     #endregion
