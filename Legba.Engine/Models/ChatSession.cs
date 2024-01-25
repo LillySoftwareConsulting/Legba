@@ -20,8 +20,6 @@ public class ChatSession : ObservableObject, IDisposable
     private string _prompt = string.Empty;
     private bool _disposed = false; // To detect redundant calls
 
-    public bool IncludePriorMessages { get; set; } = true;
-
     public Persona Persona 
     { 
         get => _persona;
@@ -153,7 +151,7 @@ public class ChatSession : ObservableObject, IDisposable
     {
         return new LegbaRequest
         {
-            Messages = IncludePriorMessages ? Messages.ToList() : [],
+            Messages = Messages.ToList(),
             Temperature = 0.5f
         };
     }
@@ -162,10 +160,15 @@ public class ChatSession : ObservableObject, IDisposable
     {
         var sb = new StringBuilder();
 
-        sb.AppendLineIfNotEmpty(Persona.Text);
-        sb.AppendLineIfNotEmpty(Persuasion.Text);
-        sb.AppendLineIfNotEmpty(Purpose.Text);
-        sb.AppendLineIfNotEmpty(Process.Text);
+        // Only include the prompt prefixes if there are no messages yet,
+        // since the app currently always includes the prior messages in the request.
+        if(Messages.Count == 0)
+        {
+            sb.AppendLineIfNotEmpty(Persona.Text);
+            sb.AppendLineIfNotEmpty(Persuasion.Text);
+            sb.AppendLineIfNotEmpty(Purpose.Text);
+            sb.AppendLineIfNotEmpty(Process.Text);
+        }
 
         sb.Append(Prompt);
 

@@ -73,13 +73,11 @@
                     <MenuItem Header="Prompt Prefixes Library"
                               Click="ExportPromptPrefixesLibrary_Click"/>
                     <MenuItem Header="Current Chat Messages"
-                              IsEnabled="{Binding ChatSession.HasMessages, Mode=OneWay}"
+                              IsEnabled="{Binding HasChatMessages, Mode=OneWay}"
                               Click="ExportCurrentChatMessages_Click"/>
                 </MenuItem>
-                <MenuItem Header="Import"
-                          IsEnabled="False">
-                    
-                </MenuItem>
+                <!--<MenuItem Header="Import"
+                          IsEnabled="False"/>-->
                 <Separator/>
                 <MenuItem Header="Exit"
                           Click="Exit_Click"/>
@@ -219,6 +217,7 @@
                    Content="Persona"/>
             <Button Grid.Row="0" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
+                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManagePersonas_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
@@ -253,6 +252,7 @@
                    Content="Purpose"/>
             <Button Grid.Row="2" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
+                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManagePurposes_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
@@ -287,6 +287,7 @@
                    Content="Persuasion"/>
             <Button Grid.Row="4" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
+                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManagePersuasions_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
@@ -321,6 +322,7 @@
                    Content="Process"/>
             <Button Grid.Row="6" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
+                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManageProcesses_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>

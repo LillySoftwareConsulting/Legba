@@ -57,6 +57,7 @@
                         <DataTemplate>
                             <Button Content="Use" 
                                     Style="{StaticResource ButtonStyle}"
+                                    IsCancel="True"
                                     Command="{Binding DataContext.UseCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
                                     CommandParameter="{Binding}" />
                         </DataTemplate>

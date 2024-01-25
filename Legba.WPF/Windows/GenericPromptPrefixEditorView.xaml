@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding Title}"
         FontSize="12pt"
-        Height="250" Width="600">
+        Height="400" Width="600">
 
     <!-- Add/edit controls for a prompt prefix -->
     <Grid Margin="5,5,5,5">
@@ -39,6 +39,7 @@
         <TextBox Grid.Row="3" Grid.Column="0"
                  Grid.ColumnSpan="2"
                  TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"
                  Text="{Binding PromptPrefixToEdit.Text, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Button Grid.Row="5" Grid.Column="0"

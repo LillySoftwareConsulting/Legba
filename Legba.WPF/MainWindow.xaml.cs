@@ -15,7 +15,7 @@ public partial class MainWindow : Window
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly PromptRepository _promptRepository;
-    private HelpView _helpView;
+    private HelpView? _helpView;
 
     private ChatViewModel? VM => DataContext as ChatViewModel;
 
