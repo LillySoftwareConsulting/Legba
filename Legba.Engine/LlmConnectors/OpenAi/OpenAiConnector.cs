@@ -64,7 +64,10 @@ public class OpenAiConnector : ILlmConnector
         }
         catch (Exception ex)
         {
-            throw new Exception("Unable to parse response", ex);
+            return new LegbaResponse()
+            {
+                Text = $"Error: {ex.Message}"
+            };
         }
     }
 
