@@ -17,6 +17,9 @@ public class LlmConnectorFactory
         {
             case Enums.Llm.OpenAi:
                 return new OpenAi.OpenAiConnector(_httpClientFactory, llm, model);
+            case Enums.Llm.Perplexity:
+                // Perplexity uses the same connector as OpenAI
+                return new OpenAi.OpenAiConnector(_httpClientFactory, llm, model);
             default:
                 throw new Exception($"Unknown LLM Connector: {llm.Name} - {model.Name}");
         }
