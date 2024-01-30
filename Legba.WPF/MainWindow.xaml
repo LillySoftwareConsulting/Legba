@@ -217,7 +217,6 @@
                    Content="Persona"/>
             <Button Grid.Row="0" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
-                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManagePersonas_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
@@ -252,7 +251,6 @@
                    Content="Purpose"/>
             <Button Grid.Row="2" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
-                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManagePurposes_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
@@ -287,7 +285,6 @@
                    Content="Persuasion"/>
             <Button Grid.Row="4" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
-                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManagePersuasions_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>
@@ -322,7 +319,6 @@
                    Content="Process"/>
             <Button Grid.Row="6" Grid.Column="1"
                     Style="{StaticResource PromptPrefixSectionButton}"
-                    IsEnabled="{Binding CanSelectPromptPrefix}"
                     Click="ManageProcesses_Click">
                 <Image Source="Images/MagnifyingGlass.png" />
                 <Button.ToolTip>

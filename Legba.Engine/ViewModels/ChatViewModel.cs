@@ -41,14 +41,10 @@ public class ChatViewModel : ObservableObject
     private void Messages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(HasChatMessages));
-        OnPropertyChanged(nameof(CanSelectPromptPrefix));
     }
 
     public bool HasChatSession => ChatSession != null;
     public bool HasChatMessages => ChatSession?.Messages.Count > 0;
-    // Currently, the prefixes are only passed in with the first request to ChatGPT.
-    // So, there is no use to select new prompt prefixes after the first request.
-    public bool CanSelectPromptPrefix => !HasChatMessages; 
 
     public ICommand SelectModelCommand { get; private set; }
     public ICommand AskCommand { get; private set; }
