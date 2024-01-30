@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Net.Http.Json;
+using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using Legba.Engine.Models;
 
@@ -43,7 +44,14 @@ public class OpenAiConnector : ILlmConnector
             // Send the request to OpenAI
             var httpClient = GetHttpClient();
 
-            var uri = new Uri("https://api.openai.com/v1/chat/completions");
+            if(_llm.Name == Enums.Llm.Perplexity)
+            {
+                // Set the authorization header
+                httpClient.DefaultRequestHeaders.Authorization = 
+                    new AuthenticationHeaderValue("Bearer", _llm.Keys.ApiKey);
+            }
+
+            var uri = new Uri(_model.Url);
             var response =
                 await httpClient
                 .PostAsJsonAsync(uri, openAiRequest, _jsonSerializerOptions)

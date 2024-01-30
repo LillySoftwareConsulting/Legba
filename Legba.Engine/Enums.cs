@@ -8,7 +8,9 @@ public class Enums
     {
         Unspecified,
         [Description("OpenAI")]
-        OpenAi
+        OpenAi,
+        [Description("Perplexity")]
+        Perplexity
     }
 
     public enum Role
