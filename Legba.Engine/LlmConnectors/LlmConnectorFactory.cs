@@ -13,15 +13,6 @@ public class LlmConnectorFactory
 
     public ILlmConnector GetLlmConnector(Settings.Llm llm, Settings.Model model)
     {
-        switch(llm.Name)
-        {
-            case Enums.Llm.OpenAi:
-                return new OpenAi.OpenAiConnector(_httpClientFactory, llm, model);
-            case Enums.Llm.Perplexity:
-                // Perplexity uses the same connector as OpenAI
-                return new OpenAi.OpenAiConnector(_httpClientFactory, llm, model);
-            default:
-                throw new Exception($"Unknown LLM Connector: {llm.Name} - {model.Name}");
-        }
+        return new OpenAi.OpenAiConnector(_httpClientFactory, llm, model);
     }
 }
