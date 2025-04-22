@@ -10,7 +10,11 @@ public class Enums
         [Description("OpenAI")]
         OpenAi,
         [Description("Perplexity")]
-        Perplexity
+        Perplexity,
+        [Description("Grok")]
+        Grok,
+        [Description("Groq")]
+        Groq
     }
 
     public enum Role
