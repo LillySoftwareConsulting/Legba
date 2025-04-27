@@ -6,13 +6,15 @@ namespace Legba.Engine.ViewModels;
 
 public class AboutViewModel
 {
+    private int initialCopyrightYear = 2023;
+
     private static readonly Version s_version =
         Assembly.GetExecutingAssembly().GetName().Version;
 
     public string VersionText =>
         $"{s_version.Major}.{s_version.Minor}.{s_version.Revision}";
     public string Copyright =>
-        $"© {DateTime.Now.Year} Lilly Software Consulting";
+        $"© {(DateTime.Now.Year == initialCopyrightYear ? $"{initialCopyrightYear}" : $"{initialCopyrightYear} - {DateTime.Now.Year}")}, Lilly Software Consulting";
     public string License =>
         "Licensed under the MIT License";
     public string ContactInformation =>

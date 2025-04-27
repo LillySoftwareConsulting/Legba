@@ -1,3 +1,5 @@
+![Build Status](https://github.com/LillySoftwareConsulting/Legba/actions/workflows/ci.yml/badge.svg)
+
 # About Legba
 
 <img align="left" width="125" height="125" style="color:white" src="https://github.com/LillySoftwareConsulting/Legba/blob/master/Legba.WPF/Images/LegbaLogo.png">
