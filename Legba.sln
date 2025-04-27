@@ -7,6 +7,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Legba.WPF", "Legba.WPF\Legb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Legba.Engine", "Legba.Engine\Legba.Engine.csproj", "{E6E5A159-EB7F-4690-AFC6-E86E928B97A3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		CONTRIBUTORS.md = CONTRIBUTORS.md
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C2FC1A78-0FAC-46C1-85A5-EB1D42925C59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{05E357AB-B37A-4182-ADDC-14A1391A8FF6}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ci.yml = .github\workflows\ci.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +38,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C2FC1A78-0FAC-46C1-85A5-EB1D42925C59} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{05E357AB-B37A-4182-ADDC-14A1391A8FF6} = {C2FC1A78-0FAC-46C1-85A5-EB1D42925C59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B180EB06-0C0F-47C5-8708-BD88E4C9E7CB}

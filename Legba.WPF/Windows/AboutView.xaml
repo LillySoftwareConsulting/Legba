@@ -34,8 +34,8 @@
         <StackPanel Grid.Row="0" Grid.Column="0" 
                     Grid.ColumnSpan="2"
                     Orientation="Horizontal">
-            
-            <Image Source="pack://application:,,,/Legba.WPF;component/Images/LegbaLogo_Transparent.png" 
+
+            <Image Source="/Images/LegbaLogo_Transparent.png" 
                    Height="75" 
                    Width="75" 
                    Margin="0,0,10,0"/>
