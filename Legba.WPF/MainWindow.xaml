@@ -101,11 +101,13 @@
                 <Grid Margin="5,5,5,5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- Requests and responses -->
                     <ListBox Grid.Row="0" Grid.Column="0"
                              x:Name="messages"
                              Background="#F4F6F6"
@@ -140,7 +142,21 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
+                    <!-- Latest request's token counts -->
+                    <StackPanel Grid.Row="1" Grid.Column="0"
+                                Orientation="Horizontal">
+                        <Label Content="Session Totals"
+                               FontWeight="Bold"/>
+                        <Label Content="Prompt tokens:"/>
+                        <Label Content="{Binding ChatSession.GrandTotalRequestTokenCount}"/>
+                        <Label Content="Completion tokens:"/>
+                        <Label Content="{Binding ChatSession.GrandTotalResponseTokenCount}"/>
+                        <Label Content="All tokens:"/>
+                        <Label Content="{Binding ChatSession.GrandTotalTokenCount}"/>
+                    </StackPanel>
+
                 </Grid>
+                
             </TabItem>
 
             <!-- Statistics -->
