@@ -9,7 +9,7 @@
     <UserSecretsId>3be61677-fcf9-4588-bc35-5383dcd0d62e</UserSecretsId>
     <ApplicationIcon>Images\LegbaIcon.ico</ApplicationIcon>
     <AssemblyName>Legba</AssemblyName>
-    <Version>2.0.0.0</Version>
+    <Version>1.2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
