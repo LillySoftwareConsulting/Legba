@@ -124,7 +124,7 @@
                             <ContextMenu>
                                 <MenuItem Header="Copy to Clipboard"
                                           Style="{StaticResource NoIconMenuItemStyle}"
-                                          Click="MenuItemCopyToClipboard_Click"/>
+                                          Click="ContextMenuCopyToClipboard_Click"/>
                             </ContextMenu>
                         </ListBox.ContextMenu>
                         <ListBox.ItemTemplate>
@@ -166,7 +166,7 @@
                             IsEnabled="{Binding ElementName=prompt, Path=Text, Converter={StaticResource StringNotEmptyToBooleanConverter}}"
                             Command="{Binding AskCommand, AsyncState=True}"/>
 
-                    <!-- Latest request's token counts -->
+                    <!-- Session total token counts -->
                     <StackPanel Grid.Row="7" Grid.Column="0"
                                 Orientation="Horizontal">
                         <Label Content="Session Totals"

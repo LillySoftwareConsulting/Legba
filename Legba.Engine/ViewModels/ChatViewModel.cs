@@ -14,27 +14,37 @@ public class ChatViewModel : ObservableObject
 
     public ObservableCollection<Settings.Llm> Llms { get; } = new();
 
-    private ChatSession _chatSession;
+    private ChatSession? _chatSession;
 
-    public ChatSession ChatSession
+    public ChatSession? ChatSession
     {
         get { return _chatSession; }
         set
         {
+            // No change, early exit
+            if (_chatSession == value)
+            {
+                return;
+            }
+
+            // Unsubscribe from the old session's messages collection changed event
             if (_chatSession != null)
             {
                 _chatSession.Messages.CollectionChanged -= Messages_CollectionChanged;
             }
 
-            if (_chatSession != value)
-            {
-                _chatSession = value;
-                OnPropertyChanged(nameof(ChatSession));
-                OnPropertyChanged(nameof(HasChatSession));
-                OnPropertyChanged(nameof(HasChatMessages));
+            _chatSession = value;
 
+            // Subscribe to the new session's messages collection changed event
+            if (_chatSession != null)
+            {
                 _chatSession.Messages.CollectionChanged += Messages_CollectionChanged;
             }
+
+            // Raise property changed notifications
+            OnPropertyChanged(nameof(ChatSession));
+            OnPropertyChanged(nameof(HasChatSession));
+            OnPropertyChanged(nameof(HasChatMessages));
         }
     }
 
@@ -51,6 +61,8 @@ public class ChatViewModel : ObservableObject
 
     #endregion
 
+    #region Constructor
+
     public ChatViewModel(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
@@ -65,6 +77,10 @@ public class ChatViewModel : ObservableObject
         AskCommand = new RelayCommand(async () => await ChatSession.Ask());
     }
 
+    #endregion
+
+    #region Private Methods
+
     private void SelectModel(Settings.Model model)
     {
         var llm = Llms.First(l => l.Models.Contains(model));
@@ -73,4 +89,6 @@ public class ChatViewModel : ObservableObject
 
         ChatSession = new ChatSession(_serviceProvider, llm, model);
     }
+
+    #endregion
 }

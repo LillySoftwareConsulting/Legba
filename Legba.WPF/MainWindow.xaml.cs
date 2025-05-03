@@ -13,31 +13,34 @@ namespace Legba.WPF;
 
 public partial class MainWindow : Window
 {
+    #region Fields and Properties
+
     private readonly IServiceProvider _serviceProvider;
     private readonly PromptRepository _promptRepository;
     private HelpView? _helpView;
 
-    private ChatViewModel? VM => DataContext as ChatViewModel;
+    private ChatViewModel VM => DataContext as ChatViewModel;
+
+    #endregion
+
+    #region Constructor
 
     public MainWindow(IServiceProvider serviceProvider)
     {
         InitializeComponent();
 
         _serviceProvider = serviceProvider;
+
         _promptRepository = _serviceProvider.GetRequiredService<PromptRepository>();
+
+        DataContext = _serviceProvider.GetRequiredService<ChatViewModel>();
+
+        VM.PropertyChanged += (s, e) => { ChatViewModel_PropertyChanged(e); };
     }
 
-    #region Menu item click handlers
+    #endregion
 
-    private void MenuItemCopyToClipboard_Click(object sender, RoutedEventArgs e)
-    {
-        if (messages.SelectedIndex != -1)
-        {
-            var message = (Message)messages.SelectedItem;
-
-            Clipboard.SetText(message.Content);
-        }
-    }
+    #region Menu item click eventhandlers
 
     private void ExportPromptPrefixesLibrary_Click(object sender, RoutedEventArgs e)
     {
@@ -115,7 +118,41 @@ public partial class MainWindow : Window
 
     #endregion
 
-    #region Button click handlers
+    #region Context menu click eventhandlers
+
+    private void ContextMenuCopyToClipboard_Click(object sender, RoutedEventArgs e)
+    {
+        if (messages.SelectedIndex != -1)
+        {
+            var message = (Message)messages.SelectedItem;
+
+            Clipboard.SetText(message.Content);
+        }
+    }
+
+    #endregion
+
+    #region Other eventhandlers
+
+    private void ChatViewModel_PropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(ChatViewModel.HasChatSession))
+        {
+            return;
+        }
+
+        // A session has been set, so, show window to get prompt prefixes.
+        PromptPrefixSelectionView promptPrefixSelectionView =
+            _serviceProvider.GetRequiredService<PromptPrefixSelectionView>();
+
+        promptPrefixSelectionView.Owner = this;
+
+        promptPrefixSelectionView.ShowDialog();
+    }
+
+    #endregion
+
+    #region Button click eventhandlers
 
     private void ManagePersonas_Click(object sender, RoutedEventArgs e)
     {

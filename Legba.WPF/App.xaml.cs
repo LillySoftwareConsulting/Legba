@@ -57,6 +57,8 @@ public partial class App : Application
         services.AddTransient<PromptPrefixEditorView<Persuasion>>();
         services.AddTransient<PromptPrefixEditorView<Process>>();
         services.AddTransient<PromptPrefixEditorView<Purpose>>();
+        services.AddTransient<PromptPrefixSelectionView>();
+        services.AddTransient<PromptPrefixSelectionContainerViewModel>();
 
         // Register 'service' objects for injection
         services.AddSingleton<OpenAiConnector>();
@@ -76,11 +78,6 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // Resolve the main window and set its DataContext to the injected view model
-        var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-        var viewModel = _serviceProvider.GetRequiredService<ChatViewModel>();
-
-        mainWindow.DataContext = viewModel;
-        mainWindow.Show();
+        _serviceProvider.GetRequiredService<MainWindow>().Show();
     }
 }

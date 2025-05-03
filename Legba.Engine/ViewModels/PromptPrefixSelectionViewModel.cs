@@ -49,6 +49,8 @@ public class PromptPrefixSelectionViewModel<T> : ObservableObject where T : Prom
 
     public ObservableCollection<T> PromptPrefixes { get; } = new();
 
+    public ObservableCollection<string> LoadedFileNames { get; } = new();
+
     public ICommand UseCommand { get; private set; }
     public ICommand EditCommand { get; private set; }
     public ICommand DeleteCommand { get; private set; }
