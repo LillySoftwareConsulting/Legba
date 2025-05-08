@@ -1,89 +1,90 @@
-﻿using Legba.Engine.LlmConnectors;
-using Legba.Engine.LlmConnectors.OpenAi;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Legba.Engine.Models.OpenAi;
+using Legba.Engine.Services;
 
 namespace Legba.Engine.Models;
 
 public class ChatSession : ObservableObject, IDisposable
 {
-    #region Properties, Fields, Commands, and Events
+    #region Private fields
 
-    private readonly ILlmConnector _connection;
+    private readonly OpenAiConnector _llmConnector;
 
-    private Persona _persona = new();
-    private Purpose _purpose = new();
-    private Persuasion _persuasion = new();
-    private Process _process = new();
-    private string _prompt = string.Empty;
     private bool _disposed = false; // To detect redundant calls
 
-    public Persona Persona 
-    { 
-        get => _persona;
-        set 
-        { 
-            _persona = value;
-            OnPropertyChanged(nameof(Persona));
-        } 
-    }
+    private string _prompt = string.Empty;
+    private string _personality = string.Empty;
+    private string _sourceCode = string.Empty;
 
-    public Purpose Purpose 
-    { 
-        get => _purpose;
-        set 
-        { 
-            _purpose = value; 
-            OnPropertyChanged(nameof(Purpose));
-        }
-    }
+    #endregion
 
-    public Persuasion Persuasion
-    {
-        get => _persuasion;
-        set
-        {
-            _persuasion = value;
-            OnPropertyChanged(nameof(Persuasion));
-        }
-    }
-
-    public Process Process
-    {
-        get => _process;
-        set
-        {
-            _process = value;
-            OnPropertyChanged(nameof(Process));
-        }
-    }
+    #region Properties
 
     public string Prompt
     {
         get => _prompt;
         set
         {
-            if (_prompt != value)
+            if (_prompt == value)
             {
-                _prompt = value;
-                OnPropertyChanged(nameof(Prompt));
+                return;
             }
+
+            _prompt = value;
+
+            OnPropertyChanged(nameof(Prompt));
+        }
+    }
+
+    public string Personality
+    {
+        get => _personality;
+        set
+        {
+            if (_personality == value)
+            {
+                return;
+            }
+
+            _personality = value;
+
+            OnPropertyChanged(nameof(Personality));
+        }
+    }
+
+    public string SourceCode
+    {
+        get => _sourceCode;
+        set
+        {
+            if (_sourceCode == value)
+            {
+                return;
+            }
+
+            _sourceCode = value;
+
+            OnPropertyChanged(nameof(SourceCode));
         }
     }
 
     public ObservableCollection<Message> Messages { get; set; } = [];
-    public ObservableCollection<TokenSummary> TokenSummaries { get; set; } = [];
+
+    public ObservableCollection<TokenSummary> TokenUsages { get; set; } = [];
+
+    public string ModelName => $"{_llmConnector.Llm.Name} | {_llmConnector.Model.Name}";
 
     public bool HasMessages => Messages.Count > 0;
 
     public int GrandTotalRequestTokenCount => 
-        TokenSummaries.Sum(u => u.RequestTokenCount);
+        TokenUsages.Sum(u => u.RequestTokenCount);
     public int GrandTotalResponseTokenCount => 
-        TokenSummaries.Sum(u => u.ResponseTokenCount);
+        TokenUsages.Sum(u => u.ResponseTokenCount);
     public int GrandTotalTokenCount => 
-        TokenSummaries.Sum(u => u.TotalTokenCount);
+        TokenUsages.Sum(u => u.TotalTokenCount);
 
     #endregion
 
@@ -91,44 +92,15 @@ public class ChatSession : ObservableObject, IDisposable
         Settings.Llm llm, Settings.Model model)
     {
         var factory = serviceProvider.GetRequiredService<LlmConnectorFactory>();
-        _connection = factory.GetLlmConnector(llm, model);
+        _llmConnector = factory.GetLlmConnector(llm, model);
 
-        Messages.CollectionChanged += OnMessageCollectionChanged;
-        TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
+        Messages.CollectionChanged += OnMessagesCollectionChanged;
+        TokenUsages.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
 
-    public async Task Ask()
-    {
-        // Store prompt in a variable so we can clear it before the response is received.
-        // This prevents the user from spamming the ask button,
-        // due to the button not being enabled when the Prompt property is empty.
-        var completePrompt = BuildPrompt();
-        Prompt = string.Empty;
+    #region Eventhandlers
 
-        // TODO: Record selected Persona, Purpose, and Process with prompt, for history.
-        AddMessage(Enums.Role.User, completePrompt);
-
-        var llmRequest = BuildLlmRequest();
-
-        AddMessage(Enums.Role.Assistant, "Thinking...");
-
-        var response = await _connection.AskAsync(llmRequest);
-
-        // Remove "Thinking..." message
-        Messages.Remove(Messages.Last());
-
-        AddMessage(Enums.Role.Assistant, response.Text);
-
-        TokenSummaries.Add(new TokenSummary
-        {
-            RequestTokenCount = response.RequestTokenCount,
-            ResponseTokenCount = response.ResponseTokenCount
-        });
-    }
-
-    #region Private supporting methods
-
-    private void OnMessageCollectionChanged(object? sender, 
+    private void OnMessagesCollectionChanged(object? sender,
         NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(HasMessages));
@@ -141,6 +113,39 @@ public class ChatSession : ObservableObject, IDisposable
         OnPropertyChanged(nameof(GrandTotalResponseTokenCount));
         OnPropertyChanged(nameof(GrandTotalTokenCount));
     }
+
+    #endregion
+
+    public async Task AskAsync()
+    {
+        // Store prompt in a variable so we can clear it before the response is received.
+        // This prevents the user from spamming the ask button,
+        // due to the button not being enabled when the Prompt property is empty.
+        var completePrompt = BuildPrompt();
+
+        Prompt = string.Empty;
+
+        AddMessage(Enums.Role.User, completePrompt);
+
+        var llmRequest = BuildLlmRequest();
+
+        AddMessage(Enums.Role.Assistant, "Thinking...");
+
+        var response = await _llmConnector.AskAsync(llmRequest);
+
+        // Remove "Thinking..." message
+        Messages.Remove(Messages.Last());
+
+        AddMessage(Enums.Role.Assistant, response.Text);
+
+        TokenUsages.Add(new TokenSummary
+        {
+            RequestTokenCount = response.RequestTokenCount,
+            ResponseTokenCount = response.ResponseTokenCount
+        });
+    }
+
+    #region Private supporting methods
 
     private void AddMessage(Enums.Role role, string content)
     {
@@ -160,14 +165,12 @@ public class ChatSession : ObservableObject, IDisposable
     {
         var sb = new StringBuilder();
 
-        // Only include the prompt prefixes if there are no messages yet,
-        // since the app currently always includes the prior messages in the request.
+        // Only include the personality and source code if there are no messages yet,
+        // since the app always includes the prior messages in the request.
         if(Messages.Count == 0)
         {
-            sb.AppendLineIfNotEmpty(Persona.Text);
-            sb.AppendLineIfNotEmpty(Persuasion.Text);
-            sb.AppendLineIfNotEmpty(Purpose.Text);
-            sb.AppendLineIfNotEmpty(Process.Text);
+            sb.AppendLineIfNotEmpty(Personality);
+            sb.AppendLineIfNotEmpty(SourceCode);
         }
 
         sb.Append(Prompt);
@@ -195,9 +198,9 @@ public class ChatSession : ObservableObject, IDisposable
         if (disposing)
         {
             Messages.Clear();
-            TokenSummaries.Clear();
+            TokenUsages.Clear();
 
-            TokenSummaries.CollectionChanged -= OnTokenUsagesCollectionChanged;
+            TokenUsages.CollectionChanged -= OnTokenUsagesCollectionChanged;
         }
 
         _disposed = true;

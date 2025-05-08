@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Legba.Engine.Models;
+using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Legba.Engine;
 
@@ -16,5 +18,19 @@ public static class ExtensionMethods
         {
             sb.AppendLine(text);
         }
+    }
+
+    public static Settings.Llm LlmWithModel(this ObservableCollection<Settings.Llm> llms, 
+        Settings.Model model)
+    {
+        foreach (var llm in llms)
+        {
+            if (llm.Models.Contains(model))
+            {
+                return llm;
+            }
+        }
+
+        throw new ArgumentException($"Model {model} not found in the list of LLMs.");
     }
 }

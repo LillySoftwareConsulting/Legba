@@ -1,0 +1,67 @@
+﻿<Application x:Class="Legba.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Legba"
+             xmlns:customConverters="clr-namespace:Legba.CustomConverters">
+    
+    <Application.Resources>
+
+        <Style TargetType="Window" x:Key="WindowStyle">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style TargetType="Menu" x:Key="MenuStyle">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style TargetType="Button" x:Key="ButtonStyle">
+            <Setter Property="Padding" Value="10,2,10,2" />
+            <Setter Property="Margin" Value="3,0,3,0" />
+        </Style>
+
+        <Style TargetType="Button" x:Key="PersonalityButton">
+            <Setter Property="Margin" Value="2,0,2,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="100"/>
+            <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
+        </Style>
+
+        <Style TargetType="Button" 
+               BasedOn="{StaticResource PersonalityButton}"
+               x:Key="PersonalityManageButton">
+            <Setter Property="ToolTip" Value="Select personality prompt from library"/>
+        </Style>
+
+        <Style TargetType="Button" 
+               BasedOn="{StaticResource PersonalityButton}"
+               x:Key="PersonalityClearButton">
+            <Setter Property="ToolTip" Value="Clear selected personality prompt"/>
+        </Style>
+
+        <Style TargetType="Button" 
+               BasedOn="{StaticResource PersonalityButton}"
+               x:Key="PersonalityAddUpdateButton">
+            <Setter Property="ToolTip" Value="Save current text to personality prompt library"/>
+        </Style>
+
+        <Style TargetType="Label" x:Key="LiteralLabel">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="PromptInputTextBox">
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <customConverters:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
+
+    </Application.Resources>
+    
+</Application>
