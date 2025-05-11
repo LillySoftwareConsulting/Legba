@@ -34,7 +34,14 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="#AEDFF7">
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FF002366" Offset="0"/>
+                <GradientStop Color="#FF004D99" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -116,11 +123,10 @@
                     <!-- Prompt tab items -->
                     <TabControl Grid.Row="2" Grid.Column="0">
                         
-                        <TabItem Header="Prompt">
+                        <TabItem Header="User-Entered Prompt">
 
-                            <TextBox Grid.Row="0" Grid.Column="0"
-                                     Style="{StaticResource PromptInputTextBox}"
-                                     Text="{Binding Path=ChatSession.PromptText, Mode=TwoWay}"/>
+                            <TextBox Style="{StaticResource PromptInputTextBox}"
+                                     Text="{Binding Path=ChatSession.Prompt, Mode=TwoWay}"/>
 
                         </TabItem>
 
@@ -128,27 +134,24 @@
 
                             <Grid>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="2"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Label Grid.Row="0" Grid.Column="0"
-                                       Style="{StaticResource LiteralLabel}"
-                                       Content="Selected Personality"/>
-                                
-                                <Button Grid.Row="0" Grid.Column="1"
+                                <Button Grid.Row="1" Grid.Column="0"
                                         Style="{StaticResource PersonalityManageButton}"
                                         Click="SelectPersonality_Click">
                                     <Image Source="/Images/MagnifyingGlass.png" />
                                 </Button>
                                 
-                                <Button Grid.Row="0" Grid.Column="2"
+                                <Button Grid.Row="1" Grid.Column="1"
                                         ToolTipService.ShowOnDisabled="True"
                                         Style="{StaticResource PersonalityAddUpdateButton}"
                                         IsEnabled="{Binding ChatSession.Personality, 
@@ -158,7 +161,7 @@
                                     <Image Source="/Images/PlusCircle.png" />
                                 </Button>
                                 
-                                <Button Grid.Row="0" Grid.Column="3"
+                                <Button Grid.Row="1" Grid.Column="2"
                                         Style="{StaticResource PersonalityClearButton}"
                                         IsEnabled="{Binding ChatSession.Personality, 
                                                             Mode=OneWay,
@@ -167,16 +170,17 @@
                                     <Image Source="/Images/ClearIcon.png" />
                                 </Button>
                                 
-                                <TextBox Grid.Row="1" Grid.Column="0"
+                                <TextBox Grid.Row="2" Grid.Column="0"
                                          Grid.ColumnSpan="4"
                                          Style="{StaticResource PromptInputTextBox}"
+                                         Margin="2"
                                          Text="{Binding ChatSession.Personality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             </Grid>
                             
                         </TabItem>
 
-                        <TabItem Header="Source Code">
+                        <TabItem Header="Source Code from Files">
                             
                         </TabItem>
                         

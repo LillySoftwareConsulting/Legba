@@ -61,6 +61,8 @@
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <customConverters:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
+        <customConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <customConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
 
     </Application.Resources>
     

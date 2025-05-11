@@ -2,6 +2,7 @@
 using Legba.Engine.Models.OpenAi;
 using Legba.Engine.Services;
 using Legba.Engine.ViewModels;
+using Legba.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
@@ -43,6 +44,10 @@ public partial class App : System.Windows.Application
 
         // Register transient classes for injection
         services.AddTransient<ChatSession>();
+        services.AddTransient<PromptPrefixSelectionView<Personality>>();
+        services.AddTransient<PromptPrefixSelectionViewModel<Personality>>();
+        services.AddTransient<PromptPrefixEditorView<Personality>>();
+        services.AddTransient<PromptPrefixEditorViewModel<Personality>>();
 
         // Registers IHttpClientFactory
         services.AddHttpClient();

@@ -1,5 +1,8 @@
-﻿using Legba.Engine.ViewModels;
+﻿using Legba.Engine.Models;
+using Legba.Engine.ViewModels;
+using Legba.Windows;
 using Legba.WPF.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
 namespace Legba;
@@ -67,7 +70,27 @@ public partial class MainWindow : Window
 
     private void SelectPersonality_Click(object sender, RoutedEventArgs e)
     {
+        var view =
+            _serviceProvider.GetRequiredService<PromptPrefixSelectionView<Personality>>();
+        view.Owner = this;
 
+        view.ShowDialog();
+
+        // Handle the result of the dialog.
+        var promptPrefixSelectionViewModel =
+            view.DataContext as PromptPrefixSelectionViewModel<Personality>;
+
+        if (promptPrefixSelectionViewModel is null ||
+            promptPrefixSelectionViewModel.SelectedPromptPrefix is null)
+        {
+            return;
+        }
+
+        if (_chatSessionViewModel?.ChatSession != null)
+        {
+            _chatSessionViewModel.ChatSession.Personality =
+                promptPrefixSelectionViewModel.SelectedPromptPrefix.Text;
+        }
     }
 
     private void AddUpdatePersonality_Click(object sender, RoutedEventArgs e)
