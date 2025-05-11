@@ -16,7 +16,7 @@ public class ChatSession : ObservableObject, IDisposable
     private bool _disposed = false; // To detect redundant calls
 
     private string _prompt = string.Empty;
-    private string _personality = string.Empty;
+    private Personality _personality = new();
     private string _sourceCode = string.Empty;
 
     #endregion
@@ -39,18 +39,12 @@ public class ChatSession : ObservableObject, IDisposable
         }
     }
 
-    public string Personality
+    public Personality Personality
     {
         get => _personality;
         set
         {
-            if (_personality == value)
-            {
-                return;
-            }
-
             _personality = value;
-
             OnPropertyChanged(nameof(Personality));
         }
     }
@@ -169,7 +163,7 @@ public class ChatSession : ObservableObject, IDisposable
         // since the app always includes the prior messages in the request.
         if(Messages.Count == 0)
         {
-            sb.AppendLineIfNotEmpty(Personality);
+            sb.AppendLineIfNotEmpty(Personality.Text);
             sb.AppendLineIfNotEmpty(SourceCode);
         }
 

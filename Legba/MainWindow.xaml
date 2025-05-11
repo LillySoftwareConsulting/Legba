@@ -154,7 +154,7 @@
                                 <Button Grid.Row="1" Grid.Column="1"
                                         ToolTipService.ShowOnDisabled="True"
                                         Style="{StaticResource PersonalityAddUpdateButton}"
-                                        IsEnabled="{Binding ChatSession.Personality, 
+                                        IsEnabled="{Binding ChatSession.Personality.Text, 
                                                             Mode=OneWay,
                                                             Converter={StaticResource StringNotEmptyToBooleanConverter}}"
                                         Click="AddUpdatePersonality_Click">
@@ -163,7 +163,7 @@
                                 
                                 <Button Grid.Row="1" Grid.Column="2"
                                         Style="{StaticResource PersonalityClearButton}"
-                                        IsEnabled="{Binding ChatSession.Personality, 
+                                        IsEnabled="{Binding ChatSession.Personality.Text, 
                                                             Mode=OneWay,
                                                             Converter={StaticResource StringNotEmptyToBooleanConverter}}"
                                         Click="ClearPersonality_Click">
@@ -174,7 +174,7 @@
                                          Grid.ColumnSpan="4"
                                          Style="{StaticResource PromptInputTextBox}"
                                          Margin="2"
-                                         Text="{Binding ChatSession.Personality, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{Binding ChatSession.Personality.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             </Grid>
                             

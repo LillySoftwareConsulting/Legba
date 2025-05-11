@@ -89,20 +89,27 @@ public partial class MainWindow : Window
         if (_chatSessionViewModel?.ChatSession != null)
         {
             _chatSessionViewModel.ChatSession.Personality =
-                promptPrefixSelectionViewModel.SelectedPromptPrefix.Text;
+                promptPrefixSelectionViewModel.SelectedPromptPrefix;
         }
     }
 
     private void AddUpdatePersonality_Click(object sender, RoutedEventArgs e)
     {
+        var view =
+            _serviceProvider.GetRequiredService<PromptPrefixEditorView<Personality>>();
+        var dataContext =
+            view.DataContext as PromptPrefixEditorViewModel<Personality>;
+        dataContext.PromptPrefixToEdit = _chatSessionViewModel.ChatSession.Personality;
+        view.Owner = this;
 
+        view.ShowDialog();
     }
 
     private void ClearPersonality_Click(object sender, RoutedEventArgs e)
     {
         if (_chatSessionViewModel?.ChatSession != null)
         {
-            _chatSessionViewModel.ChatSession.Personality = string.Empty;
+            _chatSessionViewModel.ChatSession.Personality = new Personality();
         }
     }
 }
