@@ -56,6 +56,7 @@ public class ChatSessionViewModel : ObservableObject
     public bool HasChatMessages => ChatSession?.Messages.Count > 0;
 
     public ICommand SelectModelCommand { get; private set; }
+    public ICommand AskCommand { get; private set; }
 
     #endregion
 
@@ -71,6 +72,7 @@ public class ChatSessionViewModel : ObservableObject
         }
 
         SelectModelCommand = new TypedRelayCommand<Settings.Model>(SelectModel);
+        AskCommand = new RelayCommand(async () => await ChatSession.AskAsync());
     }
 
     private void Messages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

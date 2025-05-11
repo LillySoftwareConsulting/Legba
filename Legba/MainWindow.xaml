@@ -99,6 +99,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="2*"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -126,7 +127,7 @@
                         <TabItem Header="User-Entered Prompt">
 
                             <TextBox Style="{StaticResource PromptInputTextBox}"
-                                     Text="{Binding Path=ChatSession.Prompt, Mode=TwoWay}"/>
+                                     Text="{Binding ChatSession.Prompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                         </TabItem>
 
@@ -186,12 +187,22 @@
                         
                     </TabControl>
 
-                    <Label Grid.Row="3" Grid.Column="0"
+                    <!-- Submit button -->
+                    <Button Grid.Row="3" Grid.Column="0"
+                            Style="{StaticResource ButtonStyle}"
+                            Margin="0,10,0,5"
+                            HorizontalAlignment="Left"
+                            Width="175"
+                            Content="Submit Request to LLM"
+                            IsEnabled="{Binding ChatSession.Prompt, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringNotEmptyToBooleanConverter}}"
+                            Command="{Binding AskCommand, AsyncState=True}"/>
+
+                    <Label Grid.Row="4" Grid.Column="0"
                            Content="Response"
                            Style="{StaticResource LiteralLabel}"/>
 
                     <!-- Response text box -->
-                    <TextBox Grid.Row="4" Grid.Column="0"/>
+                    <TextBox Grid.Row="5" Grid.Column="0"/>
                     
                 </Grid>
 

@@ -5,6 +5,7 @@ using Legba.Engine.ViewModels;
 using Legba.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 using System.Windows;
 
 namespace Legba;
@@ -15,6 +16,12 @@ public partial class App : System.Windows.Application
 
     public App()
     {
+        // Setup the application data directory for the app
+        string appDataPath = 
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Legba");
+        Directory.CreateDirectory(appDataPath);
+
+        // Setup the services for the app
         IServiceCollection services = new ServiceCollection();
 
         // Load settings from user secrets
@@ -40,7 +47,7 @@ public partial class App : System.Windows.Application
         // Add services for injection
         services.AddSingleton<OpenAiConnector>();
         services.AddSingleton<LlmConnectorFactory>();
-        services.AddSingleton(provider => new PromptRepository("Legba.db"));
+        services.AddSingleton(provider => new PromptRepository(Path.Combine(appDataPath, "Legba.db")));
 
         // Register transient classes for injection
         services.AddTransient<ChatSession>();

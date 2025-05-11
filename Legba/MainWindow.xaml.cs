@@ -28,7 +28,7 @@ public partial class MainWindow : Window
         DataContext = _chatSessionViewModel;
     }
 
-    #region Eventhandlers
+    #region Menu eventhandlers
 
     private void Exit_Click(object sender, RoutedEventArgs e)
     {
@@ -67,6 +67,8 @@ public partial class MainWindow : Window
     }
 
     #endregion
+
+    #region Work area eventhandlers
 
     private void SelectPersonality_Click(object sender, RoutedEventArgs e)
     {
@@ -112,4 +114,6 @@ public partial class MainWindow : Window
             _chatSessionViewModel.ChatSession.Personality = new Personality();
         }
     }
+
+    #endregion
 }
