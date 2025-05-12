@@ -189,6 +189,7 @@
 
                     <!-- Submit button -->
                     <Button Grid.Row="3" Grid.Column="0"
+                            x:Name="SubmitButton"
                             Style="{StaticResource ButtonStyle}"
                             Margin="0,10,0,5"
                             HorizontalAlignment="Left"
@@ -202,8 +203,41 @@
                            Style="{StaticResource LiteralLabel}"/>
 
                     <!-- Response text box -->
-                    <TextBox Grid.Row="5" Grid.Column="0"/>
-                    
+                    <ListBox Grid.Row="5" Grid.Column="0"
+                             x:Name="RequestResponseMessages"
+                             Background="#F4F6F6"
+                             HorizontalContentAlignment="Stretch"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ItemsSource="{Binding ChatSession.Messages}">
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Copy to Clipboard"
+                                          Style="{StaticResource NoIconMenuItemStyle}"
+                                          Click="MenuItemCopyToClipboard_Click"/>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding IsSentByUser, Converter={StaticResource BooleanToBrushConverter}}"
+                                        CornerRadius="3"
+                                        Margin="3"
+                                        HorizontalAlignment="{Binding IsSentByUser, Converter={StaticResource BooleanToHorizontalAlignmentConverter}}">
+                                    <Border.MaxWidth>
+                                        <MultiBinding Converter="{StaticResource RelativeWidthConverter}">
+                                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBox}}" />
+                                            <Binding Source="0.7" />
+                                            <!-- 70% width -->
+                                        </MultiBinding>
+                                    </Border.MaxWidth>
+                                    <TextBlock Text="{Binding Content}" 
+                                               TextWrapping="Wrap"
+                                               Padding="5"/>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+
                 </Grid>
 
 

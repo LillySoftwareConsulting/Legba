@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Legba.Engine.Models.OpenAi;
 using Legba.Engine.Services;
+using CSharpExtender.ExtensionMethods;
 
 namespace Legba.Engine.Models;
 
@@ -112,6 +113,11 @@ public class ChatSession : ObservableObject, IDisposable
 
     public async Task AskAsync()
     {
+        if (Messages.None() && Personality.Text.IsNotNullEmptyOrWhitespace())
+        {
+            AddMessage(Enums.Role.System, Personality.Text);
+        }
+
         // Store prompt in a variable so we can clear it before the response is received.
         // This prevents the user from spamming the ask button,
         // due to the button not being enabled when the Prompt property is empty.
@@ -163,7 +169,6 @@ public class ChatSession : ObservableObject, IDisposable
         // since the app always includes the prior messages in the request.
         if(Messages.Count == 0)
         {
-            sb.AppendLineIfNotEmpty(Personality.Text);
             sb.AppendLineIfNotEmpty(SourceCode);
         }
 

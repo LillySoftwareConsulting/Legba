@@ -9,5 +9,5 @@ public class Message
     [JsonPropertyName("content")]
     public string Content { get; set; } = string.Empty;
     [JsonIgnore]
-    public bool IsSentByUser { get { return Role == Enums.Role.User; } }
+    public bool IsSentByUser { get { return Role == Enums.Role.User || Role == Enums.Role.System; } }
 }

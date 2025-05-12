@@ -59,7 +59,7 @@ public class OpenAiConnector(IHttpClientFactory httpClientFactory,
             var openAiResponse = 
                 await response
                     .Content.ReadFromJsonAsync<OpenAiResponse>(_jsonSerializerOptions)
-                    ?? throw new Exception("Error parsing the OpenAI API response");
+                    ?? throw new Exception("Error parsing the API response");
 
             var legbaResponse = MapToLegbaResponse(openAiResponse);
 

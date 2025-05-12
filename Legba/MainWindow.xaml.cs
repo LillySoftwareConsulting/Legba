@@ -115,5 +115,17 @@ public partial class MainWindow : Window
         }
     }
 
+    private void MenuItemCopyToClipboard_Click(object sender, RoutedEventArgs e)
+    {
+        if (RequestResponseMessages.SelectedIndex == -1)
+        {
+            return;
+        }
+
+        var message = (Engine.Models.OpenAi.Message)RequestResponseMessages.SelectedItem;
+
+        System.Windows.Clipboard.SetText(message.Content);
+    }
+
     #endregion
 }
