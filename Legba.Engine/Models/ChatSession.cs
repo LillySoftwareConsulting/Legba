@@ -68,18 +68,18 @@ public class ChatSession : ObservableObject, IDisposable
 
     public ObservableCollection<Message> Messages { get; set; } = [];
 
-    public ObservableCollection<TokenSummary> TokenUsages { get; set; } = [];
+    public ObservableCollection<TokenSummary> TokenSummaries { get; set; } = [];
 
     public string ModelName => $"{_llmConnector.Llm.Name} | {_llmConnector.Model.Name}";
 
     public bool HasMessages => Messages.Count > 0;
 
     public int GrandTotalRequestTokenCount => 
-        TokenUsages.Sum(u => u.RequestTokenCount);
+        TokenSummaries.Sum(u => u.RequestTokenCount);
     public int GrandTotalResponseTokenCount => 
-        TokenUsages.Sum(u => u.ResponseTokenCount);
+        TokenSummaries.Sum(u => u.ResponseTokenCount);
     public int GrandTotalTokenCount => 
-        TokenUsages.Sum(u => u.TotalTokenCount);
+        TokenSummaries.Sum(u => u.TotalTokenCount);
 
     #endregion
 
@@ -90,7 +90,7 @@ public class ChatSession : ObservableObject, IDisposable
         _llmConnector = factory.GetLlmConnector(llm, model);
 
         Messages.CollectionChanged += OnMessagesCollectionChanged;
-        TokenUsages.CollectionChanged += OnTokenUsagesCollectionChanged;
+        TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
 
     #region Eventhandlers
@@ -138,7 +138,7 @@ public class ChatSession : ObservableObject, IDisposable
 
         AddMessage(Enums.Role.Assistant, response.Text);
 
-        TokenUsages.Add(new TokenSummary
+        TokenSummaries.Add(new TokenSummary
         {
             RequestTokenCount = response.RequestTokenCount,
             ResponseTokenCount = response.ResponseTokenCount
@@ -197,9 +197,9 @@ public class ChatSession : ObservableObject, IDisposable
         if (disposing)
         {
             Messages.Clear();
-            TokenUsages.Clear();
+            TokenSummaries.Clear();
 
-            TokenUsages.CollectionChanged -= OnTokenUsagesCollectionChanged;
+            TokenSummaries.CollectionChanged -= OnTokenUsagesCollectionChanged;
         }
 
         _disposed = true;
