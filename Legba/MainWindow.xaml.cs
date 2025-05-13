@@ -150,17 +150,4 @@ public partial class MainWindow : Window
     }
 
     #endregion
-
-    #region Private methods
-
-    private void MessagesFilter(object sender, FilterEventArgs e)
-    {
-        if (e.Item is Engine.Models.OpenAi.Message message)
-        {
-            // Filter out system messages and the initial source code User message
-            e.Accepted = message.Role != Role.System && !message.IsInitialSourceCode;
-        }
-    }
-
-    #endregion
 }

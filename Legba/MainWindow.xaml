@@ -11,9 +11,6 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <CollectionViewSource x:Key="FilteredMessages"
-                          Source="{Binding ChatSession.Messages}"
-                          Filter="MessagesFilter"/>
         <Style x:Key="NoIconMenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -125,7 +122,7 @@
                              Background="#F4F6F6"
                              HorizontalContentAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ItemsSource="{Binding Source={StaticResource FilteredMessages}}">
+                             ItemsSource="{Binding ChatSession.Messages}">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Copy to Clipboard"
@@ -146,7 +143,7 @@
                                             <!-- 70% width -->
                                         </MultiBinding>
                                     </Border.MaxWidth>
-                                    <TextBlock Text="{Binding Content}" 
+                                    <TextBlock Text="{Binding DisplayText}" 
                                                TextWrapping="Wrap"
                                                Padding="5"/>
                                 </Border>
