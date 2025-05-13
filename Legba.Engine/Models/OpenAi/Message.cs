@@ -35,4 +35,36 @@ public class Message
             }
         }
     }
+
+    [JsonIgnore]
+    public System.Windows.HorizontalAlignment MessageAlignment
+    {
+        get
+        {
+            if (Role == Enums.Role.System || IsInitialSourceCode)
+            {
+                return System.Windows.HorizontalAlignment.Center;
+            }
+
+            return IsSentByUser
+                ? System.Windows.HorizontalAlignment.Right
+                : System.Windows.HorizontalAlignment.Left;
+        }
+    }
+
+    [JsonIgnore]
+    public System.Windows.Media.Brush MessageBackground
+    {
+        get
+        {
+            if (Role == Enums.Role.System || IsInitialSourceCode)
+            {
+                return System.Windows.Media.Brushes.Gold;
+            }
+
+            return IsSentByUser
+                ? System.Windows.Media.Brushes.LightBlue
+                : System.Windows.Media.Brushes.LightGray;
+        }
+    }
 }

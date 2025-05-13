@@ -1,5 +1,6 @@
 ﻿using Legba.Engine.Models;
 using Legba.Engine.Models.OpenAi;
+using System.Net.Http;
 
 namespace Legba.Engine.Services;
 

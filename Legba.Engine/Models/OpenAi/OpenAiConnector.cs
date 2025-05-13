@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
+using System.Net.Http;
 
 namespace Legba.Engine.Models.OpenAi;
 

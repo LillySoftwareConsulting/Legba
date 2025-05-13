@@ -132,15 +132,14 @@
                         </ListBox.ContextMenu>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="{Binding IsSentByUser, Converter={StaticResource BooleanToBrushConverter}}"
+                                <Border Background="{Binding MessageBackground}"
                                         CornerRadius="3"
                                         Margin="3"
-                                        HorizontalAlignment="{Binding IsSentByUser, Converter={StaticResource BooleanToHorizontalAlignmentConverter}}">
+                                        HorizontalAlignment="{Binding MessageAlignment}">
                                     <Border.MaxWidth>
                                         <MultiBinding Converter="{StaticResource RelativeWidthConverter}">
                                             <Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBox}}" />
                                             <Binding Source="0.7" />
-                                            <!-- 70% width -->
                                         </MultiBinding>
                                     </Border.MaxWidth>
                                     <TextBlock Text="{Binding DisplayText}" 
