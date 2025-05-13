@@ -11,6 +11,9 @@
         WindowState="Maximized">
 
     <Window.Resources>
+        <CollectionViewSource x:Key="FilteredMessages"
+                          Source="{Binding ChatSession.Messages}"
+                          Filter="MessagesFilter"/>
         <Style x:Key="NoIconMenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -116,13 +119,13 @@
                         
                     </StackPanel>
 
-                    <!-- Response text box -->
+                    <!-- Response list box -->
                     <ListBox Grid.Row="1" Grid.Column="0"
                              x:Name="RequestResponseMessages"
                              Background="#F4F6F6"
                              HorizontalContentAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ItemsSource="{Binding ChatSession.Messages}">
+                             ItemsSource="{Binding Source={StaticResource FilteredMessages}}">
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Copy to Clipboard"
@@ -166,7 +169,12 @@
 
                         </TabItem>
 
-                        <TabItem Header="Personality">
+                        <TabItem Header="Personality"
+                                 ToolTip="Personality can only be set with first LLM request"
+                                 IsEnabled="{Binding ChatSession.HasMessages, 
+                                                     Mode=OneWay, 
+                                                     UpdateSourceTrigger=PropertyChanged,
+                                                     Converter={StaticResource BooleanInverterConverter}}">
 
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -216,7 +224,53 @@
                             
                         </TabItem>
 
-                        <TabItem Header="Source Code from Files">
+                        <TabItem Header="Source Code from Files"
+                                 ToolTip="Source code files can only be added with first LLM request"
+                                 IsEnabled="{Binding ChatSession.HasMessages, 
+                                                     Mode=OneWay, 
+                                                     UpdateSourceTrigger=PropertyChanged,
+                                                     Converter={StaticResource BooleanInverterConverter}}">
+
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Row="0" Grid.Column="0"
+                                        Style="{StaticResource ButtonStyle}"
+                                        Margin="2,2,5,2"
+                                        Content="Add solution"
+                                        Click="AddSolution_Click"/>
+                                <Button Grid.Row="1" Grid.Column="0"
+                                        Style="{StaticResource ButtonStyle}"
+                                        Margin="2,2,5,2"
+                                        Content="Add project"
+                                        Click="AddProject_Click"/>
+                                <Button Grid.Row="2" Grid.Column="0"
+                                        Style="{StaticResource ButtonStyle}"
+                                        Margin="2,2,5,2"
+                                        Content="Add folder(s)"
+                                        Click="AddFolders_Click"/>
+                                <Button Grid.Row="3" Grid.Column="0"
+                                        Style="{StaticResource ButtonStyle}"
+                                        Margin="2,2,5,2"
+                                        Content="Add file(s)"
+                                        Click="AddFiles_Click"/>
+
+                                <TextBox Grid.Row="0" Grid.Column="1"
+                                         Grid.RowSpan="4"
+                                         Style="{StaticResource PromptInputTextBox}"
+                                         Text="{Binding ChatSession.SourceCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="0,2,2,2"/>
+
+                            </Grid>
                             
                         </TabItem>
                         

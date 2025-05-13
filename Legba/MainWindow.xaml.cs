@@ -4,6 +4,8 @@ using Legba.Windows;
 using Legba.WPF.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
+using static Legba.Engine.Enums;
+using System.Windows.Data;
 
 namespace Legba;
 
@@ -16,7 +18,7 @@ public partial class MainWindow : Window
 
     private readonly IServiceProvider _serviceProvider;
 
-    private ChatSessionViewModel? _chatSessionViewModel;
+    private readonly ChatSessionViewModel? _chatSessionViewModel;
 
     public MainWindow(IServiceProvider serviceProvider)
     {
@@ -125,6 +127,39 @@ public partial class MainWindow : Window
         var message = (Engine.Models.OpenAi.Message)RequestResponseMessages.SelectedItem;
 
         System.Windows.Clipboard.SetText(message.Content);
+    }
+
+    private void AddSolution_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void AddProject_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void AddFolders_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void AddFiles_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private void MessagesFilter(object sender, FilterEventArgs e)
+    {
+        if (e.Item is Engine.Models.OpenAi.Message message)
+        {
+            // Filter out system messages and the initial source code User message
+            e.Accepted = message.Role != Role.System && !message.IsInitialSourceCode;
+        }
     }
 
     #endregion

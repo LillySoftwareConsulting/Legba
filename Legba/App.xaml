@@ -59,13 +59,14 @@
             <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         </Style>
 
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <customConverters:BooleanToBrushConverter x:Key="BooleanToBrushConverter" />
-        <customConverters:BooleanToHorizontalAlignmentConverter x:Key="BooleanToHorizontalAlignmentConverter" />
-        <customConverters:RelativeWidthConverter x:Key="RelativeWidthConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <customConverters:BooleanInverterConverter x:Key="BooleanInverterConverter"/>
+        <customConverters:BooleanToBrushConverter x:Key="BooleanToBrushConverter"/>
+        <customConverters:BooleanToHorizontalAlignmentConverter x:Key="BooleanToHorizontalAlignmentConverter"/>
+        <customConverters:RelativeWidthConverter x:Key="RelativeWidthConverter"/>
         <customConverters:StringNotEmptyToBooleanConverter x:Key="StringNotEmptyToBooleanConverter"/>
-        <customConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <customConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter" />
+        <customConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <customConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
 
     </Application.Resources>
     

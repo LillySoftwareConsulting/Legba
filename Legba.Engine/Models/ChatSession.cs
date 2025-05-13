@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Legba.Engine.Models.OpenAi;
 using Legba.Engine.Services;
@@ -113,19 +112,25 @@ public class ChatSession : ObservableObject, IDisposable
 
     public async Task AskAsync()
     {
-        if (Messages.None() && Personality.Text.IsNotNullEmptyOrWhitespace())
+        // On first request submission, include the personality and source code (if any)
+        if (Messages.None())
         {
-            AddMessage(Enums.Role.System, Personality.Text);
+            if (Personality.Text.IsNotNullEmptyOrWhitespace())
+            {
+                AddMessage(Enums.Role.System, Personality.Text);
+            }
+
+            if (SourceCode.IsNotNullEmptyOrWhitespace())
+            {
+                AddMessage(Enums.Role.User, SourceCode, true);
+            }
         }
 
-        // Store prompt in a variable so we can clear it before the response is received.
-        // This prevents the user from spamming the ask button,
-        // due to the button not being enabled when the Prompt property is empty.
-        var completePrompt = BuildPrompt();
+        // Add prompt to messages
+        AddMessage(Enums.Role.User, Prompt);
 
+        // Clear prompt in UI
         Prompt = string.Empty;
-
-        AddMessage(Enums.Role.User, completePrompt);
 
         var llmRequest = BuildLlmRequest();
 
@@ -147,9 +152,16 @@ public class ChatSession : ObservableObject, IDisposable
 
     #region Private supporting methods
 
-    private void AddMessage(Enums.Role role, string content)
+    private void AddMessage(Enums.Role role, string content, bool isInitialSourceCode = false)
     {
-        Messages.Add(new Message { Role = role, Content = content });
+        var message = new Message
+        { 
+            Role = role, 
+            Content = content, 
+            IsInitialSourceCode = isInitialSourceCode
+        };
+
+        Messages.Add(message);
     }
 
     private LegbaRequest BuildLlmRequest()
@@ -159,22 +171,6 @@ public class ChatSession : ObservableObject, IDisposable
             Messages = Messages.ToList(),
             Temperature = 0.5f
         };
-    }
-
-    private string BuildPrompt()
-    {
-        var sb = new StringBuilder();
-
-        // Only include the personality and source code if there are no messages yet,
-        // since the app always includes the prior messages in the request.
-        if(Messages.Count == 0)
-        {
-            sb.AppendLineIfNotEmpty(SourceCode);
-        }
-
-        sb.Append(Prompt);
-
-        return sb.ToString();
     }
 
     #endregion
