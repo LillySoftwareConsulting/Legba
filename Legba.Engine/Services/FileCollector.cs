@@ -9,7 +9,7 @@ public class FileCollector
 {
     #region Constants and Fields
 
-    private static readonly IReadOnlyList<string> s_fileExtensionsToInclude = [".cs", ".vb"];
+    private static readonly IReadOnlyList<string> s_fileExtensionsToInclude = [".cs", ".vb", ".xaml"];
     private static readonly IReadOnlyList<Regex> s_excludedFilePatterns =
         [
             new Regex(@"(AssemblyAttributes|AssemblyInfo|\.g|\.g\.i|\.Designer|\.generated)\.(cs|vb)$",
@@ -27,7 +27,7 @@ public class FileCollector
     /// <param name="solutionFileName">Name of Visual Studio solution</param>
     /// <returns>ReadOnlyList of code files in a Visual Studio solution</returns>
     /// <exception cref="InvalidOperationException">Exception if .sln file cannot be loaded</exception>
-    public async Task<IReadOnlyList<string>> GetFilesFromSolutionAsync(string solutionFileName)
+    public static async Task<IReadOnlyList<string>> GetFilesFromSolutionAsync(string solutionFileName)
     {
         ValidateFilePath(solutionFileName, nameof(solutionFileName));
 
@@ -59,7 +59,7 @@ public class FileCollector
     /// <param name="projectFileName">Name of the Visual Studio project</param>
     /// <returns>ReadOnlyList of code files in a Visual Studio project</returns>
     /// <exception cref="InvalidOperationException">Exception if .csproj|.vbproj file cannot be loaded</exception>
-    public async Task<IReadOnlyList<string>> GetFilesFromProjectAsync(string projectFileName)
+    public static async Task<IReadOnlyList<string>> GetFilesFromProjectAsync(string projectFileName)
     {
         ValidateFilePath(projectFileName, nameof(projectFileName));
 
@@ -87,7 +87,7 @@ public class FileCollector
     /// </summary>
     /// <param name="folderPaths">List of folder paths</param>
     /// <returns>ReadOnlyList of code files</returns>
-    public async Task<IReadOnlyList<string>> GetFilesFromFoldersAsync(string[] folderPaths)
+    public static async Task<IReadOnlyList<string>> GetFilesFromFoldersAsync(string[] folderPaths)
     {
         ValidateFolderPaths(folderPaths);
 
@@ -107,7 +107,7 @@ public class FileCollector
             filePaths.Where(f => !IsExcludedFile(f)).ToList().AsReadOnly());
     }
 
-    public async Task<IReadOnlyList<string>> GetFilesFromFilesAsync(string[] filePaths)
+    public static async Task<IReadOnlyList<string>> GetFilesFromFilesAsync(string[] filePaths)
     {
         ValidateFilePaths(filePaths);
 

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Legba"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         mc:Ignorable="d"
         d:DataContext="{d:DesignData ChatSessionViewModel}"
         Style="{StaticResource WindowStyle}"
@@ -11,6 +12,7 @@
         WindowState="Maximized">
 
     <Window.Resources>
+        
         <Style x:Key="NoIconMenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -32,6 +34,14 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <CollectionViewSource x:Key="SortedSourceCodeFiles"
+                      Source="{Binding ChatSession.SourceCodeFiles}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        
     </Window.Resources>
 
     <Grid>
@@ -150,127 +160,166 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
+                    <!-- GridSplitter -->
+                    <GridSplitter Grid.Row="2" Grid.Column="0"
+                                  Height="2"
+                                  Margin="2,5,2,5"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center"
+                                  Background="Navy"
+                                  ShowsPreview="True"/>
+
                     <!-- Prompt input area -->
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Content="Request input"
-                           Style="{StaticResource LiteralLabel}"/>
+                    <Grid Grid.Row="3" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
-                    <!-- Prompt tab items -->
-                    <TabControl Grid.Row="3" Grid.Column="0">
-                        
-                        <TabItem Header="User-Entered Prompt">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <TextBox Style="{StaticResource PromptInputTextBox}"
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Content="LLM request input"                   
+                               Style="{StaticResource LiteralLabel}"/>
+
+                        <TabControl Grid.Row="1" Grid.Column="0">
+
+                            <TabItem Header="User-Entered Prompt">
+
+                                <TextBox Style="{StaticResource PromptInputTextBox}"
                                      Text="{Binding ChatSession.Prompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        </TabItem>
+                            </TabItem>
 
-                        <TabItem Header="Personality"
+                            <TabItem Header="Personality"
                                  ToolTip="Personality can only be set with first LLM request"
                                  IsEnabled="{Binding ChatSession.HasMessages, 
                                                      Mode=OneWay, 
                                                      UpdateSourceTrigger=PropertyChanged,
                                                      Converter={StaticResource BooleanInverterConverter}}">
 
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="2"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="2"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Button Grid.Row="1" Grid.Column="0"
+                                    <Button Grid.Row="1" Grid.Column="0"
                                         Style="{StaticResource PersonalityManageButton}"
                                         Click="SelectPersonality_Click">
-                                    <Image Source="/Images/MagnifyingGlass.png" />
-                                </Button>
-                                
-                                <Button Grid.Row="1" Grid.Column="1"
+                                        <Image Source="/Images/MagnifyingGlass.png" />
+                                    </Button>
+
+                                    <Button Grid.Row="1" Grid.Column="1"
                                         ToolTipService.ShowOnDisabled="True"
                                         Style="{StaticResource PersonalityAddUpdateButton}"
                                         IsEnabled="{Binding ChatSession.Personality.Text, 
                                                             Mode=OneWay,
                                                             Converter={StaticResource StringNotEmptyToBooleanConverter}}"
                                         Click="AddUpdatePersonality_Click">
-                                    <Image Source="/Images/PlusCircle.png" />
-                                </Button>
-                                
-                                <Button Grid.Row="1" Grid.Column="2"
+                                        <Image Source="/Images/PlusCircle.png" />
+                                    </Button>
+
+                                    <Button Grid.Row="1" Grid.Column="2"
                                         Style="{StaticResource PersonalityClearButton}"
                                         IsEnabled="{Binding ChatSession.Personality.Text, 
                                                             Mode=OneWay,
                                                             Converter={StaticResource StringNotEmptyToBooleanConverter}}"
                                         Click="ClearPersonality_Click">
-                                    <Image Source="/Images/ClearIcon.png" />
-                                </Button>
-                                
-                                <TextBox Grid.Row="2" Grid.Column="0"
+                                        <Image Source="/Images/ClearIcon.png" />
+                                    </Button>
+
+                                    <TextBox Grid.Row="2" Grid.Column="0"
                                          Grid.ColumnSpan="4"
                                          Style="{StaticResource PromptInputTextBox}"
                                          Margin="2"
                                          Text="{Binding ChatSession.Personality.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                            </Grid>
-                            
-                        </TabItem>
+                                </Grid>
 
-                        <TabItem Header="Source Code from Files"
+                            </TabItem>
+
+                            <TabItem Header="Source Code from Files"
                                  ToolTip="Source code files can only be added with first LLM request"
                                  IsEnabled="{Binding ChatSession.HasMessages, 
                                                      Mode=OneWay, 
                                                      UpdateSourceTrigger=PropertyChanged,
                                                      Converter={StaticResource BooleanInverterConverter}}">
 
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Button Grid.Row="0" Grid.Column="0"
+                                    <Button Grid.Row="0" Grid.Column="0"
                                         Style="{StaticResource ButtonStyle}"
                                         Margin="2,2,5,2"
                                         Content="Add solution"
                                         Click="AddSolution_Click"/>
-                                <Button Grid.Row="1" Grid.Column="0"
+                                    <Button Grid.Row="1" Grid.Column="0"
                                         Style="{StaticResource ButtonStyle}"
                                         Margin="2,2,5,2"
                                         Content="Add project"
                                         Click="AddProject_Click"/>
-                                <Button Grid.Row="2" Grid.Column="0"
+                                    <Button Grid.Row="2" Grid.Column="0"
                                         Style="{StaticResource ButtonStyle}"
                                         Margin="2,2,5,2"
                                         Content="Add folder(s)"
                                         Click="AddFolders_Click"/>
-                                <Button Grid.Row="3" Grid.Column="0"
+                                    <Button Grid.Row="3" Grid.Column="0"
                                         Style="{StaticResource ButtonStyle}"
                                         Margin="2,2,5,2"
                                         Content="Add file(s)"
                                         Click="AddFiles_Click"/>
 
-                                <TextBox Grid.Row="0" Grid.Column="1"
-                                         Grid.RowSpan="4"
-                                         Style="{StaticResource PromptInputTextBox}"
-                                         Text="{Binding ChatSession.SourceCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                         Margin="0,2,2,2"/>
+                                    <DataGrid Grid.Row="0" Grid.Column="1"
+                                          Grid.RowSpan="4"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Auto"
+                                          AutoGenerateColumns="False"
+                                          CanUserAddRows="False"
+                                          CanUserDeleteRows="False"
+                                          CanUserReorderColumns="False"
+                                          CanUserResizeColumns="False"
+                                          CanUserResizeRows="False"
+                                          CanUserSortColumns="False"
+                                          RowHeaderWidth="0"
+                                          ItemsSource="{Binding Source={StaticResource SortedSourceCodeFiles}}"
+                                          Margin="0,2,2,2">
 
-                            </Grid>
-                            
-                        </TabItem>
+                                        <DataGrid.Columns>
+
+                                            <DataGridTextColumn Header="Source Code Files"
+                                                            Width="*"
+                                                            Binding="{Binding .}"/>
+
+                                        </DataGrid.Columns>
+
+                                    </DataGrid>
+
+                                </Grid>
+
+                            </TabItem>
+
+                        </TabControl>
                         
-                    </TabControl>
+                    </Grid>
 
                     <!-- Submit button -->
                     <Button Grid.Row="4" Grid.Column="0"

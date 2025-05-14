@@ -65,6 +65,8 @@ public class ChatSession : ObservableObject, IDisposable
         }
     }
 
+    public ObservableCollection<string> SourceCodeFiles { get; set; } = [];
+
     public ObservableCollection<Message> Messages { get; set; } = [];
 
     public ObservableCollection<TokenSummary> TokenSummaries { get; set; } = [];
@@ -110,6 +112,8 @@ public class ChatSession : ObservableObject, IDisposable
 
     #endregion
 
+    #region Public methods
+
     public async Task AskAsync()
     {
         // On first request submission, include the personality and source code (if any)
@@ -149,6 +153,19 @@ public class ChatSession : ObservableObject, IDisposable
             ResponseTokenCount = response.ResponseTokenCount
         });
     }
+
+    public void AddSourceCodeFiles(IEnumerable<string> filesToConsolidate)
+    {
+        foreach (var file in filesToConsolidate)
+        {
+            if (!SourceCodeFiles.Contains(file))
+            {
+                SourceCodeFiles.Add(file);
+            }
+        }
+    }
+
+    #endregion
 
     #region Private supporting methods
 

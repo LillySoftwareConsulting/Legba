@@ -1,11 +1,11 @@
 ﻿using Legba.Engine.Models;
+using Legba.Engine.Services;
 using Legba.Engine.ViewModels;
 using Legba.Windows;
 using Legba.WPF.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using System.Windows;
-using static Legba.Engine.Enums;
-using System.Windows.Data;
 
 namespace Legba;
 
@@ -15,6 +15,8 @@ namespace Legba;
 public partial class MainWindow : Window
 {
     private HelpView? _helpView;
+
+    private static readonly FileConsolidator s_fileConsolidator = new();
 
     private readonly IServiceProvider _serviceProvider;
 
@@ -129,24 +131,121 @@ public partial class MainWindow : Window
         System.Windows.Clipboard.SetText(message.Content);
     }
 
-    private void AddSolution_Click(object sender, RoutedEventArgs e)
+    private async void AddSolution_Click(object sender, RoutedEventArgs e)
     {
+        var fileDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Select Source Solution",
+            Filter = "Solution Files (*.sln)|*.sln",
+            Multiselect = false
+        };
 
+        if (fileDialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        try
+        {
+            var filesToConsolidate =
+                await FileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
+
+            _chatSessionViewModel?.ChatSession?.AddSourceCodeFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Error processing solution: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
-    private void AddProject_Click(object sender, RoutedEventArgs e)
+    private async void AddProject_Click(object sender, RoutedEventArgs e)
     {
+        var fileDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Select Source Project",
+            Filter = "Project Files (*.csproj, *.vbproj)|*.csproj;*.vbproj",
+            Multiselect = false
+        };
 
+        if (fileDialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        //UpdateStatusMessage("Finding code files in project");
+
+        try
+        {
+            var filesToConsolidate =
+                await FileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
+
+            _chatSessionViewModel?.ChatSession?.AddSourceCodeFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Error processing project: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
-    private void AddFolders_Click(object sender, RoutedEventArgs e)
+    private async void AddFolders_Click(object sender, RoutedEventArgs e)
     {
+        var folderDialog = new OpenFolderDialog
+        {
+            Title = "Select Source Folder(s)",
+            Multiselect = true
+        };
 
+        if (folderDialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        //UpdateStatusMessage("Finding code files in folder(s)");
+
+        try
+        {
+            var filesToConsolidate =
+                await FileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
+
+            _chatSessionViewModel?.ChatSession?.AddSourceCodeFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Error processing folder(s): {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
-    private void AddFiles_Click(object sender, RoutedEventArgs e)
+    private async void AddFiles_Click(object sender, RoutedEventArgs e)
     {
+        var fileDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Select Source Code File(s)",
+            Filter = "Source Code Files (*.cs, *.vb)|*.cs;*.vb|All Files (*.*)|*.*",
+            Multiselect = true
+        };
 
+        if (fileDialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        //UpdateStatusMessage("Finding code file(s)");
+
+        try
+        {
+            var filesToConsolidate =
+                await FileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
+
+            _chatSessionViewModel?.ChatSession?.AddSourceCodeFiles(filesToConsolidate);
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"Error processing file(s): {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
     }
 
     #endregion
