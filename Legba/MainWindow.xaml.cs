@@ -145,8 +145,15 @@ public partial class MainWindow : Window
             return;
         }
 
+        ProgressWindow progressWindow = new("Finding files in solution...")
+        {
+            Owner = this
+        };
+
         try
         {
+            progressWindow.Show();
+
             var filesToConsolidate =
                 await FileCollector.GetFilesFromSolutionAsync(fileDialog.FileName);
 
@@ -156,6 +163,10 @@ public partial class MainWindow : Window
         {
             System.Windows.MessageBox.Show($"Error processing solution: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
+        }
+        finally
+        {
+            progressWindow.Close();
         }
     }
 
@@ -173,10 +184,15 @@ public partial class MainWindow : Window
             return;
         }
 
-        //UpdateStatusMessage("Finding code files in project");
+        ProgressWindow progressWindow = new("Finding files in project...")
+        {
+            Owner = this
+        };
 
         try
         {
+            progressWindow.Show();
+
             var filesToConsolidate =
                 await FileCollector.GetFilesFromProjectAsync(fileDialog.FileName);
 
@@ -186,6 +202,10 @@ public partial class MainWindow : Window
         {
             System.Windows.MessageBox.Show($"Error processing project: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
+        }
+        finally
+        {
+            progressWindow.Close();
         }
     }
 
@@ -202,10 +222,15 @@ public partial class MainWindow : Window
             return;
         }
 
-        //UpdateStatusMessage("Finding code files in folder(s)");
+        ProgressWindow progressWindow = new("Finding files in folder(s)...")
+        {
+            Owner = this
+        };
 
         try
         {
+            progressWindow.Show();
+
             var filesToConsolidate =
                 await FileCollector.GetFilesFromFoldersAsync(folderDialog.FolderNames);
 
@@ -216,6 +241,10 @@ public partial class MainWindow : Window
             System.Windows.MessageBox.Show($"Error processing folder(s): {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
         }
+        finally
+        {
+            progressWindow.Close();
+        }
     }
 
     private async void AddFiles_Click(object sender, RoutedEventArgs e)
@@ -223,7 +252,7 @@ public partial class MainWindow : Window
         var fileDialog = new Microsoft.Win32.OpenFileDialog
         {
             Title = "Select Source Code File(s)",
-            Filter = "Source Code Files (*.cs, *.vb)|*.cs;*.vb|All Files (*.*)|*.*",
+            Filter = "Source Code Files (*.cs, *.vb, *.xaml)|*.cs;*.vb;*.xaml|All Files (*.*)|*.*",
             Multiselect = true
         };
 
@@ -232,10 +261,15 @@ public partial class MainWindow : Window
             return;
         }
 
-        //UpdateStatusMessage("Finding code file(s)");
+        ProgressWindow progressWindow = new("Finding source code files...")
+        {
+            Owner = this
+        };
 
         try
         {
+            progressWindow.Show();
+
             var filesToConsolidate =
                 await FileCollector.GetFilesFromFilesAsync(fileDialog.FileNames);
 
@@ -245,6 +279,10 @@ public partial class MainWindow : Window
         {
             System.Windows.MessageBox.Show($"Error processing file(s): {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
+        }
+        finally
+        {
+            progressWindow.Close();
         }
     }
 

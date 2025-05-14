@@ -57,6 +57,7 @@ public class ChatSessionViewModel : ObservableObject
 
     public ICommand SelectModelCommand { get; private set; }
     public ICommand AskCommand { get; private set; }
+    public ICommand RemoveSourceCodeFileCommand { get; }
 
     #endregion
 
@@ -73,6 +74,7 @@ public class ChatSessionViewModel : ObservableObject
 
         SelectModelCommand = new TypedRelayCommand<Settings.Model>(SelectModel);
         AskCommand = new RelayCommand(async () => await ChatSession.AskAsync());
+        RemoveSourceCodeFileCommand = new TypedRelayCommand<object>(RemoveSourceCodeFile);
     }
 
     private void Messages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -83,5 +85,18 @@ public class ChatSessionViewModel : ObservableObject
     private void SelectModel(Settings.Model model)
     {
         ChatSession = new ChatSession(_serviceProvider, Llms.LlmWithModel(model), model);
+    }
+
+    private void RemoveSourceCodeFile(object file)
+    {
+        if (ChatSession == null)
+        {
+            return;
+        }
+
+        if (file is string path)
+        {
+            ChatSession.SourceCodeFiles.Remove(path);
+        }
     }
 }

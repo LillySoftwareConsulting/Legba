@@ -17,7 +17,6 @@ public class ChatSession : ObservableObject, IDisposable
 
     private string _prompt = string.Empty;
     private Personality _personality = new();
-    private string _sourceCode = string.Empty;
 
     #endregion
 
@@ -49,22 +48,6 @@ public class ChatSession : ObservableObject, IDisposable
         }
     }
 
-    public string SourceCode
-    {
-        get => _sourceCode;
-        set
-        {
-            if (_sourceCode == value)
-            {
-                return;
-            }
-
-            _sourceCode = value;
-
-            OnPropertyChanged(nameof(SourceCode));
-        }
-    }
-
     public ObservableCollection<string> SourceCodeFiles { get; set; } = [];
 
     public ObservableCollection<Message> Messages { get; set; } = [];
@@ -84,6 +67,8 @@ public class ChatSession : ObservableObject, IDisposable
 
     #endregion
 
+    #region Constructor
+
     public ChatSession(IServiceProvider serviceProvider, 
         Settings.Llm llm, Settings.Model model)
     {
@@ -93,6 +78,8 @@ public class ChatSession : ObservableObject, IDisposable
         Messages.CollectionChanged += OnMessagesCollectionChanged;
         TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
+
+    #endregion
 
     #region Eventhandlers
 
@@ -124,9 +111,12 @@ public class ChatSession : ObservableObject, IDisposable
                 AddMessage(Enums.Role.System, Personality.Text);
             }
 
-            if (SourceCode.IsNotNullEmptyOrWhitespace())
+            if (SourceCodeFiles.Any())
             {
-                AddMessage(Enums.Role.User, SourceCode, true);
+                // Consolidate source code files into a single string
+                string sourceCode = await FileConsolidator.GetFilesAsStringAsync(SourceCodeFiles);
+
+                AddMessage(Enums.Role.User, sourceCode, true);
             }
         }
 

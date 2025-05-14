@@ -66,6 +66,12 @@
         <customConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <customConverters:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
 
+        <DropShadowEffect x:Key="DropShadowEffect"
+                          BlurRadius="10"
+                          ShadowDepth="2"
+                          Opacity="0.3"
+                          Color="Black" />
+
     </Application.Resources>
     
 </Application>

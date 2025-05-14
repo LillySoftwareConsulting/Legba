@@ -289,25 +289,48 @@
                                         Click="AddFiles_Click"/>
 
                                     <DataGrid Grid.Row="0" Grid.Column="1"
-                                          Grid.RowSpan="4"
-                                          VerticalScrollBarVisibility="Auto"
-                                          HorizontalScrollBarVisibility="Auto"
-                                          AutoGenerateColumns="False"
-                                          CanUserAddRows="False"
-                                          CanUserDeleteRows="False"
-                                          CanUserReorderColumns="False"
-                                          CanUserResizeColumns="False"
-                                          CanUserResizeRows="False"
-                                          CanUserSortColumns="False"
-                                          RowHeaderWidth="0"
-                                          ItemsSource="{Binding Source={StaticResource SortedSourceCodeFiles}}"
-                                          Margin="0,2,2,2">
+                                              Grid.RowSpan="4"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              AutoGenerateColumns="False"
+                                              CanUserAddRows="False"
+                                              CanUserDeleteRows="False"
+                                              CanUserReorderColumns="False"
+                                              CanUserResizeColumns="False"
+                                              CanUserResizeRows="False"
+                                              CanUserSortColumns="False"
+                                              RowHeaderWidth="0"
+                                              ItemsSource="{Binding Source={StaticResource SortedSourceCodeFiles}}"
+                                              Margin="0,2,2,2">
 
                                         <DataGrid.Columns>
 
+                                            <DataGridTemplateColumn Width="28">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Button Content="X"
+                                                                HorizontalContentAlignment="Center"
+                                                                VerticalContentAlignment="Center"
+                                                                Foreground="Red"
+                                                                FontWeight="Bold"
+                                                                Padding="0"
+                                                                Margin="2"
+                                                                Command="{Binding DataContext.RemoveSourceCodeFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
                                             <DataGridTextColumn Header="Source Code Files"
-                                                            Width="*"
-                                                            Binding="{Binding .}"/>
+                                                                Width="*"
+                                                                Binding="{Binding .}">
+                                                <DataGridTextColumn.ElementStyle>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="3,0,0,0"/>
+                                                    </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                            </DataGridTextColumn>
 
                                         </DataGrid.Columns>
 
