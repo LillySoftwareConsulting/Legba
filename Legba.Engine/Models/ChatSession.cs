@@ -1,80 +1,60 @@
-﻿using Legba.Engine.LlmConnectors;
-using Legba.Engine.LlmConnectors.OpenAi;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Legba.Engine.Models.OpenAi;
+using Legba.Engine.Services;
+using CSharpExtender.ExtensionMethods;
 
 namespace Legba.Engine.Models;
 
 public class ChatSession : ObservableObject, IDisposable
 {
-    #region Properties, Fields, Commands, and Events
+    #region Private fields
 
-    private readonly ILlmConnector _connection;
+    private readonly OpenAiConnector _llmConnector;
 
-    private Persona _persona = new();
-    private Purpose _purpose = new();
-    private Persuasion _persuasion = new();
-    private Process _process = new();
-    private string _prompt = string.Empty;
     private bool _disposed = false; // To detect redundant calls
 
-    public Persona Persona 
-    { 
-        get => _persona;
-        set 
-        { 
-            _persona = value;
-            OnPropertyChanged(nameof(Persona));
-        } 
-    }
+    private string _prompt = string.Empty;
+    private Personality _personality = new();
 
-    public Purpose Purpose 
-    { 
-        get => _purpose;
-        set 
-        { 
-            _purpose = value; 
-            OnPropertyChanged(nameof(Purpose));
-        }
-    }
+    #endregion
 
-    public Persuasion Persuasion
-    {
-        get => _persuasion;
-        set
-        {
-            _persuasion = value;
-            OnPropertyChanged(nameof(Persuasion));
-        }
-    }
-
-    public Process Process
-    {
-        get => _process;
-        set
-        {
-            _process = value;
-            OnPropertyChanged(nameof(Process));
-        }
-    }
+    #region Properties
 
     public string Prompt
     {
         get => _prompt;
         set
         {
-            if (_prompt != value)
+            if (_prompt == value)
             {
-                _prompt = value;
-                OnPropertyChanged(nameof(Prompt));
+                return;
             }
+
+            _prompt = value;
+
+            OnPropertyChanged(nameof(Prompt));
         }
     }
 
+    public Personality Personality
+    {
+        get => _personality;
+        set
+        {
+            _personality = value;
+            OnPropertyChanged(nameof(Personality));
+        }
+    }
+
+    public ObservableCollection<string> SourceCodeFiles { get; set; } = [];
+
     public ObservableCollection<Message> Messages { get; set; } = [];
+
     public ObservableCollection<TokenSummary> TokenSummaries { get; set; } = [];
+
+    public string ModelName => $"{_llmConnector.Llm.Name} | {_llmConnector.Model.Name}";
 
     public bool HasMessages => Messages.Count > 0;
 
@@ -87,48 +67,23 @@ public class ChatSession : ObservableObject, IDisposable
 
     #endregion
 
+    #region Constructor
+
     public ChatSession(IServiceProvider serviceProvider, 
         Settings.Llm llm, Settings.Model model)
     {
         var factory = serviceProvider.GetRequiredService<LlmConnectorFactory>();
-        _connection = factory.GetLlmConnector(llm, model);
+        _llmConnector = factory.GetLlmConnector(llm, model);
 
-        Messages.CollectionChanged += OnMessageCollectionChanged;
+        Messages.CollectionChanged += OnMessagesCollectionChanged;
         TokenSummaries.CollectionChanged += OnTokenUsagesCollectionChanged;
     }
 
-    public async Task Ask()
-    {
-        // Store prompt in a variable so we can clear it before the response is received.
-        // This prevents the user from spamming the ask button,
-        // due to the button not being enabled when the Prompt property is empty.
-        var completePrompt = BuildPrompt();
-        Prompt = string.Empty;
+    #endregion
 
-        // TODO: Record selected Persona, Purpose, and Process with prompt, for history.
-        AddMessage(Enums.Role.User, completePrompt);
+    #region Eventhandlers
 
-        var llmRequest = BuildLlmRequest();
-
-        AddMessage(Enums.Role.Assistant, "Thinking...");
-
-        var response = await _connection.AskAsync(llmRequest);
-
-        // Remove "Thinking..." message
-        Messages.Remove(Messages.Last());
-
-        AddMessage(Enums.Role.Assistant, response.Text);
-
-        TokenSummaries.Add(new TokenSummary
-        {
-            RequestTokenCount = response.RequestTokenCount,
-            ResponseTokenCount = response.ResponseTokenCount
-        });
-    }
-
-    #region Private supporting methods
-
-    private void OnMessageCollectionChanged(object? sender, 
+    private void OnMessagesCollectionChanged(object? sender,
         NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(HasMessages));
@@ -142,9 +97,78 @@ public class ChatSession : ObservableObject, IDisposable
         OnPropertyChanged(nameof(GrandTotalTokenCount));
     }
 
-    private void AddMessage(Enums.Role role, string content)
+    #endregion
+
+    #region Public methods
+
+    public async Task AskAsync()
     {
-        Messages.Add(new Message { Role = role, Content = content });
+        // On first request submission, include the personality and source code (if any)
+        if (Messages.None())
+        {
+            if (Personality.Text.IsNotNullEmptyOrWhitespace())
+            {
+                AddMessage(Enums.Role.System, Personality.Text);
+            }
+
+            if (SourceCodeFiles.Any())
+            {
+                // Consolidate source code files into a single string
+                string sourceCode = await FileConsolidator.GetFilesAsStringAsync(SourceCodeFiles);
+
+                AddMessage(Enums.Role.User, sourceCode, true);
+            }
+        }
+
+        // Add prompt to messages
+        AddMessage(Enums.Role.User, Prompt);
+
+        // Clear prompt in UI
+        Prompt = string.Empty;
+
+        var llmRequest = BuildLlmRequest();
+
+        AddMessage(Enums.Role.Assistant, "Thinking...");
+
+        var response = await _llmConnector.AskAsync(llmRequest);
+
+        // Remove "Thinking..." message
+        Messages.Remove(Messages.Last());
+
+        AddMessage(Enums.Role.Assistant, response.Text);
+
+        TokenSummaries.Add(new TokenSummary
+        {
+            RequestTokenCount = response.RequestTokenCount,
+            ResponseTokenCount = response.ResponseTokenCount
+        });
+    }
+
+    public void AddSourceCodeFiles(IEnumerable<string> filesToConsolidate)
+    {
+        foreach (var file in filesToConsolidate)
+        {
+            if (!SourceCodeFiles.Contains(file))
+            {
+                SourceCodeFiles.Add(file);
+            }
+        }
+    }
+
+    #endregion
+
+    #region Private supporting methods
+
+    private void AddMessage(Enums.Role role, string content, bool isInitialSourceCode = false)
+    {
+        var message = new Message
+        { 
+            Role = role, 
+            Content = content, 
+            IsInitialSourceCode = isInitialSourceCode
+        };
+
+        Messages.Add(message);
     }
 
     private LegbaRequest BuildLlmRequest()
@@ -154,25 +178,6 @@ public class ChatSession : ObservableObject, IDisposable
             Messages = Messages.ToList(),
             Temperature = 0.5f
         };
-    }
-
-    private string BuildPrompt()
-    {
-        var sb = new StringBuilder();
-
-        // Only include the prompt prefixes if there are no messages yet,
-        // since the app currently always includes the prior messages in the request.
-        if(Messages.Count == 0)
-        {
-            sb.AppendLineIfNotEmpty(Persona.Text);
-            sb.AppendLineIfNotEmpty(Persuasion.Text);
-            sb.AppendLineIfNotEmpty(Purpose.Text);
-            sb.AppendLineIfNotEmpty(Process.Text);
-        }
-
-        sb.Append(Prompt);
-
-        return sb.ToString();
     }
 
     #endregion

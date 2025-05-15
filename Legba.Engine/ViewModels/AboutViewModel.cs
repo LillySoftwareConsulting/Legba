@@ -27,7 +27,7 @@ public class AboutViewModel
         "This software is provided as-is, without any warranty, express or implied. " +
         "While every effort has been made to ensure the program functions correctly, it is used at your own risk.";
     public string Credits =>
-        "This software uses the following third-party components:\n" +
+        "This application uses the following third-party components:\n" +
         "• LiteDB\n" +
         "• ScottLilly.CSharpExtender";
 

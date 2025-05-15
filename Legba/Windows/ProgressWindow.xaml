@@ -1,0 +1,38 @@
+﻿<Window x:Class="Legba.Windows.ProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        SizeToContent="WidthAndHeight"
+        ShowInTaskbar="False"
+        Topmost="True">
+
+    <Border Background="#DDFFFFFF"
+            CornerRadius="10"
+            Padding="20"
+            BorderBrush="#FFCCCCCC"
+            BorderThickness="1"
+            SnapsToDevicePixels="True"
+            Effect="{DynamicResource DropShadowEffect}">
+        
+        <StackPanel>
+            <TextBlock x:Name="MessageTextBlock"
+                       Text="Working..."
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       Margin="0 0 0 10"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap" />
+            <ProgressBar IsIndeterminate="True"
+                         Height="20"
+                         Width="200"
+                         Margin="0"
+                         HorizontalAlignment="Center" />
+        </StackPanel>
+    </Border>
+    
+</Window>

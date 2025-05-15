@@ -20,6 +20,7 @@ public class Enums
     public enum Role
     {
         Unspecified,
+        System,
         User,
         Assistant
     }

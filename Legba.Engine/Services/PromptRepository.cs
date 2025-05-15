@@ -6,10 +6,16 @@ namespace Legba.Engine.Services;
 
 public class PromptRepository(string databasePath) : IDisposable
 {
+    #region Private members
+
     // This will create a LiteDB database file in the same directory as the executable,
     // if one does not already exist.
     private readonly LiteDatabase _liteDb = new(databasePath);
     private bool _disposed = false;
+
+    #endregion
+
+    #region Public methods
 
     public static string GetCollectionName<T>() where T : PromptPrefix
     {
@@ -41,7 +47,7 @@ public class PromptRepository(string databasePath) : IDisposable
         var collectionName = GetCollectionName<T>();
         var collection = _liteDb.GetCollection<T>(collectionName);
 
-        if(item.Id == Guid.Empty)
+        if (item.Id == Guid.Empty)
         {
             // New items Id is Guid.Empty, so we need to generate a real Id.
             item.Id = Guid.NewGuid();
@@ -78,17 +84,7 @@ public class PromptRepository(string databasePath) : IDisposable
             .FindAll().OrderBy(pp => pp.Name);
     }
 
-    public PromptPrefixesExport Export()
-    {
-        var export = new PromptPrefixesExport();
-
-        export.Personas.AddRange(GetAll<Persona>());
-        export.Purposes.AddRange(GetAll<Purpose>());
-        export.Persuasions.AddRange(GetAll<Persuasion>());
-        export.Processes.AddRange(GetAll<Process>());
-
-        return export;
-    }
+    #endregion
 
     #region Implementation of IDisposable
 
