@@ -32,61 +32,62 @@ public class HelpViewModel : ObservableObject
     {
         Topics.Clear();
 
-        AddHelpTopic("OpenAI API Setup",
-            "Create an OpenAI API account at https://openai.com/blog/openai-api." + 
+        AddHelpTopic("API Setup",
+            "Create an API account for any of the following LLMs: OpenAI, Grok, Perplexity, or Groq." + 
             _doubleNewLine +
-            "Get an OpenAI key at https://platform.openai.com/api-keys." + 
+            "Get your API key and (optionally) Organization ID." + 
             _doubleNewLine +
             "Fund the API account. It may take a few hours for the API to recognize the account was funded.");
 
         AddHelpTopic("Legba Setup",
             "In the directory where Legba is installed, find the appsettings.json file and open it in a text editor." + 
             _doubleNewLine +
-            "Add your OpenAI API key and (optionally) your OpenAI Organization ID.");
+            "Add your API key and (optionally) your Organization ID where appsettings has 'YOUR_API_KEY' and 'YOUR_ORG_ID'." +
+            _doubleNewLine +
+            "If you are not using an Organization ID, remove the text 'YOUR_ORG_ID'.");
 
-        AddHelpTopic("New Chat Session",
-            "When you want to chat with ChatGPT, select File -> New Session -> OpenAi and then the version you want to use." +
+        AddHelpTopic("New LLM Session",
+            "When you want to chat with the LLM, select File -> New Session -> LLM Company and the name of the model you want to use." +
             _doubleNewLine +
-            "This should display an empty message history on the left, the four prompt prefix sections (Persona, Purpose, Persuasion, and Process) on the right, and the prompt input box on the bottom right.");
+            "This will display the session screen. Your conversation with the LLM will be displayed in the top section of the screen." +
+            _doubleNewLine +
+            "You can enter your request in 'User-Entered Prompt', and optionally select a Personality or source code files to include.");
 
-        AddHelpTopic("Prompt Prefixes",
-            "The prompt prefixes are used to help ChatGPT understand the context of your conversation." +
+        AddHelpTopic("Personality",
+            "The personality is used to help the LLM understand the context of your conversation and how to respond. It is not required." +
             _doubleNewLine +
-            "They are not required. You can enter you prompt in the lower-right textbox and click the 'Ask' button to prompt ChatGPT without any prompt prefixes." +
+            "The magnifying glass shows you a list of available personalities. From there, you can add a new one, edit or delete an existing one, or select one to use." +
             _doubleNewLine +
-            "However, you can save prefixes in the database for future use - to save on typing and improve consistency in results." +
+            "The green '+' button lets you save what is currently in the prompt's textbox to the database. It will pop up a window for you to enter the personality's name before saving." +
             _doubleNewLine +
-            "Currently, the prefixes are only passed in with the first request to ChatGPT. So, the button to select a new prompt prefix is disabled after the initial request.");
+            "The red 'X' button lets you clear out the prompt prefix text box. It does not affect anything in the database." +
+            _doubleNewLine +
+            "The personality is only sent with the first request. So, the Personality tab is disabled after the first request.");
 
-        AddHelpTopic("Managing Prompt Prefixes",
-            "Above each prompt prefix section are three buttons." +
+        AddHelpTopic("Source Code",
+            "You can include C# and VB.NET (including XAML) source code files with your first request." +
             _doubleNewLine +
-            "The magnifying glass shows you a list of available prefixes. From there, you can add a new prefix, edit or delete an existing prefix, or select the prefix to use." +
+            "You can use the buttons on the left to add source code files from a solution file, project file, folder(s), or just selecting the file(s) to include." +
             _doubleNewLine +
-            "Since the prompt prefixes are only sent in with the first request, this button is disabled after making the initial request." +
+            "You can selectively delete files by clicking the red 'X' button next to the file in the list." +
             _doubleNewLine +
-            "The green '+' button will let you save what is currently in the prompt's textbox to your library. It will pop up a window for you to enter the prompt prefix's name before saving." +
-            _doubleNewLine +
-            "The red 'X' button lets you clear out the prompt prefix text box. It does not affect anything in the database.");
+            "The source code files are only sent with the first request. So, the 'Source Code from Files' tab is disabled after the first request."
+            );
 
-        AddHelpTopic("Chatting with ChatGPT",
-            "Enter, or select, any prompt prefixes you want to use." +
+        AddHelpTopic("Sending Your Request",
+            "Enter, or select, any (optional) personality and (optional) source code files you want to include in your request." +
             _doubleNewLine +
-            "Then, enter your prompt in the lower-right textbox and click the 'Ask' button." +
+            "Enter your prompt/question in the 'User-Entered Prompt' tab, then click the 'Submit Request to LLM' button." +
             _doubleNewLine +
-            "Your message will be displayed in the message area on the left, along with a 'Thinking...' message while waiting for ChatGPT's response.");
+            "Your message will be displayed in the upper response area, along with a 'Thinking...' message while waiting for the LLM's response.");
 
-        AddHelpTopic("Saving Message History",
-            "You can save the chat session's message history to a text file by selecting Export -> Current Chat Messages." +
-            _doubleNewLine +
-            "This will pop up a window for you to select the file to save to." +
-            _doubleNewLine +
-            "You can also save an individual message by right-clicking on it and selecting 'Save Message' from the context menu.");
+        AddHelpTopic("Copying Responses",
+            "You can right-click on a response and copy its text to your clipboard, to paste into Notepad or an editor.");
 
-        AddHelpTopic("Saving Prompt Prefixes",
-            "You can save the prompt prefixes to a text file by selecting Export -> Prompt Prefixes." +
+        AddHelpTopic("Statistics",
+            "Clicking on the 'Statistics' tab at the top of the app will show you the number of tokens you've used during this session." +
             _doubleNewLine +
-            "This will pop up a window for you to select the file to save to.");
+            "It shows a list of tokens used with each request and the session's grand total at the bottom.");
     }
 
     private void AddHelpTopic(string title, string content)
