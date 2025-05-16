@@ -1,5 +1,3 @@
-![Build Status](https://github.com/LillySoftwareConsulting/Legba/actions/workflows/ci.yml/badge.svg)
-
 # About Legba
 
 <img align="left" width="125" height="125" style="color:white" src="https://github.com/LillySoftwareConsulting/Legba/blob/master/Legba/Images/LegbaLogo.png">
@@ -11,6 +9,9 @@ It started out as a simple desktop request/response app, but I've expanded it to
 These prompt prefixes can be saved to be re-used (and/or edited) with future prompts.
 
 The name "Legba" is from [Papa Legba](https://en.wikipedia.org/wiki/Papa_Legba), a voodoo *loa* who stood at the crossroads between humans and God, to help them communicate.
+
+![Build Status](https://github.com/LillySoftwareConsulting/Legba/actions/workflows/ci.yml/badge.svg)
+[![License](https://img.shields.io/github/license/LillySoftwareConsulting/Legba)](https://github.com/LillySoftwareConsulting/Legba/LICENSE)
 
 # Setup steps
 - Create an [OpenAI API account](https://openai.com/blog/openai-api)
