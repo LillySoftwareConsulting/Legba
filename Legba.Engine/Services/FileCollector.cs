@@ -9,12 +9,14 @@ public class FileCollector
 {
     #region Constants and Fields
 
-    private static readonly IReadOnlyList<string> s_fileExtensionsToInclude = [".cs", ".vb", ".xaml"];
+    private static readonly IReadOnlyList<string> s_fileExtensionsToInclude =
+    [".cs", ".vb", ".xaml", ".vsixmanifest", ".vsct", ".resx", ".json", ".xml", ".config", ".targets", ".props", ".ruleset"];
+
     private static readonly IReadOnlyList<Regex> s_excludedFilePatterns =
-        [
-            new Regex(@"(AssemblyAttributes|AssemblyInfo|\.g|\.g\.i|\.Designer|\.generated)\.(cs|vb)$",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled)
-        ];
+    [
+        new Regex(@"(AssemblyAttributes|AssemblyInfo|\.g|\.g\.i|\.Designer|\.generated)\.(cs|vb|xaml)$",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled)
+    ];
 
     #endregion
 

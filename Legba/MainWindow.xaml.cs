@@ -16,8 +16,6 @@ public partial class MainWindow : Window
 {
     private HelpView? _helpView;
 
-    private static readonly FileConsolidator s_fileConsolidator = new();
-
     private readonly IServiceProvider _serviceProvider;
 
     private readonly ChatSessionViewModel? _chatSessionViewModel;
