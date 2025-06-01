@@ -1,5 +1,9 @@
 # RELEASE NOTES
 
+## Version 2.1.0 (2025-??-??)
+### Features
+* Changed UI to make requests and responses easier to scroll through.
+
 ## Version 2.0.0 (2025-05-15)
 ### Breaking Changes
 * Now uses a single "Personality" prompt prefix, instead of previous "Persona", "Purpose", "Persuasion", and "Process" prefixes.

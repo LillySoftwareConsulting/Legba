@@ -127,38 +127,15 @@
                     </StackPanel>
 
                     <!-- Response list box -->
-                    <ListBox Grid.Row="1" Grid.Column="0"
-                             x:Name="RequestResponseMessages"
-                             Background="#F4F6F6"
-                             HorizontalContentAlignment="Stretch"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ItemsSource="{Binding ChatSession.Messages}">
-                        <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Copy to Clipboard"
-                                          Style="{StaticResource NoIconMenuItemStyle}"
-                                          Click="MenuItemCopyToClipboard_Click"/>
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="{Binding MessageBackground}"
-                                        CornerRadius="3"
-                                        Margin="3"
-                                        HorizontalAlignment="{Binding MessageAlignment}">
-                                    <Border.MaxWidth>
-                                        <MultiBinding Converter="{StaticResource RelativeWidthConverter}">
-                                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBox}}" />
-                                            <Binding Source="0.7" />
-                                        </MultiBinding>
-                                    </Border.MaxWidth>
-                                    <TextBlock Text="{Binding DisplayText}" 
-                                               TextWrapping="Wrap"
-                                               Padding="5"/>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <FlowDocumentScrollViewer
+                        Grid.Row="1" Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Name="MessageViewer"
+                        VerticalScrollBarVisibility="Auto"
+                        IsToolBarVisible="False"
+                        Padding="10"
+                        Margin="10"
+                        Document="{Binding MessagesDocument}" />
 
                     <!-- GridSplitter -->
                     <GridSplitter Grid.Row="2" Grid.Column="0"

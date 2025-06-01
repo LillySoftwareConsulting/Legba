@@ -2,7 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Legba.Engine.ViewModels;
 
@@ -44,6 +47,7 @@ public class ChatSessionViewModel : ObservableObject
             OnPropertyChanged(nameof(ChatSession));
             OnPropertyChanged(nameof(HasChatSession));
             OnPropertyChanged(nameof(HasChatMessages));
+            OnPropertyChanged(nameof(MessagesDocument));
 
             if (_chatSession != null)
             {
@@ -52,6 +56,35 @@ public class ChatSessionViewModel : ObservableObject
         }
     }
 
+    public FlowDocument MessagesDocument
+    {
+        get
+        {
+            var document = new FlowDocument();
+
+            if (ChatSession == null)
+            {
+                return document;
+            }
+
+            foreach (var message in ChatSession.Messages)
+            {
+                var paragraph = new Paragraph(new Run(message.DisplayText))
+                {
+                    Margin = new Thickness(5),
+                    TextAlignment = message.Alignment,
+                    Background = message.BackgroundColor,
+                    Padding = new Thickness(8),
+                    FontSize = 14,
+                    FontFamily = new FontFamily("Consolas")
+                };
+
+                document.Blocks.Add(paragraph);
+            }
+
+            return document;
+        }
+    }
     public bool HasChatSession => ChatSession != null;
     public bool HasChatMessages => ChatSession?.Messages.Count > 0;
 
@@ -80,6 +113,7 @@ public class ChatSessionViewModel : ObservableObject
     private void Messages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         OnPropertyChanged(nameof(HasChatMessages));
+        OnPropertyChanged(nameof(MessagesDocument));
     }
 
     private void SelectModel(Settings.Model model)
