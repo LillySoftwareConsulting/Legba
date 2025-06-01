@@ -16,8 +16,6 @@ public partial class MainWindow : Window
 {
     private HelpView? _helpView;
 
-    private static readonly FileConsolidator s_fileConsolidator = new();
-
     private readonly IServiceProvider _serviceProvider;
 
     private readonly ChatSessionViewModel? _chatSessionViewModel;
@@ -121,14 +119,15 @@ public partial class MainWindow : Window
 
     private void MenuItemCopyToClipboard_Click(object sender, RoutedEventArgs e)
     {
-        if (RequestResponseMessages.SelectedIndex == -1)
-        {
-            return;
-        }
+        // TODO: Implement copy to clipboard functionality for messages
+        //if (RequestResponseMessages.SelectedIndex == -1)
+        //{
+        //    return;
+        //}
 
-        var message = (Engine.Models.OpenAi.Message)RequestResponseMessages.SelectedItem;
+        //var message = (Engine.Models.OpenAi.Message)RequestResponseMessages.SelectedItem;
 
-        System.Windows.Clipboard.SetText(message.Content);
+        //System.Windows.Clipboard.SetText(message.Content);
     }
 
     private async void AddSolution_Click(object sender, RoutedEventArgs e)

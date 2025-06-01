@@ -9,12 +9,20 @@ public class FileCollector
 {
     #region Constants and Fields
 
-    private static readonly IReadOnlyList<string> s_fileExtensionsToInclude = [".cs", ".vb", ".xaml"];
+    private static readonly IReadOnlyList<string> s_fileExtensionsToInclude =
+    [
+        ".cs", ".vb", ".xaml", ".xaml.cs", ".xaml.vb", ".vsixmanifest", ".vsct", ".resx", 
+        ".targets", ".props", ".ruleset", ".settings", ".cshtml", ".vbhtml", ".aspx", ".ascx"
+    ];
     private static readonly IReadOnlyList<Regex> s_excludedFilePatterns =
-        [
-            new Regex(@"(AssemblyAttributes|AssemblyInfo|\.g|\.g\.i|\.Designer|\.generated)\.(cs|vb)$",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled)
-        ];
+    [
+        new Regex(
+            @"(AssemblyInfo|AssemblyAttributes|\.g|\.g\.i|\.Designer|\.generated|\.razor\.cs|\.g\.cshtml|\.tt|\.t4|\.Reference)\.(cs|vb|xaml|cshtml)$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled)
+    ];
+
+    private static readonly IReadOnlyList<string> s_excludedDirectories =
+        [ "bin", "obj", "node_modules", ".vs", "packages" ];
 
     #endregion
 
@@ -91,20 +99,22 @@ public class FileCollector
     {
         ValidateFolderPaths(folderPaths);
 
-        var filePaths = new List<string>();
+        var filePaths = new ConcurrentBag<string>();
 
-        foreach (var folderPath in folderPaths)
+        await Parallel.ForEachAsync(folderPaths, async (folderPath, ct) =>
         {
-            foreach (var extension in s_fileExtensionsToInclude)
+            await foreach (var file in Directory.EnumerateFiles(folderPath, "*.*", SearchOption.AllDirectories)
+                .ToAsyncEnumerable()
+                .Where(file =>
+                    s_fileExtensionsToInclude.Any(ext => file.EndsWith(ext, StringComparison.OrdinalIgnoreCase)) &&
+                    !s_excludedDirectories.Any(dir => file.Contains(Path.DirectorySeparatorChar + dir + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) &&
+                    !IsExcludedFile(file)))
             {
-                filePaths.AddRange(
-                    Directory.GetFiles(folderPath, $"*{extension}",
-                    SearchOption.AllDirectories));
+                filePaths.Add(file);
             }
-        }
+        });
 
-        return await Task.FromResult<IReadOnlyList<string>>(
-            filePaths.Where(f => !IsExcludedFile(f)).ToList().AsReadOnly());
+        return filePaths.ToList().AsReadOnly();
     }
 
     public static async Task<IReadOnlyList<string>> GetFilesFromFilesAsync(string[] filePaths)
@@ -140,7 +150,7 @@ public class FileCollector
 
         var invalidPaths = folderPaths.Where(fp => !Directory.Exists(fp)).ToArray();
 
-        if (invalidPaths.Any())
+        if (invalidPaths.Length != 0)
         {
             throw new DirectoryNotFoundException("One or more folder paths do not exist: " + string.Join(", ", invalidPaths));
         }
@@ -155,7 +165,7 @@ public class FileCollector
 
         var invalidPaths = filePaths.Where(fp => !File.Exists(fp)).ToArray();
 
-        if (invalidPaths.Any())
+        if (invalidPaths.Length != 0)
         {
             throw new FileNotFoundException("One or more files do not exist: " + string.Join(", ", invalidPaths));
         }

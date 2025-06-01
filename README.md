@@ -27,7 +27,5 @@ Please report any problems at one of these places:
 - [Discussions](https://github.com/LillySoftwareConsulting/Legba/discussions)
 
 # Future Plans
-- Convert the UI to something that runs cross-platform - probably [Avalonia](https://avaloniaui.net/).
 - Able to share prompts with friends, co-workers, or the public.
   - Possibly host a web service to share prompt prefixes.
-- Connect to other LLMs besides OpenAI (on the web and/or locally).

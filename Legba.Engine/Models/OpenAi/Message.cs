@@ -37,23 +37,7 @@ public class Message
     }
 
     [JsonIgnore]
-    public System.Windows.HorizontalAlignment MessageAlignment
-    {
-        get
-        {
-            if (Role == Enums.Role.System || IsInitialSourceCode)
-            {
-                return System.Windows.HorizontalAlignment.Center;
-            }
-
-            return IsSentByUser
-                ? System.Windows.HorizontalAlignment.Right
-                : System.Windows.HorizontalAlignment.Left;
-        }
-    }
-
-    [JsonIgnore]
-    public System.Windows.Media.Brush MessageBackground
+    public System.Windows.Media.Brush BackgroundColor
     {
         get
         {
@@ -65,6 +49,22 @@ public class Message
             return IsSentByUser
                 ? System.Windows.Media.Brushes.LightBlue
                 : System.Windows.Media.Brushes.LightGray;
+        }
+    }
+
+    [JsonIgnore]
+    public System.Windows.TextAlignment Alignment
+    {
+        get
+        {
+            if (Role == Enums.Role.System || IsInitialSourceCode)
+            {
+                return System.Windows.TextAlignment.Center;
+            }
+
+            return IsSentByUser
+                ? System.Windows.TextAlignment.Right
+                : System.Windows.TextAlignment.Left;
         }
     }
 }
