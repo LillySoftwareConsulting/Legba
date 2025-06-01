@@ -1,9 +1,15 @@
 ﻿using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Legba.Engine.Models.OpenAi;
 
 public class Message
 {
+    private static readonly Regex CodeBlockRegex =
+        new(@"^```[\w]*\s[\s\S]*?^```", RegexOptions.Multiline | RegexOptions.Compiled);
+    private static readonly Regex CodeBlockLangRegex =
+        new(@"^```(?<lang>\w+)?\s", RegexOptions.Multiline | RegexOptions.Compiled);
+
     [JsonPropertyName("role")]
     public Enums.Role Role { get; set; }
 
@@ -65,6 +71,19 @@ public class Message
             return IsSentByUser
                 ? System.Windows.TextAlignment.Right
                 : System.Windows.TextAlignment.Left;
+        }
+    }
+
+    [JsonIgnore]
+    public bool ContainsCodeBlock => CodeBlockRegex.IsMatch(Content);
+
+    [JsonIgnore]
+    public string? CodeBlockLanguage
+    {
+        get
+        {
+            var match = CodeBlockLangRegex.Match(Content);
+            return match.Success ? match.Groups["lang"].Value : null;
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
-using System.Net.Http.Json;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Net.Http;
 
 namespace Legba.Engine.Models.OpenAi;
 
@@ -11,7 +11,7 @@ public class OpenAiConnector(IHttpClientFactory httpClientFactory,
 {
     #region Private fields
 
-    private readonly JsonSerializerOptions _jsonSerializerOptions =
+    private static readonly JsonSerializerOptions s_jsonSerializerOptions =
         new()
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -31,48 +31,24 @@ public class OpenAiConnector(IHttpClientFactory httpClientFactory,
 
     #endregion
 
-    public async Task<LegbaResponse> AskAsync(LegbaRequest legbaRequest)
+    public async Task<OpenAiResponse> AskAsync(OpenAiRequest request)
     {
-        try
-        {
-            var openAiRequest = MapToOpenAiRequest(legbaRequest);
+        // Send request to the LLM API
+        var response =
+            await GetHttpClient()
+            .PostAsJsonAsync(new Uri(Model.Url), request, s_jsonSerializerOptions)
+            .ConfigureAwait(false);
 
-            // Send the request to OpenAI
-            var httpClient = GetHttpClient();
+        // Throw exception if the response was not successful
+        response.EnsureSuccessStatusCode();
 
-            if(Llm.Name == Enums.Llm.Perplexity)
-            {
-                // Set the authorization header
-                httpClient.DefaultRequestHeaders.Authorization = 
-                    new AuthenticationHeaderValue("Bearer", Llm.Keys.ApiKey);
-            }
+        // Parse the successful response
+        var openAiResponse = 
+            await response
+                .Content.ReadFromJsonAsync<OpenAiResponse>(s_jsonSerializerOptions)
+                ?? throw new Exception("Error parsing the API response");
 
-            var uri = new Uri(Model.Url);
-            var response =
-                await httpClient
-                .PostAsJsonAsync(uri, openAiRequest, _jsonSerializerOptions)
-                .ConfigureAwait(false);
-
-            // Ensure the response is successful
-            response.EnsureSuccessStatusCode();
-
-            // Parse the successful response
-            var openAiResponse = 
-                await response
-                    .Content.ReadFromJsonAsync<OpenAiResponse>(_jsonSerializerOptions)
-                    ?? throw new Exception("Error parsing the API response");
-
-            var legbaResponse = MapToLegbaResponse(openAiResponse);
-
-            return legbaResponse;
-        }
-        catch (Exception ex)
-        {
-            return new LegbaResponse()
-            {
-                Text = $"Error: {ex.Message}"
-            };
-        }
+        return openAiResponse;
     }
 
     #region Private methods
@@ -88,27 +64,14 @@ public class OpenAiConnector(IHttpClientFactory httpClientFactory,
             httpClient.DefaultRequestHeaders.Add("OpenAI-Organization", Llm.Keys.OrgId);
         }
 
+        if (Llm.Name == Enums.Llm.Perplexity)
+        {
+            // Set the authorization header
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", Llm.Keys.ApiKey);
+        }
+
         return httpClient;
-    }
-
-    private OpenAiRequest MapToOpenAiRequest(LegbaRequest legbaRequest)
-    {
-        return new OpenAiRequest()
-        {
-            Model = Model.Id,
-            Messages = legbaRequest.Messages,
-            Temperature = legbaRequest.Temperature
-        };
-    }
-
-    private LegbaResponse MapToLegbaResponse(OpenAiResponse openAiResponse)
-    {
-        return new LegbaResponse()
-        {
-            Text = openAiResponse.Choices[0].Message?.Content ?? string.Empty,
-            RequestTokenCount = openAiResponse.Usage.PromptTokens,
-            ResponseTokenCount = openAiResponse.Usage.CompletionTokens
-        };
     }
 
     #endregion

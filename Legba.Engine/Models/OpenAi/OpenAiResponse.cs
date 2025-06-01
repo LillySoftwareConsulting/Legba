@@ -15,5 +15,5 @@ public class OpenAiResponse
     [JsonPropertyName("usage")]
     public Usage Usage { get; set; } = new Usage();
     [JsonPropertyName("choices")]
-    public List<Choice> Choices { get; set; } = new List<Choice>();
+    public List<Choice> Choices { get; set; } = [];
 }

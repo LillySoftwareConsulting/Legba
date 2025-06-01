@@ -106,41 +106,50 @@ public class ChatSession : ObservableObject, IDisposable
         // On first request submission, include the personality and source code (if any)
         if (Messages.None())
         {
-            if (Personality.Text.IsNotNullEmptyOrWhitespace())
-            {
-                AddMessage(Enums.Role.System, Personality.Text);
-            }
-
-            if (SourceCodeFiles.Any())
-            {
-                // Consolidate source code files into a single string
-                string sourceCode = await FileConsolidator.GetFilesAsStringAsync(SourceCodeFiles);
-
-                AddMessage(Enums.Role.User, sourceCode, true);
-            }
+            await AddPersonalityAndSourceCodeMessagesAsync();
         }
 
-        // Add prompt to messages
-        AddMessage(Enums.Role.User, Prompt);
+        // Add user's prompt to messages
+        Messages.Add(new Message
+        {
+            Role = Enums.Role.User,
+            Content = Prompt
+        });
 
         // Clear prompt in UI
         Prompt = string.Empty;
 
-        var llmRequest = BuildLlmRequest();
+        // Add "Thinking..." message to UI
+        Messages.Add(new Message
+        {
+            Role = Enums.Role.Assistant,
+            Content = "Thinking..."
+        });
 
-        AddMessage(Enums.Role.Assistant, "Thinking...");
-
-        var response = await _llmConnector.AskAsync(llmRequest);
+        // Build the LLM request and get the response
+        var response = 
+            await _llmConnector.AskAsync(new OpenAiRequest
+            {
+                Model = _llmConnector.Model.Id,
+                Messages = Messages.ToList(),
+                Temperature = 0.5f
+            });
 
         // Remove "Thinking..." message
         Messages.Remove(Messages.Last());
 
-        AddMessage(Enums.Role.Assistant, response.Text);
+        // Add the response message to the chat
+        Messages.Add(new Message
+        {
+            Role = Enums.Role.Assistant,
+            Content = response.Choices[0].Message?.Content ?? string.Empty
+        });
 
+        // Add token usage summary
         TokenSummaries.Add(new TokenSummary
         {
-            RequestTokenCount = response.RequestTokenCount,
-            ResponseTokenCount = response.ResponseTokenCount
+            RequestTokenCount = response.Usage.PromptTokens,
+            ResponseTokenCount = response.Usage.CompletionTokens
         });
     }
 
@@ -156,28 +165,28 @@ public class ChatSession : ObservableObject, IDisposable
     }
 
     #endregion
-
     #region Private supporting methods
 
-    private void AddMessage(Enums.Role role, string content, bool isInitialSourceCode = false)
+    private async Task AddPersonalityAndSourceCodeMessagesAsync()
     {
-        var message = new Message
-        { 
-            Role = role, 
-            Content = content, 
-            IsInitialSourceCode = isInitialSourceCode
-        };
-
-        Messages.Add(message);
-    }
-
-    private LegbaRequest BuildLlmRequest()
-    {
-        return new LegbaRequest
+        if (Personality.Text.IsNotNullEmptyOrWhitespace())
         {
-            Messages = Messages.ToList(),
-            Temperature = 0.5f
-        };
+            Messages.Add(new Message
+            {
+                Role = Enums.Role.System,
+                Content = Personality.Text
+            });
+        }
+
+        if (SourceCodeFiles.Any())
+        {
+            Messages.Add(new Message
+            {
+                Role = Enums.Role.User,
+                Content = await FileConsolidator.GetFilesAsStringAsync(SourceCodeFiles),
+                IsInitialSourceCode = true
+            });
+        }
     }
 
     #endregion
