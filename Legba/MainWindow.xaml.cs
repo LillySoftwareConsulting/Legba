@@ -293,11 +293,39 @@ public partial class MainWindow : Window
 
     private void ScrollToLastParagraphTop()
     {
-        if ((MessageViewer?.Document?.Blocks?.LastBlock) is Paragraph paragraph)
+        if (_chatSessionViewModel?.ChatSession == null)
+        {
+            return;
+        }
+
+        var messages = _chatSessionViewModel.ChatSession.Messages;
+
+        // Find the last user message (excluding system messages)
+        var lastUserMessage = 
+            messages.LastOrDefault(m => m.Role == Engine.Enums.Role.User && !m.IsInitialSourceCode);
+
+        if (lastUserMessage == null)
+        {
+            return;
+        }
+
+        // Find the corresponding paragraph in the FlowDocument
+        var document = MessageViewer?.Document;
+        if (document == null)
+        {
+            return;
+        }
+
+        // Match the paragraph by DisplayText
+        var paragraphToScroll = document.Blocks
+            .OfType<Paragraph>()
+            .FirstOrDefault(p => (p.Inlines.FirstInline as Run)?.Text == lastUserMessage.DisplayText);
+
+        if (paragraphToScroll != null)
         {
             Dispatcher.InvokeAsync(() =>
             {
-                paragraph.BringIntoView();
+                paragraphToScroll.BringIntoView();
             }, DispatcherPriority.Loaded);
         }
     }
