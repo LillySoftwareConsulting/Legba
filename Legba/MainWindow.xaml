@@ -130,7 +130,7 @@
                     <FlowDocumentScrollViewer
                         Grid.Row="1" Grid.Column="0"
                         Grid.ColumnSpan="2"
-                        Name="MessageViewer"
+                        x:Name="MessageViewer"
                         VerticalScrollBarVisibility="Auto"
                         IsToolBarVisible="False"
                         Padding="10"

@@ -6,6 +6,8 @@ using Legba.WPF.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Threading;
 
 namespace Legba;
 
@@ -25,7 +27,7 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _serviceProvider = serviceProvider;
-        _chatSessionViewModel = new ChatSessionViewModel(serviceProvider);
+        _chatSessionViewModel = new ChatSessionViewModel(serviceProvider, ScrollToLastParagraphTop);
 
         DataContext = _chatSessionViewModel;
     }
@@ -282,6 +284,21 @@ public partial class MainWindow : Window
         finally
         {
             progressWindow.Close();
+        }
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private void ScrollToLastParagraphTop()
+    {
+        if ((MessageViewer?.Document?.Blocks?.LastBlock) is Paragraph paragraph)
+        {
+            Dispatcher.InvokeAsync(() =>
+            {
+                paragraph.BringIntoView();
+            }, DispatcherPriority.Loaded);
         }
     }
 

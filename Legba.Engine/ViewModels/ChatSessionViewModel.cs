@@ -14,6 +14,7 @@ public class ChatSessionViewModel : ObservableObject
     #region Private fields
 
     private readonly IServiceProvider _serviceProvider;
+    private readonly Action? _scrollToLastParagraphTop;
 
     private ChatSession? _chatSession;
 
@@ -94,9 +95,10 @@ public class ChatSessionViewModel : ObservableObject
 
     #endregion
 
-    public ChatSessionViewModel(IServiceProvider serviceProvider)
+    public ChatSessionViewModel(IServiceProvider serviceProvider, Action? scrollToLastParagraphTop)
     {
         _serviceProvider = serviceProvider;
+        _scrollToLastParagraphTop = scrollToLastParagraphTop;
 
         var settings = _serviceProvider.GetRequiredService<Settings>();
 
@@ -106,7 +108,14 @@ public class ChatSessionViewModel : ObservableObject
         }
 
         SelectModelCommand = new TypedRelayCommand<Settings.Model>(SelectModel);
-        AskCommand = new RelayCommand(async () => await ChatSession.AskAsync());
+        AskCommand = new RelayCommand(async () =>
+        {
+            if (ChatSession != null)
+            {
+                await ChatSession.AskAsync();
+                _scrollToLastParagraphTop?.Invoke();
+            }
+        });
         RemoveSourceCodeFileCommand = new TypedRelayCommand<object>(RemoveSourceCodeFile);
     }
 
